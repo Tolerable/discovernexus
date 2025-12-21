@@ -743,7 +743,10 @@
       // Display current photo
       const currentPhoto = allPhotos[currentPhotoIndex];
       console.log('[PHOTO DISPLAY] Setting image src to:', currentPhoto);
+      console.log('[PHOTO DISPLAY] avatarElement before:', avatarElement.innerHTML);
       avatarElement.innerHTML = `<img src="${currentPhoto}" alt="${currentDisplayName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="console.error('[PHOTO DISPLAY] Image failed to load:', this.src)">`;
+      console.log('[PHOTO DISPLAY] avatarElement after:', avatarElement.innerHTML);
+      console.log('[PHOTO DISPLAY] img element exists:', avatarElement.querySelector('img') !== null);
 
       // Remove existing navigation
       container.querySelectorAll('.gallery-nav, .gallery-indicator').forEach(el => el.remove());
