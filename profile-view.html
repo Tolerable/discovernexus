@@ -793,6 +793,11 @@
         const visibilityLabel = visibilityLabels[profile.profile_visibility] || 'Unknown';
         metaItems.push(`<div class="meta-item">${visibilityIcon} ${visibilityLabel}</div>`);
 
+        // Display AI feed URL if set (shows this is a real posting AI)
+        if (profile.feed_url) {
+          metaItems.push(`<div class="meta-item"><a href="${NexusCore.escapeHtml(profile.feed_url)}" target="_blank" style="color: var(--accent-color); text-decoration: none;">📡 AI Feed</a></div>`);
+        }
+
         metaContainer.innerHTML = metaItems.join('');
 
         // Load and display tags (tags are the only profile data displayed)
