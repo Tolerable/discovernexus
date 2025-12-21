@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-24HL4B73C3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-24HL4B73C3');
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore - NEXUS</title>
+
+  <link rel="stylesheet" href="/css/nexus-base.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <style>
+    body {
+      padding-top: 60px;
+    }
+
+    .explore-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .filters {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: var(--spacing-xs);
+      color: var(--accent-color);
+      font-weight: 500;
+    }
+
+    .filter-input {
+      width: 100%;
+      padding: var(--spacing-sm);
+      background: rgba(42, 45, 52, 0.5);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-sm);
+      color: var(--text-light);
+      font-family: var(--font-body);
+    }
+
+    .profiles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .profile-card {
+      background: var(--primary-bg);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      transition: all var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .profile-card:hover {
+      border-color: var(--accent-color);
+      box-shadow: var(--glow-aqua);
+      transform: translateY(-2px);
+    }
+
+    .profile-card-header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .profile-avatar-small {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-color), var(--deep-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--gunmetal);
+      font-weight: 700;
+    }
+
+    .profile-card-info {
+      flex: 1;
+    }
+
+    .profile-card-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin-bottom: var(--spacing-xs);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ai-badge {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .profile-card-username {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .compatibility-score {
+      text-align: center;
+      padding: var(--spacing-sm);
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .score-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--highlight-color);
+    }
+
+    .score-label {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .profile-card-bio {
+      margin-bottom: var(--spacing-md);
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+    .profile-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .tag-small {
+      font-size: 0.8rem;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      background: rgba(0, 212, 255, 0.2);
+      border: 1px solid rgba(0, 212, 255, 0.4);
+      border-radius: var(--radius-sm);
+      color: var(--accent-color);
+      transition: all var(--transition-fast);
+      cursor: default;
+    }
+
+    .tag-small:hover {
+      background: rgba(0, 212, 255, 0.3);
+      box-shadow: var(--glow-aqua);
+      transform: translateY(-1px);
+    }
+
+    /* Tag Autocomplete Styles */
+    .tag-filter-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .tag-input-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px;
+      background: rgba(42, 45, 52, 0.5);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-sm);
+      min-height: 42px;
+      align-items: center;
+      cursor: text;
+    }
+
+    .tag-input-wrapper:focus-within {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.1);
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(0, 212, 255, 0.25);
+      border: 1px solid var(--accent-color);
+      border-radius: 16px;
+      font-size: 0.85rem;
+      color: var(--accent-color);
+      white-space: nowrap;
+    }
+
+    .tag-chip-remove {
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .tag-chip-remove:hover {
+      opacity: 1;
+    }
+
+    #tagSearchInput {
+      flex: 1;
+      min-width: 120px;
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      outline: none;
+      padding: 4px;
+    }
+
+    #tagSearchInput::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .tag-autocomplete {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--primary-bg);
+      border: 1px solid rgba(0, 212, 255, 0.4);
+      border-top: none;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+
+    .tag-autocomplete.show {
+      display: block;
+    }
+
+    .tag-option {
+      padding: 10px 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .tag-option:hover, .tag-option.highlighted {
+      background: rgba(0, 212, 255, 0.15);
+    }
+
+    .tag-option-name {
+      color: var(--text-light);
+    }
+
+    .tag-option-count {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .profile-card-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xl) 0;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      padding: var(--spacing-sm) 0;
+    }
+
+    .navbar-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-md);
+    }
+
+    .navbar-logo {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      text-shadow: var(--glow-aqua);
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: center;
+    }
+
+    .navbar-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+
+    .navbar-links a:hover {
+      color: var(--highlight-color);
+    }
+
+    @media (max-width: 768px) {
+      .profiles-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+
+  <div class="explore-container">
+    <h1 class="text-gradient" style="margin-bottom: var(--spacing-lg);">Explore Compatible Connections</h1>
+
+    <!-- Filters -->
+    <div class="panel" style="margin-bottom: var(--spacing-xl);">
+      <div class="filters">
+        <div class="filter-group">
+          <label for="searchFilter">Search</label>
+          <input
+            type="text"
+            id="searchFilter"
+            class="filter-input"
+            placeholder="Search by name or tags..."
+            
+          >
+        </div>
+
+        <div class="filter-group" style="min-width: 300px;">
+          <label>Filter by Tags</label>
+          <div class="tag-filter-container">
+            <div class="tag-input-wrapper" onclick="document.getElementById('tagSearchInput').focus()">
+              <div id="selectedTagsContainer"></div>
+              <input type="text" id="tagSearchInput" placeholder="Type to search tags..."
+                     oninput="handleTagSearch(this.value)"
+                     onkeydown="handleTagKeydown(event)"
+                     onfocus="showTagDropdown()"
+                     autocomplete="off">
+            </div>
+            <div class="tag-autocomplete" id="tagAutocomplete"></div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="sortFilter">Sort By</label>
+          <select id="sortFilter" class="filter-input" onchange="applyFilters()">
+            <option value="compatibility">Compatibility Score</option>
+            <option value="recent">Recently Active</option>
+            <option value="new">Newest Members</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="minScore">Min Compatibility</label>
+          <input
+            type="range"
+            id="minScore"
+            class="filter-input"
+            min="0"
+            max="100"
+            value="0"
+            oninput="updateScoreLabel(this.value)"
+          >
+          <span id="scoreLabel" style="font-size: 0.9rem; opacity: 0.7;">0% (All Public)</span>
+        </div>
+
+        <!-- BIG SEARCH BUTTON -->
+        <div class="filter-group" style="display: flex; align-items: flex-end; min-width: 150px;">
+          <button id="searchBtn" class="btn btn-primary" onclick="applyFilters()" style="width: 100%; padding: 12px 24px; font-size: 1.1rem; font-weight: 700;">
+            SEARCH
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results info bar -->
+    <div id="resultsBar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--spacing-md); padding: var(--spacing-sm) var(--spacing-md); background: rgba(0,212,255,0.1); border-radius: var(--radius-sm);">
+      <span id="resultCount" style="color: var(--accent-color);">Loading profiles...</span>
+      <button id="clearFiltersBtn" class="btn btn-secondary btn-small" onclick="clearAllFilters()" style="display:none;">Clear All Filters</button>
+    </div>
+
+    <!-- Profiles Grid -->
+    <div id="profilesContainer">
+      <div class="profiles-grid" id="profilesGrid">
+        <!-- Profiles will be populated by JavaScript -->
+      </div>
+
+      <div class="empty-state" id="emptyState" style="display:none">
+        <div class="panel">
+          <p style="font-size: 1.2rem; margin-bottom: var(--spacing-md);">
+            No compatible profiles found with your current filters.
+          </p>
+          <p style="opacity: 0.7; margin-bottom: var(--spacing-lg);">
+            Try lowering the minimum compatibility score, or refine your discovery profile for better matches.
+          </p>
+          <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+            <button onclick="document.getElementById('minScore').value = 0; updateScoreLabel(0); applyFilters();" class="btn btn-secondary">Show All Profiles</button>
+            <a href="/discover.html" class="btn btn-primary">Redo Discovery</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-state" id="loadingState">
+        <div style="text-align: center; padding: var(--spacing-xl);">
+          <div class="loading" style="margin: 0 auto;"></div>
+          <p style="margin-top: var(--spacing-md); opacity: 0.7;">Finding compatible connections...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/nexus-core.js"></script>
+  <script>
+    let allProfiles = [];
+    let currentUserId = null;
+    let allTags = [];  // All available tags from database
+    let selectedFilterTags = [];  // Tags currently selected for filtering
+    let highlightedIndex = -1;
+
+    // Load all tags for autocomplete
+    async function loadAllTags() {
+      try {
+        // Simple query - proxy can't handle GROUP BY/COUNT
+        const tagsResult = await supabaseSelect('tags', {
+          columns: ['id', 'tag_name'],
+          order: 'tag_name'
+        });
+        allTags = (tagsResult.data || []).map(t => ({
+          ...t,
+          user_count: 0  // We'll skip counts for now
+        }));
+        console.log('[EXPLORE] Loaded', allTags.length, 'tags for autocomplete');
+      } catch (e) {
+        console.error('Failed to load tags:', e);
+        allTags = [];
+      }
+    }
+
+    function handleTagSearch(query) {
+      const dropdown = document.getElementById('tagAutocomplete');
+      query = query.toLowerCase().trim();
+
+      if (!query) {
+        dropdown.classList.remove('show');
+        return;
+      }
+
+      // Filter tags matching query (exclude already selected)
+      const selectedIds = selectedFilterTags.map(t => t.id);
+      const matches = allTags.filter(t =>
+        t.tag_name.toLowerCase().includes(query) && !selectedIds.includes(t.id)
+      ).slice(0, 8);
+
+      if (matches.length === 0) {
+        dropdown.innerHTML = '<div class="tag-option" style="opacity:0.5;cursor:default">No matching tags</div>';
+        dropdown.classList.add('show');
+        return;
+      }
+
+      dropdown.innerHTML = matches.map((tag, i) => `
+        <div class="tag-option ${i === highlightedIndex ? 'highlighted' : ''}"
+             onclick="selectTag('${tag.id}', '${escapeHtml(tag.tag_name)}')"
+             data-index="${i}">
+          <span class="tag-option-name">${escapeHtml(tag.tag_name)}</span>
+          <span class="tag-option-count">${tag.user_count || 0} users</span>
+        </div>
+      `).join('');
+      dropdown.classList.add('show');
+      highlightedIndex = -1;
+    }
+
+    function handleTagKeydown(e) {
+      const dropdown = document.getElementById('tagAutocomplete');
+      const options = dropdown.querySelectorAll('.tag-option[data-index]');
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        highlightedIndex = Math.min(highlightedIndex + 1, options.length - 1);
+        updateHighlight(options);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        highlightedIndex = Math.max(highlightedIndex - 1, 0);
+        updateHighlight(options);
+      } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+        e.preventDefault();
+        const opt = options[highlightedIndex];
+        if (opt) opt.click();
+      } else if (e.key === 'Escape') {
+        dropdown.classList.remove('show');
+        highlightedIndex = -1;
+      } else if (e.key === 'Backspace' && e.target.value === '' && selectedFilterTags.length > 0) {
+        // Remove last tag on backspace if input is empty
+        const lastTag = selectedFilterTags[selectedFilterTags.length - 1];
+        removeTag(lastTag.id);
+      }
+    }
+
+    function updateHighlight(options) {
+      options.forEach((opt, i) => {
+        opt.classList.toggle('highlighted', i === highlightedIndex);
+      });
+    }
+
+    function showTagDropdown() {
+      const input = document.getElementById('tagSearchInput');
+      if (input.value.trim()) {
+        handleTagSearch(input.value);
+      }
+    }
+
+    function selectTag(id, name) {
+      selectedFilterTags.push({ id, tag_name: name });
+      renderSelectedTags();
+      document.getElementById('tagSearchInput').value = '';
+      document.getElementById('tagAutocomplete').classList.remove('show');
+      highlightedIndex = -1;
+      applyFilters();
+    }
+
+    function removeTag(id) {
+      selectedFilterTags = selectedFilterTags.filter(t => t.id !== id);
+      renderSelectedTags();
+      applyFilters();
+    }
+
+    function renderSelectedTags() {
+      const container = document.getElementById('selectedTagsContainer');
+      container.innerHTML = selectedFilterTags.map(tag => `
+        <span class="tag-chip">
+          ${escapeHtml(tag.tag_name)}
+          <span class="tag-chip-remove" onclick="removeTag('${tag.id}'); event.stopPropagation();">x</span>
+        </span>
+      `).join('');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      const container = document.querySelector('.tag-filter-container');
+      if (container && !container.contains(e.target)) {
+        document.getElementById('tagAutocomplete').classList.remove('show');
+      }
+    });
+
+    async function initExplore() {
+      // Require authentication
+      const auth = window.auth;
+      const isAuth = await auth.requireAuth();
+
+      if (!isAuth) {
+        return; // requireAuth will handle redirect
+      }
+
+      currentUserId = getUserId();
+
+      // Load all tags for autocomplete filter
+      await loadAllTags();
+
+      // Check if user has completed their profile/discovery (by checking for tags)
+      try {
+        console.log('[EXPLORE] Checking if user has completed discovery...');
+        console.log('[EXPLORE] Current User ID:', currentUserId);
+
+        // Check if user just completed discovery (to avoid stale cache issues)
+        const justCompleted = sessionStorage.getItem('discovery_just_completed');
+        const confirmedTagCount = sessionStorage.getItem('confirmed_tag_count');
+
+        if (justCompleted === 'true' && confirmedTagCount) {
+          console.log('[EXPLORE] ✓ Discovery just completed with', confirmedTagCount, 'tags (from sessionStorage)');
+          // Clear the flags so they don't persist across sessions
+          sessionStorage.removeItem('discovery_just_completed');
+          sessionStorage.removeItem('confirmed_tag_count');
+        } else {
+          // Normal flow - check database for tags
+          const userTags = await NexusCore.getUserTags(currentUserId);
+          console.log('[EXPLORE] User tags retrieved:', userTags?.length || 0, 'tags');
+
+          if (!userTags || userTags.length === 0) {
+            // User hasn't completed discovery - redirect them to complete it first
+            console.error('[EXPLORE] ✗ No tags found for user. Redirecting to discovery.');
+
+            // Show error with more detail
+            const errorMsg = `Discovery not complete. No tags found for your profile.\n\nPlease complete the discovery process to browse other members.\n\n(Debug: User ID: ${currentUserId}, Tags: ${userTags?.length || 0})`;
+            alert(errorMsg);
+
+            // Wait a moment before redirect so user can read the message
+            setTimeout(() => {
+              window.location.href = '/discover.html';
+            }, 1000);
+            return;
+          }
+
+          console.log('[EXPLORE] ✓ User has completed discovery with', userTags.length, 'tags');
+        }
+      } catch (error) {
+        console.error('[EXPLORE] Failed to check user profile:', error);
+        console.error('[EXPLORE] Error details:', {
+          message: error.message,
+          stack: error.stack,
+          userId: currentUserId
+        });
+
+        // Show more detailed error
+        alert(`Error checking your profile:\n${error.message}\n\nPlease complete your discovery profile first.\n\n(Check browser console for details)`);
+
+        // Wait before redirect
+        setTimeout(() => {
+          window.location.href = '/discover.html';
+        }, 1000);
+        return;
+      }
+
+      await loadProfiles();
+    }
+
+    async function loadProfiles() {
+      const loadingState = document.getElementById('loadingState');
+      const profilesGrid = document.getElementById('profilesGrid');
+
+      try {
+        loadingState.style.display = 'block';
+        profilesGrid.innerHTML = '';
+
+        // Get potential matches - all users except self
+        // Simplified query - proxy struggles with complex WHERE
+        console.log('[EXPLORE] Loading profiles for user:', currentUserId);
+
+        let usersResult;
+        try {
+          usersResult = await supabaseSelect('users', {
+            where: {},  // Get all users
+            limit: 100
+          });
+        } catch (e) {
+          console.error('[EXPLORE] Users query failed:', e);
+          usersResult = { data: [] };
+        }
+
+        // Filter out self client-side
+        allProfiles = (usersResult.data || []).filter(u => u.id !== currentUserId);
+        console.log('[EXPLORE] Found', allProfiles.length, 'users (excluding self)');
+
+        // Also fetch AI profiles from users table (they have @nexus.ai.local emails)
+        try {
+          const aiResult = await supabaseQuery(`
+            SELECT id, display_name, bio, created_at FROM users
+            WHERE email LIKE '%@nexus.ai.local' AND id != $1
+            ORDER BY created_at DESC LIMIT 20
+          `, [currentUserId]);
+
+          const aiProfiles = (aiResult.data || []).map(ai => ({
+            ...ai,
+            is_ai: true,
+            tags: ['AI Companion']  // Give AI a default tag so they pass filter
+          }));
+
+          // Merge AI profiles (avoid duplicates)
+          const existingIds = new Set(allProfiles.map(p => p.id));
+          aiProfiles.forEach(ai => {
+            if (!existingIds.has(ai.id)) {
+              allProfiles.push(ai);
+            }
+          });
+        } catch (e) { console.log('AI profiles fetch:', e); }
+
+        if (allProfiles.length === 0) {
+          return; // No need to fetch more data
+        }
+
+        const userIds = allProfiles.map(u => u.id);
+
+        // Note: We no longer fetch connection_patterns for display
+        // All profile data is represented by tags only
+
+        // Get tags separately for all users
+        const userTagsResult = await supabaseQuery(`
+          SELECT user_id, tag_id FROM user_tags WHERE user_id = ANY($1)
+        `, [userIds]);
+
+        // Get unique tag IDs
+        const tagIds = [...new Set((userTagsResult.data || []).map(ut => ut.tag_id))];
+
+        // Get tag details
+        const tagsDetailsResult = tagIds.length > 0 ? await supabaseQuery(`
+          SELECT id, tag_name, version, definition FROM tags WHERE id = ANY($1)
+        `, [tagIds]) : { data: [] };
+
+        const tagDetailsMap = {};
+        (tagsDetailsResult.data || []).forEach(t => {
+          tagDetailsMap[t.id] = t;
+        });
+
+        // Group tags by user (limit 5 per user)
+        const tagsMap = {};
+        (userTagsResult.data || []).forEach(ut => {
+          if (!tagsMap[ut.user_id]) {
+            tagsMap[ut.user_id] = [];
+          }
+          if (tagsMap[ut.user_id].length < 5 && tagDetailsMap[ut.tag_id]) {
+            tagsMap[ut.user_id].push({
+              id: ut.tag_id,
+              tag_name: tagDetailsMap[ut.tag_id].tag_name,
+              version: tagDetailsMap[ut.tag_id].version,
+              definition: tagDetailsMap[ut.tag_id].definition
+            });
+          }
+        });
+
+        // Merge all data
+        allProfiles = allProfiles.map(user => ({
+          ...user,
+          tags: tagsMap[user.id] || null
+        }));
+
+        // Log profile counts for debugging
+        const withTags = allProfiles.filter(p => p.tags && Array.isArray(p.tags) && p.tags.length > 0).length;
+        const aiCount = allProfiles.filter(p => p.is_ai === true).length;
+        console.log('[EXPLORE] Profiles with tags:', withTags, '| AI profiles:', aiCount, '| Total:', allProfiles.length);
+
+        // Show ALL profiles - don't filter by tags (users want to see everyone)
+
+        // AI profiles now included above\!
+        // Could add AI companions here with different personas:
+        // - Tag: "AI Companions Open" labeled clearly
+        // - Different system messages for varied personalities
+        // - Kept tame and respectful per requirements
+
+        // Calculate compatibility scores
+        const myTags = await getUserTags(currentUserId);
+        const myTagIds = myTags.map(t => t.id);
+
+        allProfiles.forEach(profile => {
+          profile.compatibilityScore = calculateCompatibility(profile, myTagIds);
+        });
+
+        // Show all profiles initially - user clicks SEARCH to filter
+        displayProfiles(allProfiles);
+
+      } catch (error) {
+        console.error('Failed to load profiles:', error);
+        showToast('Failed to load profiles', 'error');
+        profilesGrid.innerHTML = `
+          <div class="panel" style="grid-column: 1/-1;">
+            <p style="text-align: center; opacity: 0.7;">Failed to load profiles. Please try again.</p>
+          </div>
+        `;
+      } finally {
+        loadingState.style.display = 'none';
+      }
+    }
+
+    function calculateCompatibility(profile, myTagIds) {
+      if (!profile.tags || !Array.isArray(profile.tags)) {
+        return Math.floor(Math.random() * 30) + 40; // Random 40-70% for profiles without tags
+      }
+
+      const theirTagIds = profile.tags.map(t => t.id);
+      const commonTags = myTagIds.filter(id => theirTagIds.includes(id)).length;
+      const totalUniqueTags = new Set([...myTagIds, ...theirTagIds]).size;
+
+      if (totalUniqueTags === 0) {
+        return Math.floor(Math.random() * 30) + 40;
+      }
+
+      // Jaccard similarity: common / total_unique
+      const jaccardScore = commonTags / totalUniqueTags;
+
+      // Scale to 0-100
+      let score = Math.floor(jaccardScore * 100);
+
+      return Math.min(100, Math.max(0, score));
+    }
+
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
+      const sortBy = document.getElementById('sortFilter').value;
+      const minScore = parseInt(document.getElementById('minScore').value);
+
+      let filtered = [...allProfiles];
+
+      // Apply tag filter (must have ALL selected tags)
+      // AI profiles pass if "AI Companion" is selected (they don't have real tags)
+      if (selectedFilterTags.length > 0) {
+        const requiredTagIds = selectedFilterTags.map(t => t.id);
+        const hasAIFilter = selectedFilterTags.some(t => t.tag_name.toLowerCase().includes('ai'));
+        filtered = filtered.filter(profile => {
+          // AI profiles pass if user is filtering for AI-related tags
+          if (profile.is_ai && hasAIFilter) return true;
+          if (!profile.tags || !Array.isArray(profile.tags)) return false;
+          const profileTagIds = profile.tags.map(t => t.id);
+          return requiredTagIds.every(id => profileTagIds.includes(id));
+        });
+      }
+
+      // Apply search filter
+      if (searchTerm) {
+        filtered = filtered.filter(profile => {
+          const name = (profile.display_name || '').toLowerCase();
+          const username = (profile.username || '').toLowerCase();
+          const bio = (profile.bio || '').toLowerCase();
+          const tags = (profile.tags || []).map(t => t.tag_name ? t.tag_name.toLowerCase() : t.toLowerCase()).join(' ');
+          const isAI = profile.is_ai ? 'ai artificial intelligence bot' : '';
+
+          return name.includes(searchTerm) ||
+                 username.includes(searchTerm) ||
+                 bio.includes(searchTerm) ||
+                 tags.includes(searchTerm) ||
+                 isAI.includes(searchTerm);
+        });
+      }
+
+      // Apply compatibility filter
+      filtered = filtered.filter(p => p.compatibilityScore >= minScore);
+
+      // Apply sorting
+      filtered.sort((a, b) => {
+        if (sortBy === 'compatibility') {
+          return b.compatibilityScore - a.compatibilityScore;
+        } else if (sortBy === 'recent') {
+          return new Date(b.last_active_at || b.created_at) - new Date(a.last_active_at || a.created_at);
+        } else if (sortBy === 'new') {
+          return new Date(b.created_at) - new Date(a.created_at);
+        }
+        return 0;
+      });
+
+      displayProfiles(filtered);
+    }
+
+    function clearAllFilters() {
+      document.getElementById('searchFilter').value = '';
+      document.getElementById('minScore').value = 0;
+      updateScoreLabel(0);
+      selectedFilterTags = [];
+      renderSelectedTags();
+      document.getElementById('tagSearchInput').value = '';
+      applyFilters();
+    }
+
+    function displayProfiles(profiles) {
+      console.log('[EXPLORE] displayProfiles called with', profiles.length, 'profiles');
+      const profilesGrid = document.getElementById('profilesGrid');
+      const emptyState = document.getElementById('emptyState');
+      const resultCount = document.getElementById('resultCount');
+      const clearBtn = document.getElementById('clearFiltersBtn');
+
+      // Update result count
+      const total = allProfiles.length;
+      const showing = profiles.length;
+      const hasFilters = selectedFilterTags.length > 0 ||
+                         document.getElementById('searchFilter').value ||
+                         parseInt(document.getElementById('minScore').value) > 0;
+
+      resultCount.textContent = hasFilters
+        ? `Showing ${showing} of ${total} profiles`
+        : `${total} profiles available`;
+      clearBtn.style.display = hasFilters ? 'inline-block' : 'none';
+
+      if (profiles.length === 0) {
+        profilesGrid.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      profilesGrid.style.display = 'grid';
+      emptyState.style.display = 'none';
+
+      profilesGrid.innerHTML = profiles.map(profile => {
+        const displayName = profile.display_name || 'Anonymous User';
+        const username = profile.username || profile.display_name || `user_${profile.id.substring(0, 8)}`;
+        const initials = displayName.substring(0, 2).toUpperCase();
+        const bio = profile.bio || 'No bio available.';
+        // Ensure tags is always an array (json_agg can return null)
+        const tags = Array.isArray(profile.tags) ? profile.tags : [];
+
+        return `
+          <div class="profile-card" onclick="viewProfile('${profile.id}')">
+            <div class="profile-card-header">
+              <div class="profile-avatar-small">${initials}</div>
+              <div class="profile-card-info">
+                <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? '<span class="ai-badge">AI</span>' : ''}</div>
+                <div class="profile-card-username">@${escapeHtml(username)}</div>
+              </div>
+            </div>
+
+            <div class="compatibility-score">
+              <div class="score-value">${profile.compatibilityScore}%</div>
+              <div class="score-label">Compatibility</div>
+            </div>
+
+            <div class="profile-card-bio">
+              ${escapeHtml(bio.substring(0, 150))}${bio.length > 150 ? '...' : ''}
+            </div>
+
+            <div class="profile-card-tags">
+              ${tags.slice(0, 3).map(tag => `
+                <span class="tag-small" title="${escapeHtml(tag.definition || tag.tag_name)}">${escapeHtml(tag.tag_name)}</span>
+              `).join('')}
+              ${tags.length > 3 ? `<span class="tag-small">+${tags.length - 3} more</span>` : ''}
+            </div>
+
+            <div class="profile-card-actions">
+              ${profile.id !== currentUserId ? `
+              <button class="btn btn-primary btn-small" onclick="sendConnectionRequest('${profile.id}', ${profile.compatibilityScore}); event.stopPropagation();">
+                Connect
+              </button>
+              <button class="btn btn-secondary btn-small" onclick="openMessageWindow('${profile.id}'); event.stopPropagation();">
+                Message
+              </button>
+              ` : `<span style="opacity: 0.5; font-size: 0.85rem;">This is you</span>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateScoreLabel(value) {
+      const label = value == 0 ? '0% (All Public)' : `${value}%`;
+      document.getElementById('scoreLabel').textContent = label;
+    }
+
+    async function sendConnectionRequest(targetUserId, compatibilityScore) {
+      // Prevent connecting with yourself
+      if (targetUserId === currentUserId) {
+        showToast('You cannot connect with yourself', 'error');
+        return;
+      }
+      try {
+        await createMatchRequest(targetUserId, compatibilityScore);
+        showToast('Connection request sent!', 'success');
+      } catch (error) {
+        console.error('Failed to send connection request:', error);
+        showToast('Failed to send connection request', 'error');
+      }
+    }
+
+    function openMessageWindow(targetUserId) {
+      // Prevent messaging yourself
+      if (targetUserId === currentUserId) {
+        showToast('You cannot message yourself', 'error');
+        return;
+      }
+      window.location.href = `/messages.html?user=${targetUserId}`;
+    }
+
+    function viewProfile(userId) {
+      window.location.href = `/profile-view.html?user=${userId}`;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initExplore);
+  </script>
+  <!-- Age Verification & Cookie Consent -->
+  <script src="/js/age-gate.js"></script>
+  <script src="/js/cookie-consent.js"></script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-24HL4B73C3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-24HL4B73C3');
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tag Encyclopedia - NEXUS</title>
+
+  <link rel="stylesheet" href="/css/nexus-base.css">
+
+  <style>
+    body {
+      padding-top: 80px;
+    }
+
+    .header-section {
+      text-align: center;
+      padding: var(--spacing-xl) var(--spacing-md);
+      background: linear-gradient(180deg, var(--gunmetal), var(--bg-dark));
+    }
+
+    .search-bar {
+      max-width: 600px;
+      margin: var(--spacing-lg) auto;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: var(--spacing-md) var(--spacing-lg);
+      font-size: 1.1rem;
+      background: rgba(42, 45, 52, 0.5);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-full);
+      color: var(--text-light);
+      transition: all var(--transition-fast);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: var(--glow-aqua);
+    }
+
+    .filters {
+      display: flex;
+      gap: var(--spacing-sm);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: var(--spacing-md);
+    }
+
+    .filter-btn {
+      padding: var(--spacing-xs) var(--spacing-md);
+      background: transparent;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-full);
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-size: 0.9rem;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent-color);
+      color: var(--gunmetal);
+      box-shadow: var(--glow-aqua);
+    }
+
+    .tags-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: var(--spacing-md);
+      padding: var(--spacing-lg) 0;
+    }
+
+    .tag-card {
+      background: var(--primary-bg);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      transition: all var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .tag-card:hover {
+      border-color: var(--accent-color);
+      box-shadow: var(--shadow-lg), var(--glow-aqua);
+      transform: translateY(-2px);
+    }
+
+    .tag-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .tag-card-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      color: var(--accent-color);
+      margin-bottom: 0;
+    }
+
+    .tag-card-meta {
+      display: flex;
+      gap: var(--spacing-xs);
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .tag-card-definition {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: var(--spacing-sm);
+      opacity: 0.9;
+    }
+
+    .tag-card-examples {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      font-style: italic;
+    }
+
+    .tag-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-sm);
+      border-top: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .add-tag-btn {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      background: transparent;
+      border: 1px solid var(--accent-color);
+      border-radius: var(--radius-sm);
+      color: var(--accent-color);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all var(--transition-fast);
+    }
+
+    .add-tag-btn:hover {
+      background: var(--accent-color);
+      color: var(--gunmetal);
+    }
+
+    .add-tag-btn.added {
+      background: var(--highlight-color);
+      border-color: var(--highlight-color);
+      color: var(--gunmetal);
+    }
+
+    .usage-count {
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      padding: var(--spacing-lg);
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      max-width: 700px;
+      width: 100%;
+      background: var(--gunmetal);
+      border: 1px solid var(--accent-color);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-lg), var(--glow-aqua);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      opacity: 1;
+    }
+
+    .version-history {
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .version-item {
+      padding: var(--spacing-sm);
+      margin-bottom: var(--spacing-sm);
+      background: rgba(0, 212, 255, 0.05);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent-color);
+    }
+
+    .version-item.current {
+      border-left-color: var(--highlight-color);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    /* Intensity Indicator - Signal Bars */
+    .intensity-indicator {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 16px;
+      vertical-align: middle;
+    }
+
+    .intensity-bar {
+      width: 4px;
+      border-radius: 1px;
+      transition: all 0.2s ease;
+    }
+
+    .intensity-bar:nth-child(1) { height: 20%; }
+    .intensity-bar:nth-child(2) { height: 40%; }
+    .intensity-bar:nth-child(3) { height: 60%; }
+    .intensity-bar:nth-child(4) { height: 80%; }
+    .intensity-bar:nth-child(5) { height: 100%; }
+
+    /* Active bars - color gradient from red to green */
+    .intensity-bar.active.level-1 { background: #ff4444; }
+    .intensity-bar.active.level-2 { background: #ff8844; }
+    .intensity-bar.active.level-3 { background: #ffcc44; }
+    .intensity-bar.active.level-4 { background: #88ff44; }
+    .intensity-bar.active.level-5 { background: #44ff88; }
+
+    /* Inactive bars */
+    .intensity-bar:not(.active) {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Interest Indicator (dual-axis) */
+    .interest-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .interest-indicator.negative .interest-label {
+      color: #ff6464;
+    }
+
+    .interest-indicator.positive .interest-label {
+      color: #44ff88;
+    }
+
+    .interest-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .interest-neutral {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-style: italic;
+    }
+
+    .interest-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+    }
+
+    .interest-bar {
+      width: 3px;
+      border-radius: 1px;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .interest-bar:nth-child(1) { height: 20%; }
+    .interest-bar:nth-child(2) { height: 40%; }
+    .interest-bar:nth-child(3) { height: 60%; }
+    .interest-bar:nth-child(4) { height: 80%; }
+    .interest-bar:nth-child(5) { height: 100%; }
+
+    .interest-bar.active.avoid { background: #ff6464; }
+    .interest-bar.active.seek { background: #44ff88; }
+
+    /* Experience Indicator */
+    .experience-indicator {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+    }
+
+    .experience-bar {
+      width: 3px;
+      border-radius: 1px;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .experience-bar:nth-child(1) { height: 20%; }
+    .experience-bar:nth-child(2) { height: 40%; }
+    .experience-bar:nth-child(3) { height: 60%; }
+    .experience-bar:nth-child(4) { height: 80%; }
+    .experience-bar:nth-child(5) { height: 100%; }
+
+    .experience-bar.active {
+      background: var(--highlight-color, #d4af37);
+    }
+
+    @media (max-width: 768px) {
+      .tags-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+
+  <!-- Header -->
+  <div class="header-section" style="margin-top: 60px;">
+    <h1 class="text-gradient">Tag Encyclopedia</h1>
+    <p style="font-size: 1.1rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+      Comprehensive taxonomy of connection patterns, arousal triggers, and relationship preferences.
+    </p>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder="Search tags by name or description..."
+      />
+    </div>
+
+    <!-- Filters -->
+    <div class="filters" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--spacing-xs); max-width: 900px; margin: var(--spacing-md) auto;">
+      <button class="filter-btn active" data-category="all">All Tags</button>
+      <button class="filter-btn" data-category="relationship_structure">Relationships</button>
+      <button class="filter-btn" data-category="sexual_orientation">Sexual Orientation</button>
+      <button class="filter-btn" data-category="kink_bdsm">Kink & BDSM</button>
+      <button class="filter-btn" data-category="communication_style">Communication</button>
+      <button class="filter-btn" data-category="arousal_pattern">Arousal Patterns</button>
+      <button class="filter-btn" data-category="physical_preference">Physical</button>
+      <button class="filter-btn" data-category="lifestyle_values">Lifestyle</button>
+      <button class="filter-btn" data-category="modern_digital">Modern</button>
+      <button class="filter-btn" data-category="emotional_connection">Emotional</button>
+      <button class="filter-btn" data-category="attachment_style">Attachment</button>
+      <button class="filter-btn" data-category="experience_level">Experience</button>
+    </div>
+  </div>
+
+  <!-- Tags Grid -->
+  <div class="container">
+    <div id="tagsGrid" class="tags-grid">
+      <!-- Tags will be populated by JavaScript -->
+    </div>
+
+    <div id="emptyState" style="display: none; text-align: center; padding: var(--spacing-xl);">
+      <p style="font-size: 1.2rem; opacity: 0.7;">No tags found</p>
+      <p style="opacity: 0.5;">Try adjusting your search or filters</p>
+    </div>
+
+    <div id="loadingState" style="text-align: center; padding: var(--spacing-xl);">
+      <div class="loading" style="margin: 0 auto;"></div>
+      <p style="margin-top: var(--spacing-md); opacity: 0.7;">Loading tags...</p>
+    </div>
+  </div>
+
+  <!-- Tag Detail Modal -->
+  <div id="tagModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeTagModal()">×</button>
+      <div id="tagDetail">
+        <!-- Tag details will be populated here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/nexus-core.js"></script>
+  <script src="/js/tags.js"></script>
+  <!-- Age Verification & Cookie Consent -->
+  <script src="/js/age-gate.js"></script>
+  <script src="/js/cookie-consent.js"></script>
+</body>
+</html>

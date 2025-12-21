@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-24HL4B73C3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-24HL4B73C3');
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages - NEXUS</title>
+
+  <link rel="stylesheet" href="/css/nexus-base.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <style>
+    body {
+      padding-top: 60px;
+    }
+
+    .messages-container {
+      display: flex;
+      height: calc(100vh - 60px);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .conversations-list {
+      width: 350px;
+      border-right: 1px solid rgba(0, 212, 255, 0.2);
+      overflow-y: auto;
+      background: var(--bg-dark);
+    }
+
+    .conversations-header {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      background: var(--gunmetal);
+    }
+
+    .conversations-header h2 {
+      color: var(--accent-color);
+      font-size: 1.2rem;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .search-conversations {
+      width: 100%;
+      padding: var(--spacing-sm);
+      background: rgba(42, 45, 52, 0.5);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-sm);
+      color: var(--text-light);
+      font-family: var(--font-body);
+    }
+
+    .conversation-item {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+
+    .conversation-item:hover {
+      background: rgba(0, 212, 255, 0.05);
+    }
+
+    .conversation-item.active {
+      background: rgba(0, 212, 255, 0.1);
+      border-left: 3px solid var(--accent-color);
+    }
+
+    .conversation-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-color), var(--deep-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--gunmetal);
+      flex-shrink: 0;
+    }
+
+    .conversation-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .conversation-name {
+      font-weight: 600;
+      color: var(--accent-color);
+      margin-bottom: var(--spacing-xs);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .conversation-preview {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .conversation-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--spacing-xs);
+      flex-shrink: 0;
+    }
+
+    .conversation-time {
+      font-size: 0.75rem;
+      opacity: 0.6;
+    }
+
+    .unread-badge {
+      background: var(--highlight-color);
+      color: var(--gunmetal);
+      border-radius: var(--radius-full);
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--near-black);
+    }
+
+    .chat-header {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      background: var(--gunmetal);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-header-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .message {
+      display: flex;
+      gap: var(--spacing-sm);
+      max-width: 70%;
+    }
+
+    .message.sent {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-color), var(--deep-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--gunmetal);
+      flex-shrink: 0;
+    }
+
+    .message-content {
+      flex: 1;
+    }
+
+    .message-bubble {
+      background: var(--primary-bg);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm) var(--spacing-md);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .message.sent .message-bubble {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: var(--accent-color);
+    }
+
+    .message-time {
+      font-size: 0.75rem;
+      opacity: 0.6;
+      padding: 0 var(--spacing-sm);
+    }
+
+    .chat-input-area {
+      padding: var(--spacing-md);
+      border-top: 1px solid rgba(0, 212, 255, 0.2);
+      background: var(--gunmetal);
+    }
+
+    .chat-input-form {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: rgba(42, 45, 52, 0.5);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      color: var(--text-light);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      resize: none;
+      max-height: 120px;
+    }
+
+    .empty-state {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--spacing-xl);
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      padding: var(--spacing-sm) 0;
+    }
+
+    .navbar-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-md);
+    }
+
+    .navbar-logo {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      text-shadow: var(--glow-aqua);
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: center;
+    }
+
+    .navbar-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+
+    .navbar-links a:hover {
+      color: var(--highlight-color);
+    }
+
+    @media (max-width: 768px) {
+      .messages-container {
+        flex-direction: column;
+      }
+
+      .conversations-list {
+        width: 100%;
+        height: 40vh;
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      }
+
+      .message {
+        max-width: 85%;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+
+  <div class="messages-container">
+    <!-- Conversations List -->
+    <div class="conversations-list">
+      <div class="conversations-header">
+        <h2>Messages</h2>
+        <input
+          type="text"
+          class="search-conversations"
+          placeholder="Search conversations..."
+          oninput="filterConversations(this.value)"
+        >
+      </div>
+
+      <div id="conversationsList">
+        <!-- Conversations will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div>
+          <p style="font-size: 1.2rem; margin-bottom: var(--spacing-md); opacity: 0.7;">
+            Select a conversation to start messaging
+          </p>
+          <a href="/explore.html" class="btn btn-primary">Find Connections</a>
+        </div>
+      </div>
+
+      <!-- Active Chat -->
+      <div id="activeChat" style="display: none; flex: 1; display: flex; flex-direction: column;">
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <div class="conversation-avatar" id="chatAvatar">?</div>
+            <div>
+              <div style="font-weight: 600; color: var(--accent-color);" id="chatName">Loading...</div>
+              <div style="font-size: 0.85rem; opacity: 0.7;" id="chatStatus">Online</div>
+            </div>
+          </div>
+          <button class="btn btn-small btn-outline" onclick="viewUserProfile()">
+            View Profile
+          </button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <!-- Messages will be populated by JavaScript -->
+        </div>
+
+        <div class="chat-input-area">
+          <form class="chat-input-form" onsubmit="sendMessageFromForm(event)">
+            <textarea
+              id="messageInput"
+              class="chat-input"
+              placeholder="Type your message..."
+              rows="1"
+              onkeydown="handleKeyDown(event)"
+            ></textarea>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/nexus-core.js"></script>
+  <script>
+    let currentUserId = null;
+    let conversations = [];
+    let activeConversation = null;
+    let messages = [];
+    let messagePolling = null;
+
+    async function initMessages() {
+      // Require authentication
+      const auth = window.auth;
+      const isAuth = await auth.requireAuth();
+
+      if (!isAuth) {
+        return; // requireAuth will handle redirect
+      }
+
+      currentUserId = getUserId();
+
+      // Check if there's a user parameter in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetUserId = urlParams.get('user');
+
+      // Prevent messaging yourself
+      if (targetUserId && targetUserId === currentUserId) {
+        showToast('You cannot message yourself', 'error');
+        window.history.replaceState({}, '', '/messages.html');
+        await loadConversations();
+        return;
+      }
+
+      await loadConversations();
+
+      if (targetUserId) {
+        // Check if user can message this person before starting conversation
+        const messagePermission = await NexusCore.canMessage(targetUserId);
+        if (!messagePermission.canMessage) {
+          showToast(messagePermission.reason, 'error');
+          window.history.replaceState({}, '', '/messages.html');
+          await loadConversations();
+          return;
+        }
+        // Start conversation with specific user
+        await openConversation(targetUserId);
+      }
+
+      // Poll for new messages every 10 seconds
+      messagePolling = setInterval(() => {
+        if (activeConversation) {
+          loadMessages(activeConversation.userId, true);
+        }
+      }, 10000);
+    }
+
+    async function loadConversations() {
+      try {
+        // Get all messages involving current user (no JOIN - Supabase proxy doesn't support it)
+        const messagesResult = await supabaseQuery(`
+          SELECT sender_id, recipient_id, content, sent_at, read_at, deleted_by
+          FROM messages
+          WHERE (sender_id = $1 OR recipient_id = $1)
+            AND NOT ($1 = ANY(deleted_by))
+          ORDER BY sent_at DESC
+        `, [currentUserId]);
+
+        const messages = messagesResult.data || [];
+
+        // Get unique conversation partners
+        const conversationPartners = new Map();
+        messages.forEach(msg => {
+          const otherUserId = msg.sender_id === currentUserId ? msg.recipient_id : msg.sender_id;
+
+          if (!conversationPartners.has(otherUserId)) {
+            conversationPartners.set(otherUserId, {
+              userId: otherUserId,
+              lastMessage: msg.content,
+              lastMessageTime: msg.sent_at,
+              unreadCount: 0
+            });
+          }
+        });
+
+        // Count unread messages from each partner
+        messages.forEach(msg => {
+          if (msg.recipient_id === currentUserId && !msg.read_at) {
+            const partner = conversationPartners.get(msg.sender_id);
+            if (partner) {
+              partner.unreadCount++;
+            }
+          }
+        });
+
+        // Get user info for all conversation partners
+        const userIds = Array.from(conversationPartners.keys());
+        if (userIds.length === 0) {
+          conversations = [];
+          displayConversations();
+          return;
+        }
+
+        const usersResult = await supabaseQuery(`
+          SELECT id, display_name, username
+          FROM users
+          WHERE id = ANY($1)
+        `, [userIds]);
+
+        const usersMap = {};
+        (usersResult.data || []).forEach(u => {
+          usersMap[u.id] = u;
+        });
+
+        // Merge user info with conversation data
+        conversations = Array.from(conversationPartners.values()).map(conv => ({
+          userId: conv.userId,
+          displayName: usersMap[conv.userId]?.display_name || 'Anonymous User',
+          username: usersMap[conv.userId]?.username || `user_${conv.userId.substring(0, 8)}`,
+          lastMessage: conv.lastMessage || '',
+          lastMessageTime: conv.lastMessageTime,
+          unreadCount: conv.unreadCount
+        })).sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
+
+        displayConversations();
+
+      } catch (error) {
+        console.error('Failed to load conversations:', error);
+        showToast('Failed to load conversations', 'error');
+      }
+    }
+
+    function displayConversations() {
+      const container = document.getElementById('conversationsList');
+
+      if (conversations.length === 0) {
+        container.innerHTML = `
+          <div style="padding: var(--spacing-xl); text-align: center; opacity: 0.7;">
+            <p>No conversations yet.</p>
+            <p style="margin-top: var(--spacing-sm); font-size: 0.9rem;">
+              Start connecting with others!
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = conversations.map(conv => {
+        const initials = conv.displayName.substring(0, 2).toUpperCase();
+        const isActive = activeConversation?.userId === conv.userId;
+
+        return `
+          <div class="conversation-item ${isActive ? 'active' : ''}" onclick="openConversation('${conv.userId}')">
+            <div class="conversation-avatar">${initials}</div>
+            <div class="conversation-info">
+              <div class="conversation-name">${escapeHtml(conv.displayName)}</div>
+              <div class="conversation-preview">${escapeHtml(conv.lastMessage.substring(0, 50))}</div>
+            </div>
+            <div class="conversation-meta">
+              <div class="conversation-time">${formatDate(conv.lastMessageTime)}</div>
+              ${conv.unreadCount > 0 ? `<span class="unread-badge">${conv.unreadCount}</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterConversations(searchTerm) {
+      const items = document.querySelectorAll('.conversation-item');
+      const term = searchTerm.toLowerCase();
+
+      items.forEach(item => {
+        const name = item.querySelector('.conversation-name').textContent.toLowerCase();
+        item.style.display = name.includes(term) ? 'flex' : 'none';
+      });
+    }
+
+    async function openConversation(userId) {
+      activeConversation = conversations.find(c => c.userId === userId);
+
+      if (!activeConversation) {
+        // Create new conversation
+        const userResult = await supabaseQuery(`
+          SELECT id, display_name, username
+          FROM users
+          WHERE id = $1
+        `, [userId]);
+
+        if (!userResult.data || userResult.data.length === 0) {
+          showToast('User not found', 'error');
+          return;
+        }
+
+        const user = userResult.data[0];
+        activeConversation = {
+          userId: user.id,
+          displayName: user.display_name || 'Anonymous User',
+          username: user.username || `user_${user.id.substring(0, 8)}`,
+          lastMessage: '',
+          lastMessageTime: new Date(),
+          unreadCount: 0
+        };
+
+        conversations.unshift(activeConversation);
+        displayConversations();
+      }
+
+      // Update UI
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('activeChat').style.display = 'flex';
+
+      const initials = activeConversation.displayName.substring(0, 2).toUpperCase();
+      document.getElementById('chatAvatar').textContent = initials;
+      document.getElementById('chatName').textContent = activeConversation.displayName;
+
+      // Load messages
+      await loadMessages(userId);
+
+      // Mark messages as read
+      markConversationAsRead(userId);
+    }
+
+    async function loadMessages(otherUserId, silent = false) {
+      try {
+        const newMessages = await getConversation(otherUserId);
+
+        // Only update if there are new messages or initial load
+        if (!silent || newMessages.length !== messages.length) {
+          messages = newMessages;
+          displayMessages();
+        }
+
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+        if (!silent) {
+          showToast('Failed to load messages', 'error');
+        }
+      }
+    }
+
+    function displayMessages() {
+      const container = document.getElementById('chatMessages');
+
+      if (messages.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; opacity: 0.7; margin: auto;">
+            <p>No messages yet. Start the conversation!</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Get current user info for display
+      const currentUserInfo = window.auth && window.auth.user ?
+        (window.auth.user.display_name || 'You') : 'You';
+
+      container.innerHTML = messages.map(msg => {
+        const isSent = msg.sender_id === currentUserId;
+        // Fixed: Show correct person's name for each message
+        const displayName = isSent ? currentUserInfo : activeConversation.displayName;
+        const initials = displayName.substring(0, 2).toUpperCase();
+
+        return `
+          <div class="message ${isSent ? 'sent' : 'received'}">
+            <div class="message-avatar">${initials}</div>
+            <div class="message-content">
+              <div class="message-bubble">
+                ${escapeHtml(msg.content)}
+              </div>
+              <div class="message-time">${formatDate(msg.sent_at)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Scroll to bottom
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function sendMessageFromForm(event) {
+      event.preventDefault();
+
+      const input = document.getElementById('messageInput');
+      const content = input.value.trim();
+
+      if (!content || !activeConversation) return;
+
+      // Check messaging permission before sending
+      const messagePermission = await NexusCore.canMessage(activeConversation.userId);
+      if (!messagePermission.canMessage) {
+        showToast(messagePermission.reason, 'error');
+        return;
+      }
+
+      try {
+        await sendMessage(activeConversation.userId, content);
+
+        // Clear input
+        input.value = '';
+        input.style.height = 'auto';
+
+        // Reload messages
+        await loadMessages(activeConversation.userId);
+
+        // Update conversation list
+        activeConversation.lastMessage = content;
+        activeConversation.lastMessageTime = new Date();
+        displayConversations();
+
+        showToast('Message sent', 'success');
+
+      } catch (error) {
+        console.error('Failed to send message:', error);
+        showToast('Failed to send message', 'error');
+      }
+    }
+
+    async function markConversationAsRead(otherUserId) {
+      try {
+        // Mark all messages from this user as read
+        await supabaseQuery(`
+          UPDATE messages
+          SET read_at = NOW()
+          WHERE recipient_id = $1
+            AND sender_id = $2
+            AND read_at IS NULL
+        `, [currentUserId, otherUserId]);
+
+        // Update conversation unread count
+        const conv = conversations.find(c => c.userId === otherUserId);
+        if (conv) {
+          conv.unreadCount = 0;
+          displayConversations();
+        }
+
+      } catch (error) {
+        console.error('Failed to mark messages as read:', error);
+      }
+    }
+
+    function handleKeyDown(event) {
+      const input = event.target;
+
+      // Auto-resize textarea
+      input.style.height = 'auto';
+      input.style.height = input.scrollHeight + 'px';
+
+      // Send on Enter (without Shift)
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        input.form.dispatchEvent(new Event('submit'));
+      }
+    }
+
+    function viewUserProfile() {
+      if (activeConversation) {
+        window.location.href = `/profile-view.html?user=${activeConversation.userId}`;
+      }
+    }
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (messagePolling) {
+        clearInterval(messagePolling);
+      }
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initMessages);
+  </script>
+  <!-- Age Verification & Cookie Consent -->
+  <script src="/js/age-gate.js"></script>
+  <script src="/js/cookie-consent.js"></script>
+</body>
+</html>

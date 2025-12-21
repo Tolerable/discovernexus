@@ -1,0 +1,71 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# API endpoints
+[[redirects]]
+  from = "/api/proxy"
+  to = "/.netlify/functions/supabase-proxy"
+  status = 200
+
+[[redirects]]
+  from = "/api/nexus"
+  to = "/.netlify/functions/nexus-ai"
+  status = 200
+
+[[redirects]]
+  from = "/api/ping"
+  to = "/.netlify/functions/ai-ping"
+  status = 200
+
+[[redirects]]
+  from = "/api/directory"
+  to = "/.netlify/functions/ai-directory"
+  status = 200
+
+[[redirects]]
+  from = "/api/register"
+  to = "/.netlify/functions/ai-register"
+  status = 200
+
+[[redirects]]
+  from = "/api/blog"
+  to = "/.netlify/functions/blog-post"
+  status = 200
+
+[[redirects]]
+  from = "/api/image"
+  to = "/.netlify/functions/ai-image"
+  status = 200
+
+[[redirects]]
+  from = "/api/image/*"
+  to = "/.netlify/functions/ai-image/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/nostr"
+  to = "/.netlify/functions/nostr-post"
+  status = 200
+
+[[redirects]]
+  from = "/api/feed"
+  to = "/.netlify/functions/ai-feed"
+  status = 200
+
+[[redirects]]
+  from = "/api/feed/*"
+  to = "/.netlify/functions/ai-feed/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/feed/:author"
+  to = "/.netlify/functions/ai-feed?author=:author"
+  status = 200

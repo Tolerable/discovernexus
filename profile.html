@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-24HL4B73C3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-24HL4B73C3');
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - NEXUS</title>
+
+  <link rel="stylesheet" href="/css/nexus-base.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <style>
+    body {
+      padding-top: 60px;
+    }
+
+    .profile-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      padding: var(--spacing-lg);
+      background: var(--primary-bg);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      position: relative;
+    }
+
+    .profile-avatar-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-color), var(--deep-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: var(--gunmetal);
+      font-weight: 700;
+      box-shadow: var(--glow-aqua);
+    }
+
+    .gallery-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(13, 17, 23, 0.8);
+      border: 1px solid var(--accent-color);
+      color: var(--accent-color);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .gallery-nav:hover {
+      background: rgba(0, 212, 255, 0.2);
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    .gallery-nav-prev {
+      left: -12px;
+    }
+
+    .gallery-nav-next {
+      right: -12px;
+    }
+
+    .gallery-indicator {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      color: var(--accent-color);
+      opacity: 0.7;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 2rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--accent-color);
+    }
+
+    .profile-username {
+      opacity: 0.7;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .profile-stats {
+      display: flex;
+      gap: var(--spacing-lg);
+      font-size: 0.9rem;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--highlight-color);
+    }
+
+    .stat-label {
+      opacity: 0.7;
+    }
+
+    .section {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--accent-color);
+    }
+
+    .tag-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+
+    .connection-pattern-text {
+      background: var(--primary-bg);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      line-height: 1.8;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xl);
+      opacity: 0.7;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      padding: var(--spacing-sm) 0;
+    }
+
+    .navbar-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-md);
+    }
+
+    .navbar-logo {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      text-shadow: var(--glow-aqua);
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: center;
+    }
+
+    .navbar-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+
+    .navbar-links a:hover {
+      color: var(--highlight-color);
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      color: var(--accent-color);
+      font-weight: 500;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: var(--spacing-sm);
+      background: rgba(42, 45, 52, 0.5);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-sm);
+      color: var(--text-light);
+      font-family: var(--font-body);
+      font-size: 1rem;
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .visibility-toggle {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-sm);
+    }
+
+    .visibility-toggle label {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      cursor: pointer;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+    }
+
+    .visibility-toggle input[type="radio"]:checked + label {
+      background: rgba(0, 212, 255, 0.2);
+      border-color: var(--accent-color);
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-stats {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+
+  <div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-avatar-container" id="profileAvatarContainer">
+        <div class="profile-avatar" id="profileAvatar">?</div>
+      </div>
+      <div class="profile-info">
+        <h1 class="profile-name" id="profileName">Loading...</h1>
+        <p class="profile-username" id="profileUsername">@username</p>
+        <div class="profile-stats">
+          <div class="stat">
+            <span class="stat-value" id="statTags">0</span>
+            <span class="stat-label">Tags</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="statMatches">0</span>
+            <span class="stat-label">Matches</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="statMessages">0</span>
+            <span class="stat-label">Messages</span>
+          </div>
+        </div>
+      </div>
+      <div style="position: absolute; top: var(--spacing-md); right: var(--spacing-md);">
+        <a href="#" onclick="viewPublicProfile(); return false;" class="btn btn-outline btn-small">
+          👁️ View Public Profile
+        </a>
+      </div>
+    </div>
+
+    <!-- Edit Profile -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Profile Settings</h2>
+        <button class="btn btn-primary btn-small" onclick="saveProfile()">Save Changes</button>
+      </div>
+
+      <div class="panel">
+        <div class="form-group">
+          <label for="displayName">Display Name</label>
+          <input type="text" id="displayName" class="form-input" placeholder="How you want to appear">
+          <small style="opacity: 0.7; font-size: 0.85rem;">Your public name (e.g., "Alex", "Jamie S.")</small>
+        </div>
+
+        <div class="form-group">
+          <label for="username">Username Handle</label>
+          <input type="text" id="username" class="form-input" placeholder="your_handle" pattern="[a-zA-Z0-9_]+" maxlength="30">
+          <small style="opacity: 0.7; font-size: 0.85rem;">Your unique @handle (letters, numbers, underscores only). You login with your email, not this.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" class="form-textarea" placeholder="Tell others about yourself..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Date of Birth <span style="color: var(--highlight-color);">*</span></label>
+          <div style="display: flex; gap: var(--spacing-sm);">
+            <select id="birthMonth" class="form-input" required style="flex: 2;">
+              <option value="">Month</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+            <select id="birthDay" class="form-input" required style="flex: 1;">
+              <option value="">Day</option>
+            </select>
+            <select id="birthYear" class="form-input" required style="flex: 1;">
+              <option value="">Year</option>
+            </select>
+          </div>
+          <div id="ageDisplay" style="margin-top: var(--spacing-xs); opacity: 0.9; display: none;">
+            <span style="color: var(--accent-color);">Age: <span id="calculatedAge">--</span></span>
+          </div>
+          <small style="opacity: 0.7; font-size: 0.85rem; display: block; margin-top: var(--spacing-xs);">Required. You must be at least 21 years old to use NEXUS.</small>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="showAge" style="margin-right: var(--spacing-xs);">
+            Show my age on my profile
+          </label>
+          <small style="opacity: 0.7; font-size: 0.85rem; display: block; margin-top: var(--spacing-xs);">If unchecked, your age will be hidden from other users.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="profilePhoto">Profile Photo URL</label>
+          <input type="url" id="profilePhoto" class="form-input" placeholder="https://example.com/your-photo.jpg">
+          <small style="opacity: 0.7; font-size: 0.85rem;">Link to your profile photo (hosted on Imgur, your own site, etc.)</small>
+        </div>
+
+        <div class="form-group">
+          <label>Additional Photos</label>
+          <div id="additionalPhotos">
+            <!-- Photo URL inputs will be added here -->
+          </div>
+          <button type="button" class="btn btn-outline btn-small" onclick="addPhotoSlot()" style="margin-top: var(--spacing-sm);">
+            + Add Photo URL
+          </button>
+          <small style="opacity: 0.7; font-size: 0.85rem; display: block; margin-top: var(--spacing-xs);">
+            Add up to 10 additional photos. Use image hosting services like Imgur.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label>Profile Visibility</label>
+          <div class="visibility-toggle">
+            <input type="radio" name="visibility" value="public" id="visPublic">
+            <label for="visPublic">🌍 Public</label>
+
+            <input type="radio" name="visibility" value="connections" id="visConnections">
+            <label for="visConnections">🤝 Connections Only</label>
+
+            <input type="radio" name="visibility" value="private" id="visPrivate">
+            <label for="visPrivate">🔒 Private</label>
+          </div>
+        </div>
+
+        <!-- Privacy & Messaging Settings -->
+        <div style="margin-top: var(--spacing-xl); padding-top: var(--spacing-md); border-top: 1px solid rgba(0, 212, 255, 0.2);">
+          <h3 style="color: var(--accent-color); margin-bottom: var(--spacing-md);">Privacy & Messaging</h3>
+
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" class="form-input">
+              <option value="">Prefer not to say</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="non-binary">Non-binary</option>
+              <option value="other">Other</option>
+            </select>
+            <small style="opacity: 0.7;">Used for matching preferences and safety features</small>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="showGender" checked>
+              <span>Show my gender on public profile</span>
+            </label>
+            <small style="opacity: 0.7;">When unchecked, your gender won't be visible to other users</small>
+          </div>
+
+          <div class="form-group">
+            <label for="messagingPref">Who Can Message You</label>
+            <select id="messagingPref" class="form-input">
+              <option value="connections_only">Connections Only (Recommended)</option>
+              <option value="allow_requests">Allow Message Requests</option>
+              <option value="open">Open (Anyone can message)</option>
+            </select>
+            <small style="opacity: 0.7;">
+              <strong>Connections Only:</strong> Only accepted connections can message you<br>
+              <strong>Allow Requests:</strong> Others can send a message request you approve/decline<br>
+              <strong>Open:</strong> Anyone can message you directly
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="showInExplore" checked>
+              <span>Show my profile in Explore</span>
+            </label>
+            <small style="opacity: 0.7;">When unchecked, your profile won't appear when others browse</small>
+          </div>
+        </div>
+
+        <!-- Save button at bottom of form -->
+        <div style="margin-top: var(--spacing-xl); text-align: center; padding-top: var(--spacing-md); border-top: 1px solid rgba(0, 212, 255, 0.2);">
+          <button class="btn btn-primary btn-large" onclick="saveProfile()">💾 Save All Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection Pattern Tags -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">My Connection Pattern Tags</h2>
+        <a href="/discover.html" class="btn btn-secondary btn-small">Retake Discovery</a>
+      </div>
+
+      <div class="panel" id="connectionPatternsPanel">
+        <div class="loading-state">
+          <div class="loading"></div>
+          <p>Loading your patterns...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Tags -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">My Tags</h2>
+        <a href="/tags.html" class="btn btn-secondary btn-small">Browse Tags</a>
+      </div>
+
+      <div class="panel">
+        <div class="tag-grid" id="myTags">
+          <!-- Tags will be populated by JavaScript -->
+        </div>
+        <div class="empty-state" id="emptyTags" style="display:none">
+          <p>You haven't added any tags yet.</p>
+          <a href="/tags.html" class="btn btn-primary">Explore Tags</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Connections -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Active Connections</h2>
+        <a href="/explore.html" class="btn btn-secondary btn-small">Find More</a>
+      </div>
+
+      <div class="panel" id="connectionsPanel">
+        <div class="empty-state">
+          <p>No active connections yet.</p>
+          <p style="margin-top: var(--spacing-sm); opacity: 0.7;">
+            Complete your discovery to start matching with compatible people.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/nexus-core.js"></script>
+  <script>
+    let currentUser = null;
+    let currentPhotoIndex = 0;
+    let allPhotos = [];
+    let currentDisplayName = '';
+
+    // Initialize date of birth dropdowns
+    function initializeDOBSelectors() {
+      const birthDay = document.getElementById('birthDay');
+      const birthYear = document.getElementById('birthYear');
+      const birthMonth = document.getElementById('birthMonth');
+
+      // Populate days (1-31)
+      for (let i = 1; i <= 31; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        birthDay.appendChild(option);
+      }
+
+      // Populate years (current year - 100 to current year - 18)
+      const currentYear = new Date().getFullYear();
+      for (let i = currentYear - 18; i >= currentYear - 100; i--) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        birthYear.appendChild(option);
+      }
+
+      // Add change listeners to calculate age
+      [birthMonth, birthDay, birthYear].forEach(select => {
+        select.addEventListener('change', calculateAge);
+      });
+    }
+
+    // Calculate age from birth date
+    function calculateAge() {
+      const month = parseInt(document.getElementById('birthMonth').value);
+      const day = parseInt(document.getElementById('birthDay').value);
+      const year = parseInt(document.getElementById('birthYear').value);
+
+      if (month && day && year) {
+        const today = new Date();
+        const birthDate = new Date(year, month - 1, day);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+
+        document.getElementById('calculatedAge').textContent = age;
+        document.getElementById('ageDisplay').style.display = 'block';
+
+        return age;
+      }
+
+      return null;
+    }
+
+    // Photo gallery functions
+    function initPhotoGallery(profilePhotoUrl, additionalPhotos, displayName) {
+      currentDisplayName = displayName;
+      allPhotos = [];
+
+      // Add profile photo first
+      if (profilePhotoUrl && profilePhotoUrl.trim()) {
+        allPhotos.push(profilePhotoUrl.trim());
+      }
+
+      // Add additional photos
+      if (additionalPhotos) {
+        try {
+          const photos = typeof additionalPhotos === 'string' ? JSON.parse(additionalPhotos) : additionalPhotos;
+          if (Array.isArray(photos)) {
+            photos.forEach(url => {
+              if (url && url.trim()) {
+                allPhotos.push(url.trim());
+              }
+            });
+          }
+        } catch (e) {
+          console.error('Error parsing additional photos:', e);
+        }
+      }
+
+      currentPhotoIndex = 0;
+      updatePhotoDisplay();
+    }
+
+    function updatePhotoDisplay() {
+      const container = document.getElementById('profileAvatarContainer');
+      const avatarElement = document.getElementById('profileAvatar');
+
+      if (allPhotos.length === 0) {
+        // No photos, show initials
+        const initials = currentDisplayName.substring(0, 2).toUpperCase();
+        avatarElement.textContent = initials;
+        avatarElement.innerHTML = initials;
+        // Remove any existing navigation
+        container.querySelectorAll('.gallery-nav, .gallery-indicator').forEach(el => el.remove());
+        return;
+      }
+
+      // Display current photo
+      const currentPhoto = allPhotos[currentPhotoIndex];
+      avatarElement.innerHTML = `<img src="${escapeHtml(currentPhoto)}" alt="${escapeHtml(currentDisplayName)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+
+      // Remove existing navigation
+      container.querySelectorAll('.gallery-nav, .gallery-indicator').forEach(el => el.remove());
+
+      // Only show navigation if there are multiple photos
+      if (allPhotos.length > 1) {
+        // Add previous button
+        const prevBtn = document.createElement('div');
+        prevBtn.className = 'gallery-nav gallery-nav-prev';
+        prevBtn.innerHTML = '&lt;';
+        prevBtn.onclick = prevPhoto;
+        container.appendChild(prevBtn);
+
+        // Add next button
+        const nextBtn = document.createElement('div');
+        nextBtn.className = 'gallery-nav gallery-nav-next';
+        nextBtn.innerHTML = '&gt;';
+        nextBtn.onclick = nextPhoto;
+        container.appendChild(nextBtn);
+
+        // Add indicator
+        const indicator = document.createElement('div');
+        indicator.className = 'gallery-indicator';
+        indicator.textContent = `${currentPhotoIndex + 1} / ${allPhotos.length}`;
+        container.appendChild(indicator);
+      }
+    }
+
+    function nextPhoto() {
+      if (allPhotos.length > 0) {
+        currentPhotoIndex = (currentPhotoIndex + 1) % allPhotos.length;
+        updatePhotoDisplay();
+      }
+    }
+
+    function prevPhoto() {
+      if (allPhotos.length > 0) {
+        currentPhotoIndex = (currentPhotoIndex - 1 + allPhotos.length) % allPhotos.length;
+        updatePhotoDisplay();
+      }
+    }
+
+    async function initProfile() {
+      // Require authentication
+      const auth = window.auth;
+      const isAuth = await auth.requireAuth();
+
+      if (!isAuth) {
+        return; // requireAuth will handle redirect
+      }
+
+      currentUser = auth.getUser();
+
+      // Initialize DOB selectors
+      initializeDOBSelectors();
+
+      // Load profile data
+      await loadProfileData();
+    }
+
+    async function loadProfileData() {
+      try {
+        const userId = getUserId();
+        const profile = await getUserProfile(userId);
+        const tags = await getUserTags(userId);
+        const matches = await getUserMatches('accepted');
+
+        // Update profile header
+        const displayName = profile.display_name || profile.email || 'User';
+        const username = profile.username || `user_${userId.substring(0, 8)}`;
+        const initials = displayName.substring(0, 2).toUpperCase();
+
+        document.getElementById('profileName').textContent = displayName;
+        document.getElementById('profileUsername').textContent = `@${username}`;
+
+        // Initialize photo gallery with profile photo and additional photos
+        initPhotoGallery(profile.profile_photo_url, profile.additional_photos, displayName);
+
+        // Update stats
+        document.getElementById('statTags').textContent = tags.length;
+        document.getElementById('statMatches').textContent = matches.length;
+
+        // Update form fields
+        document.getElementById('displayName').value = profile.display_name || '';
+        document.getElementById('username').value = profile.username || '';
+        document.getElementById('bio').value = profile.bio || '';
+        document.getElementById('profilePhoto').value = profile.profile_photo_url || '';
+
+        // Load birth date if available
+        if (profile.birth_date) {
+          // Parse date string manually to avoid timezone issues
+          // birth_date format: "YYYY-MM-DD"
+          const dateParts = profile.birth_date.split('-');
+          const year = parseInt(dateParts[0]);
+          const month = parseInt(dateParts[1]); // Already 1-12
+          const day = parseInt(dateParts[2]);
+
+          // Set values as strings to match option values
+          document.getElementById('birthMonth').value = String(month);
+          document.getElementById('birthDay').value = String(day);
+          document.getElementById('birthYear').value = String(year);
+
+          calculateAge(); // Calculate and display age
+        } else if (profile.age) {
+          // Fallback: if only age exists (old format), estimate birth year
+          const currentYear = new Date().getFullYear();
+          document.getElementById('birthYear').value = String(currentYear - profile.age);
+        }
+
+        // Load age visibility preference
+        document.getElementById('showAge').checked = profile.show_age !== false; // Default to true
+
+        // Load additional photos
+        loadAdditionalPhotos(profile.additional_photos || []);
+
+        const visibility = profile.profile_visibility || 'public';
+        document.getElementById(`vis${visibility.charAt(0).toUpperCase() + visibility.slice(1)}`).checked = true;
+
+        // Load privacy settings
+        document.getElementById('gender').value = profile.gender || '';
+        document.getElementById('showGender').checked = profile.show_gender !== false;
+        document.getElementById('messagingPref').value = profile.messaging_preference || 'connections_only';
+        document.getElementById('showInExplore').checked = profile.show_in_explore !== false;
+
+        // Load connection patterns
+        await loadConnectionPatterns(profile);
+
+        // Load tags
+        await loadTags(tags);
+
+        // Load unread message count
+        const unreadCount = await getUnreadCount();
+        document.getElementById('statMessages').textContent = unreadCount;
+
+      } catch (error) {
+        console.error('Failed to load profile:', error);
+        showToast('Failed to load profile data', 'error');
+      }
+    }
+
+    async function loadConnectionPatterns(profile) {
+      const panel = document.getElementById('connectionPatternsPanel');
+
+      // Check if user has completed discovery (by checking if they have tags)
+      const userId = getUserId();
+      console.log('[PROFILE] Loading tags for user ID:', userId);
+
+      const userTags = await NexusCore.getUserTags(userId);
+      console.log('[PROFILE] getUserTags returned:', userTags);
+      console.log('[PROFILE] Tag count:', userTags?.length || 0);
+
+      if (!userTags || userTags.length === 0) {
+        console.error('[PROFILE] No tags found - showing discovery prompt');
+        panel.innerHTML = `
+          <div class="empty-state">
+            <p>You haven't completed the discovery flow yet.</p>
+            <a href="/discover.html" class="btn btn-primary">Begin Discovery</a>
+          </div>
+        `;
+        return;
+      }
+
+      console.log('[PROFILE] Found', userTags.length, 'tags, organizing by category');
+
+      // Group tags by category
+      const tagsByCategory = {};
+      userTags.forEach(tag => {
+        const category = tag.category || 'Other';
+        if (!tagsByCategory[category]) {
+          tagsByCategory[category] = [];
+        }
+        tagsByCategory[category].push(tag);
+      });
+
+      // Build HTML organized by category
+      let html = `
+        <div style="margin-bottom: var(--spacing-md);">
+          <p style="opacity: 0.8;">Your profile is represented by these connection pattern tags. These tags help others understand your unique connection style.</p>
+        </div>
+      `;
+
+      Object.keys(tagsByCategory).sort().forEach(category => {
+        const tags = tagsByCategory[category];
+        const categoryLabel = formatCategoryLabel(category);
+
+        html += `
+          <div style="margin-bottom: var(--spacing-lg);">
+            <h4 style="color: var(--accent-color); margin-bottom: var(--spacing-sm);">${categoryLabel}</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-xs);">
+              ${tags.map(tag => `
+                <span class="tag" title="${escapeHtml(tag.definition || '')}">
+                  ${escapeHtml(tag.tag_name)}
+                  <span class="tag-version">v${tag.version}</span>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      panel.innerHTML = html;
+    }
+
+    function formatCategoryLabel(category) {
+      return category
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+
+    function formatQuestionKey(key) {
+      const questions = {
+        'question1': 'What draws you to someone initially?',
+        'question2': 'How do you prefer to communicate?',
+        'question3': 'What kind of relationship structures interest you?',
+        'question4': 'What makes you feel truly connected?',
+        'question5': 'What are you NOT looking for?',
+        // Also support old format just in case
+        'q1': 'What draws you to someone initially?',
+        'q2': 'How do you prefer to communicate?',
+        'q3': 'What kind of relationship structures interest you?',
+        'q4': 'What makes you feel truly connected?',
+        'q5': 'What are you NOT looking for?'
+      };
+      return questions[key] || key;
+    }
+
+    async function loadTags(tags) {
+      const container = document.getElementById('myTags');
+      const emptyState = document.getElementById('emptyTags');
+
+      if (tags.length === 0) {
+        container.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      container.style.display = 'flex';
+      emptyState.style.display = 'none';
+
+      container.innerHTML = tags.map(tag => `
+        <span class="tag" onclick="removeTag('${tag.id}')" title="${escapeHtml(tag.definition || tag.tag_name)}">
+          ${escapeHtml(tag.tag_name)}
+          <span class="tag-version">v${tag.version}</span>
+          <span style="margin-left: var(--spacing-xs); cursor: pointer;">×</span>
+        </span>
+      `).join('');
+    }
+
+    async function removeTag(tagId) {
+      if (!confirm('Remove this tag from your profile?')) return;
+
+      try {
+        await removeUserTag(tagId);
+        showToast('Tag removed', 'success');
+        await loadProfileData();
+      } catch (error) {
+        console.error('Failed to remove tag:', error);
+        showToast('Failed to remove tag', 'error');
+      }
+    }
+
+    async function saveProfile() {
+      try {
+        const displayName = document.getElementById('displayName').value;
+        const username = document.getElementById('username').value;
+        const bio = document.getElementById('bio').value;
+        const profilePhoto = document.getElementById('profilePhoto').value;
+        const visibility = document.querySelector('input[name="visibility"]:checked')?.value || 'public';
+        const showAge = document.getElementById('showAge').checked;
+
+        // Get privacy settings
+        const gender = document.getElementById('gender').value || null;
+        const showGender = document.getElementById('showGender').checked;
+        const messagingPref = document.getElementById('messagingPref').value || 'connections_only';
+        const showInExplore = document.getElementById('showInExplore').checked;
+
+        // Get birth date from dropdowns
+        const month = parseInt(document.getElementById('birthMonth').value);
+        const day = parseInt(document.getElementById('birthDay').value);
+        const year = parseInt(document.getElementById('birthYear').value);
+
+        // Validate birth date is filled out
+        if (!month || !day || !year) {
+          showToast('Please enter your complete date of birth', 'error');
+          return;
+        }
+
+        // Create birth date and calculate age
+        const birthDate = new Date(year, month - 1, day);
+        const age = calculateAge();
+
+        // Validate age is 21+
+        if (!age || age < 21) {
+          showToast('You must be at least 21 years old to use NEXUS', 'error');
+          return;
+        }
+
+        // Format birth date as ISO string for database
+        const birthDateISO = birthDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+
+        // Collect additional photos
+        const additionalPhotos = [];
+        document.querySelectorAll('.photo-url-input').forEach(input => {
+          if (input.value.trim()) {
+            additionalPhotos.push(input.value.trim());
+          }
+        });
+
+        showToast('Saving your profile...', 'info');
+
+        // CRITICAL: Ensure user record exists in Nexus users table before updating
+        const userId = getUserId();
+        const user = currentUser || auth.getUser();
+
+        try {
+          const existingUser = await supabaseQuery(
+            `SELECT id FROM users WHERE id = $1`,
+            [userId]
+          );
+
+          if (!existingUser.data || existingUser.data.length === 0) {
+            console.log('[PROFILE SAVE] User record missing, creating...');
+            await supabaseInsert('users', {
+              id: userId,
+              email: user.email,
+              display_name: displayName || user.email?.split('@')[0] || 'User',
+              created_at: new Date().toISOString()
+            });
+            console.log('[PROFILE SAVE] ✓ Created user record');
+          }
+        } catch (error) {
+          console.error('[PROFILE SAVE] Error ensuring user record:', error);
+          throw new Error(`Failed to verify user account: ${error.message}`);
+        }
+
+        // Now update the profile
+        await updateUserProfile({
+          display_name: displayName,
+          username: username,
+          bio: bio,
+          birth_date: birthDateISO,
+          show_age: showAge,
+          profile_photo_url: profilePhoto,
+          additional_photos: additionalPhotos, // Send as array for JSONB column
+          profile_visibility: visibility,
+          gender: gender,
+          show_gender: showGender,
+          messaging_preference: messagingPref,
+          show_in_explore: showInExplore
+        });
+
+        console.log('[PROFILE SAVE] ✓✓✓ Profile saved successfully');
+        showToast('Profile updated successfully', 'success');
+        await loadProfileData();
+      } catch (error) {
+        console.error('[PROFILE SAVE] ✗ FAILED:', error);
+        showToast('Failed to save profile: ' + (error.message || 'Unknown error'), 'error');
+      }
+    }
+
+    /**
+     * Load additional photo URL inputs
+     */
+    function loadAdditionalPhotos(photos) {
+      const container = document.getElementById('additionalPhotos');
+      container.innerHTML = '';
+
+      // Always show at least one empty slot
+      const photosToShow = photos.length > 0 ? photos : [''];
+
+      photosToShow.forEach((url, index) => {
+        addPhotoSlot(url, index);
+      });
+    }
+
+    /**
+     * Add a new photo URL input slot
+     */
+    function addPhotoSlot(url = '', index = null) {
+      const container = document.getElementById('additionalPhotos');
+      const currentCount = container.querySelectorAll('.photo-url-input').length;
+
+      if (currentCount >= 10) {
+        showToast('Maximum 10 additional photos allowed', 'warning');
+        return;
+      }
+
+      const div = document.createElement('div');
+      div.style.cssText = 'display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm); align-items: center;';
+
+      div.innerHTML = `
+        <input
+          type="url"
+          class="form-input photo-url-input"
+          placeholder="https://i.imgur.com/example.jpg"
+          value="${url || ''}"
+          style="flex: 1;"
+        />
+        <button
+          type="button"
+          class="btn btn-outline btn-small"
+          onclick="removePhotoSlot(this)"
+          style="padding: 8px 12px; min-width: 40px;"
+        >−</button>
+      `;
+
+      container.appendChild(div);
+    }
+
+    /**
+     * Remove a photo URL input slot
+     */
+    function removePhotoSlot(button) {
+      button.parentElement.remove();
+    }
+
+    /**
+     * View public profile (preview how others see your profile)
+     */
+    function viewPublicProfile() {
+      const userId = getUserId();
+      if (userId) {
+        window.location.href = `/profile-view.html?user=${userId}&preview=true`;
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initProfile);
+  </script>
+  <!-- Age Verification & Cookie Consent -->
+  <script src="/js/age-gate.js"></script>
+  <script src="/js/cookie-consent.js"></script>
+</body>
+</html>

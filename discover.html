@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-24HL4B73C3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-24HL4B73C3');
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discovery Flow - NEXUS</title>
+
+  <link rel="stylesheet" href="/css/nexus-base.css">
+
+  <style>
+    body {
+      padding-top: 60px;
+    }
+
+    .discovery-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+      min-height: calc(100vh - 60px);
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: rgba(0, 212, 255, 0.2);
+      border-radius: var(--radius-full);
+      margin-bottom: var(--spacing-xl);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-color), var(--deep-purple));
+      transition: width 0.3s ease;
+      box-shadow: var(--glow-aqua);
+    }
+
+    .step {
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .question {
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+    }
+
+    .input-mode-selector {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+      justify-content: center;
+    }
+
+    .mode-btn {
+      flex: 1;
+      max-width: 200px;
+      padding: var(--spacing-md);
+      background: transparent;
+      border: 2px solid var(--accent-color);
+      border-radius: var(--radius-md);
+      color: var(--accent-color);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-family: var(--font-heading);
+    }
+
+    .mode-btn.active {
+      background: var(--accent-color);
+      color: var(--gunmetal);
+      box-shadow: var(--glow-aqua);
+    }
+
+    .voice-controls {
+      text-align: center;
+      padding: var(--spacing-xl);
+      display: none;
+    }
+
+    .voice-controls.active {
+      display: block;
+    }
+
+    .mic-button {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--accent-color);
+      background: transparent;
+      color: var(--accent-color);
+      font-size: 2rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--spacing-md);
+    }
+
+    .mic-button:hover {
+      background: rgba(0, 212, 255, 0.1);
+      box-shadow: var(--glow-aqua);
+    }
+
+    .mic-button.recording {
+      background: var(--accent-color);
+      color: var(--gunmetal);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .transcript-display {
+      background: rgba(42, 45, 52, 0.5);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      min-height: 100px;
+      margin-top: var(--spacing-md);
+      font-style: italic;
+      color: rgba(232, 232, 240, 0.8);
+    }
+
+    .suggested-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+
+    .tag-small {
+      display: inline-block;
+      font-size: 0.8rem;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      background: rgba(0, 212, 255, 0.2);
+      border: 1px solid rgba(0, 212, 255, 0.4);
+      border-radius: var(--radius-sm);
+      color: var(--accent-color);
+      transition: all var(--transition-fast);
+      cursor: default;
+    }
+
+    .tag-small:hover {
+      background: rgba(0, 212, 255, 0.3);
+      box-shadow: var(--glow-aqua);
+      transform: translateY(-1px);
+    }
+
+    .tag-small.clickable {
+      cursor: pointer;
+    }
+
+    .tag-small.pre-selected {
+      background: rgba(212, 175, 55, 0.3);
+      border-color: var(--highlight-color);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    }
+
+    .tag-small.pre-selected::after {
+      content: ' ✓';
+    }
+
+    .tag-suggestion {
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .tag-suggestion.selected {
+      background: rgba(0, 212, 255, 0.3);
+      box-shadow: var(--glow-aqua);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-xl);
+      justify-content: space-between;
+    }
+
+    .profile-preview {
+      background: var(--primary-bg);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+
+    .profile-section {
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .profile-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .profile-section h4 {
+      color: var(--accent-color);
+      font-size: 1rem;
+      margin-bottom: var(--spacing-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 768px) {
+      .input-mode-selector {
+        flex-direction: column;
+      }
+
+      .mode-btn {
+        max-width: none;
+      }
+    }
+
+    /* Persistent Tag Sidebar */
+    .tag-sidebar {
+      position: fixed;
+      right: 0;
+      top: 60px;
+      width: 280px;
+      max-height: calc(100vh - 80px);
+      background: rgba(26, 29, 36, 0.95);
+      border-left: 2px solid rgba(0, 212, 255, 0.3);
+      padding: var(--spacing-md);
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .tag-sidebar.collapsed {
+      transform: translateX(240px);
+    }
+
+    .tag-sidebar.collapsed .sidebar-content {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sidebar-toggle {
+      position: absolute;
+      left: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 80px;
+      background: rgba(0, 212, 255, 0.2);
+      border: 1px solid rgba(0, 212, 255, 0.4);
+      border-right: none;
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+      color: var(--accent-color);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: all var(--transition-fast);
+    }
+
+    .sidebar-toggle:hover {
+      background: rgba(0, 212, 255, 0.3);
+    }
+
+    .sidebar-toggle .tag-count {
+      font-weight: bold;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .sidebar-header h3 {
+      color: var(--accent-color);
+      font-size: 0.9rem;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .sidebar-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      background: rgba(0, 212, 255, 0.15);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .sidebar-tag:hover {
+      background: rgba(255, 100, 100, 0.2);
+      border-color: rgba(255, 100, 100, 0.5);
+    }
+
+    .sidebar-tag .remove-x {
+      opacity: 0.5;
+      font-size: 0.9rem;
+      transition: opacity var(--transition-fast);
+    }
+
+    .sidebar-tag:hover .remove-x {
+      opacity: 1;
+      color: #ff6464;
+    }
+
+    .sidebar-empty {
+      text-align: center;
+      padding: var(--spacing-lg);
+      opacity: 0.6;
+      font-size: 0.85rem;
+    }
+
+    .sidebar-add-btn {
+      width: 100%;
+      padding: var(--spacing-sm);
+      background: transparent;
+      border: 1px dashed rgba(0, 212, 255, 0.4);
+      border-radius: var(--radius-sm);
+      color: var(--accent-color);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all var(--transition-fast);
+    }
+
+    .sidebar-add-btn:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-style: solid;
+    }
+
+    /* Adjust discovery container when sidebar is visible */
+    .discovery-container {
+      transition: padding-right 0.3s ease;
+    }
+
+    .discovery-container.sidebar-open {
+      padding-right: 300px;
+    }
+
+    @media (max-width: 900px) {
+      .tag-sidebar {
+        width: 100%;
+        max-width: 300px;
+      }
+      .discovery-container.sidebar-open {
+        padding-right: var(--spacing-md);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .tag-sidebar {
+        max-width: none;
+        width: 85%;
+      }
+      .tag-sidebar.collapsed {
+        transform: translateX(calc(100% - 40px));
+      }
+    }
+
+    /* Tag Browser Modal */
+    .modal {
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      margin: auto;
+      animation: fadeIn 0.3s ease-out;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Persistent Tag Sidebar -->
+  <div id="tagSidebar" class="tag-sidebar collapsed">
+    <button class="sidebar-toggle" onclick="toggleTagSidebar()" title="Toggle tag panel">
+      <span class="tag-count" id="sidebarTagCount">0</span>
+      <span>tags</span>
+    </button>
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+        <h3>Your Tags</h3>
+      </div>
+      <div id="sidebarTags" class="sidebar-tags">
+        <!-- Tags will be populated here -->
+      </div>
+      <div id="sidebarEmpty" class="sidebar-empty">
+        Click tags during questions or use the button below to add tags
+      </div>
+      <button class="sidebar-add-btn" onclick="openTagBrowser()">
+        + Browse All Tags
+      </button>
+    </div>
+  </div>
+
+  <div class="discovery-container" style="margin-top: 60px;">
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+
+    <!-- Step 0: Welcome -->
+    <div class="step active" id="step0">
+      <div class="panel text-center">
+        <h1 class="text-gradient">Welcome to NEXUS Discovery</h1>
+        <p style="font-size: 1.2rem; margin: var(--spacing-lg) 0;">
+          Let's understand what connection means to you.
+        </p>
+        <p style="opacity: 0.8; margin-bottom: var(--spacing-xl);">
+          This journey will help you articulate your unique connection patterns,
+          arousal triggers, and what you truly seek in relationships.
+        </p>
+        <div style="display: flex; gap: var(--spacing-md); justify-content: center;">
+          <a href="/" class="btn btn-outline btn-large">← Cancel</a>
+          <button class="btn btn-primary btn-large" onclick="startDiscovery()">
+            Begin Discovery
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1-5: Questions -->
+    <div class="step" id="step1">
+      <h3 class="question">What draws you to someone initially?</h3>
+
+      <div class="input-mode-selector">
+        <button class="mode-btn active" onclick="selectMode('text', 1)">
+          ✍️ Type Answer
+        </button>
+        <button class="mode-btn" onclick="selectMode('voice', 1)">
+          🎤 Voice Answer
+        </button>
+      </div>
+
+      <div class="text-input-area">
+        <textarea
+          id="answer1"
+          class="form-textarea"
+          placeholder="Share what initially attracts you to someone..."
+          rows="6"
+        ></textarea>
+
+        <div class="tag-hints" style="margin-top: var(--spacing-sm); padding: var(--spacing-sm); background: rgba(0, 212, 255, 0.05); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-color);">
+          <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: 500; margin-bottom: var(--spacing-xs);">💡 Example attraction patterns:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-xs); font-size: 0.85rem; opacity: 0.9;">
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Sapiosexual')">Sapiosexual</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Demisexual')">Demisexual</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Visual Arousal')">Visual Arousal</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Touch-Focused')">Touch-Focused</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Scent-Based Arousal')">Scent-Based Arousal</span>
+          </div>
+          <div style="font-size: 0.75rem; margin-top: var(--spacing-xs); opacity: 0.6;">
+            Click tags to pre-select them - AI will also suggest more after questions
+          </div>
+        </div>
+      </div>
+
+      <div class="voice-controls" id="voiceControls1">
+        <button class="mic-button" id="micButton1" onclick="toggleRecording(1)">
+          🎤
+        </button>
+        <p id="voiceStatus1">Click the microphone to start recording</p>
+        <div class="transcript-display" id="transcript1"></div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="previousStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step2">
+      <h3 class="question">How do you prefer to communicate?</h3>
+
+      <div class="input-mode-selector">
+        <button class="mode-btn active" onclick="selectMode('text', 2)">
+          ✍️ Type Answer
+        </button>
+        <button class="mode-btn" onclick="selectMode('voice', 2)">
+          🎤 Voice Answer
+        </button>
+      </div>
+
+      <div class="text-input-area">
+        <textarea
+          id="answer2"
+          class="form-textarea"
+          placeholder="Describe your ideal communication style (text vs voice, sync vs async, deep vs casual)..."
+          rows="6"
+        ></textarea>
+
+        <div class="tag-hints" style="margin-top: var(--spacing-sm); padding: var(--spacing-sm); background: rgba(0, 212, 255, 0.05); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-color);">
+          <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: 500; margin-bottom: var(--spacing-xs);">💡 Example communication styles:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-xs); font-size: 0.85rem; opacity: 0.9;">
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Asynchronous Preference')">Asynchronous Preference</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Direct Communicator')">Direct Communicator</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Deep Conversation Seeker')">Deep Conversation Seeker</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Voice/Call Preference')">Voice/Call Preference</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Words of Affirmation')">Words of Affirmation</span>
+          </div>
+          <div style="font-size: 0.75rem; margin-top: var(--spacing-xs); opacity: 0.6;">
+            Click tags to pre-select them - AI will also suggest more after questions
+          </div>
+        </div>
+      </div>
+
+      <div class="voice-controls" id="voiceControls2">
+        <button class="mic-button" id="micButton2" onclick="toggleRecording(2)">
+          🎤
+        </button>
+        <p id="voiceStatus2">Click the microphone to start recording</p>
+        <div class="transcript-display" id="transcript2"></div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="previousStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step3">
+      <h3 class="question">What kind of relationship structures interest you?</h3>
+
+      <div class="input-mode-selector">
+        <button class="mode-btn active" onclick="selectMode('text', 3)">
+          ✍️ Type Answer
+        </button>
+        <button class="mode-btn" onclick="selectMode('voice', 3)">
+          🎤 Voice Answer
+        </button>
+      </div>
+
+      <div class="text-input-area">
+        <textarea
+          id="answer3"
+          class="form-textarea"
+          placeholder="Share your thoughts on relationship structures (monogamy, polyamory, long-distance, creative collaboration, etc.)..."
+          rows="6"
+        ></textarea>
+
+        <div class="tag-hints" style="margin-top: var(--spacing-sm); padding: var(--spacing-sm); background: rgba(0, 212, 255, 0.05); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-color);">
+          <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: 500; margin-bottom: var(--spacing-xs);">💡 Example relationship structures:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-xs); font-size: 0.85rem; opacity: 0.9;">
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Monogamy')">Monogamy</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Polyamory')">Polyamory</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Ethical Non-Monogamy')">Ethical Non-Monogamy</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Relationship Anarchy')">Relationship Anarchy</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Solo Polyamory')">Solo Polyamory</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Open Relationship')">Open Relationship</span>
+          </div>
+          <div style="font-size: 0.75rem; margin-top: var(--spacing-xs); opacity: 0.6;">
+            Click tags to pre-select them - AI will also suggest more after questions
+          </div>
+        </div>
+      </div>
+
+      <div class="voice-controls" id="voiceControls3">
+        <button class="mic-button" id="micButton3" onclick="toggleRecording(3)">
+          🎤
+        </button>
+        <p id="voiceStatus3">Click the microphone to start recording</p>
+        <div class="transcript-display" id="transcript3"></div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="previousStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step4">
+      <h3 class="question">What makes you feel truly connected to someone?</h3>
+
+      <div class="input-mode-selector">
+        <button class="mode-btn active" onclick="selectMode('text', 4)">
+          ✍️ Type Answer
+        </button>
+        <button class="mode-btn" onclick="selectMode('voice', 4)">
+          🎤 Voice Answer
+        </button>
+      </div>
+
+      <div class="text-input-area">
+        <textarea
+          id="answer4"
+          class="form-textarea"
+          placeholder="Describe moments or qualities that create deep connection for you..."
+          rows="6"
+        ></textarea>
+
+        <div class="tag-hints" style="margin-top: var(--spacing-sm); padding: var(--spacing-sm); background: rgba(0, 212, 255, 0.05); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-color);">
+          <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: 500; margin-bottom: var(--spacing-xs);">💡 Example connection patterns:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-xs); font-size: 0.85rem; opacity: 0.9;">
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Meta-Cognitive Intimacy')">Meta-Cognitive Intimacy</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Collaborative Growth')">Collaborative Growth</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Quality Time Priority')">Quality Time Priority</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Touch-Focused')">Touch-Focused</span>
+            <span class="tag-small clickable" onclick="toggleExampleTag(this, 'Authentic Over Performative')">Authentic Over Performative</span>
+          </div>
+          <div style="font-size: 0.75rem; margin-top: var(--spacing-xs); opacity: 0.6;">
+            Click tags to pre-select them - AI will also suggest more after questions
+          </div>
+        </div>
+      </div>
+
+      <div class="voice-controls" id="voiceControls4">
+        <button class="mic-button" id="micButton4" onclick="toggleRecording(4)">
+          🎤
+        </button>
+        <p id="voiceStatus4">Click the microphone to start recording</p>
+        <div class="transcript-display" id="transcript4"></div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="previousStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step5">
+      <h3 class="question">What are you NOT looking for?</h3>
+
+      <div class="input-mode-selector">
+        <button class="mode-btn active" onclick="selectMode('text', 5)">
+          ✍️ Type Answer
+        </button>
+        <button class="mode-btn" onclick="selectMode('voice', 5)">
+          🎤 Voice Answer
+        </button>
+      </div>
+
+      <div class="text-input-area">
+        <textarea
+          id="answer5"
+          class="form-textarea"
+          placeholder="Share what doesn't work for you, what you want to avoid, or dealbreakers..."
+          rows="6"
+        ></textarea>
+      </div>
+
+      <div class="voice-controls" id="voiceControls5">
+        <button class="mic-button" id="micButton5" onclick="toggleRecording(5)">
+          🎤
+        </button>
+        <p id="voiceStatus5">Click the microphone to start recording</p>
+        <div class="transcript-display" id="transcript5"></div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="previousStep()">← Back</button>
+        <button class="btn btn-primary" onclick="analyzeResponses()">Analyze Patterns →</button>
+      </div>
+    </div>
+
+    <!-- Step 6: Analysis -->
+    <div class="step" id="step6">
+      <div class="panel">
+        <h2 class="text-gradient text-center">Analyzing Your Patterns...</h2>
+        <div style="text-align: center; padding: var(--spacing-xl);">
+          <div class="loading" style="width: 50px; height: 50px; margin: 0 auto;"></div>
+          <p style="margin-top: var(--spacing-md); opacity: 0.7;">
+            AI is reviewing your responses and identifying connection patterns...
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 7: Tag Selection -->
+    <div class="step" id="step7">
+      <div class="panel">
+        <h2 class="text-gradient">Your Connection Patterns</h2>
+        <p style="margin-bottom: var(--spacing-lg);">
+          Based on your responses, here are tags that match your patterns.
+          Select the ones that resonate with you:
+        </p>
+
+        <div class="suggested-tags" id="suggestedTags">
+          <!-- Tags will be populated by JavaScript -->
+        </div>
+
+        <div style="margin-top: var(--spacing-xl); padding-top: var(--spacing-lg); border-top: 1px solid rgba(0, 212, 255, 0.2);">
+          <p style="margin-bottom: var(--spacing-md); font-weight: 500;">
+            Want to add more tags?
+          </p>
+          <button onclick="openTagBrowser()" class="btn btn-outline btn-small">
+            Browse All Tags
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="previousStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 8: Profile Preview -->
+    <div class="step" id="step8">
+      <div class="panel">
+        <h2 class="text-gradient">Your NEXUS Profile</h2>
+        <p style="margin-bottom: var(--spacing-lg);">
+          Here's how your profile will appear to others:
+        </p>
+
+        <div class="profile-preview" id="profilePreview">
+          <!-- Profile will be populated by JavaScript -->
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn btn-outline" onclick="previousStep()">← Edit</button>
+          <button class="btn btn-primary btn-large" onclick="saveProfile()">
+            Save & Enter NEXUS
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tag Browser Modal -->
+  <div id="tagBrowserModal" class="modal" style="display: none;">
+    <div class="modal-content panel" style="max-width: 900px; max-height: 80vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-md); border-bottom: 1px solid rgba(0, 212, 255, 0.2); position: sticky; top: 0; background: var(--gunmetal); z-index: 10;">
+        <h2 class="text-gradient" style="margin: 0;">Browse Tags</h2>
+        <button onclick="closeTagBrowser()" style="background: none; border: none; color: var(--accent-color); font-size: 2rem; cursor: pointer; line-height: 1; padding: 0;">&times;</button>
+      </div>
+
+      <div style="margin-bottom: var(--spacing-md);">
+        <input
+          type="text"
+          id="tagSearch"
+          placeholder="Search tags..."
+          oninput="filterModalTags()"
+          class="form-input"
+          style="width: 100%;"
+        />
+      </div>
+
+      <div style="margin-bottom: var(--spacing-md);">
+        <label style="color: var(--accent-color); margin-bottom: var(--spacing-xs); display: block;">Filter by Category</label>
+        <select id="categoryFilter" onchange="filterModalTags()" class="form-select" style="width: 100%;">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+
+      <div id="modalTagsContainer" style="display: flex; flex-wrap: wrap; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg);">
+        <!-- Tags will be populated here -->
+      </div>
+
+      <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; padding-top: var(--spacing-md); border-top: 1px solid rgba(0, 212, 255, 0.2);">
+        <button onclick="closeTagBrowser()" class="btn btn-outline">Cancel</button>
+        <button onclick="addSelectedTagsFromModal()" class="btn btn-primary">Add Selected Tags</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/nexus-core.js"></script>
+  <script src="/js/pollinations.js"></script>
+  <script src="/js/discovery.js"></script>
+  <!-- Age Verification & Cookie Consent -->
+  <script src="/js/age-gate.js"></script>
+  <script src="/js/cookie-consent.js"></script>
+</body>
+</html>
