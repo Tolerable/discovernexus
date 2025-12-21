@@ -243,6 +243,16 @@
               " class="dropdown-item">
                 👤 Profile
               </a>
+              <a href="/email-request.html" style="
+                display: block;
+                padding: 12px 20px;
+                color: var(--text-primary, #e8e8f0);
+                text-decoration: none;
+                font-size: 0.95rem;
+                transition: background 0.2s ease;
+              " class="dropdown-item">
+                ✉️ Get NEXUS Email
+              </a>
               <button onclick="handleSignOut()" style="
                 display: block;
                 width: 100%;

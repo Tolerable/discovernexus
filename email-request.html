@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#00d4ff">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Your @discovernexus.app Email - NEXUS</title>
+  <link rel="stylesheet" href="/css/nexus-base.css">
+  <style>
+    body {
+      padding-top: 80px;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+    .email-header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+    .email-header h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--accent-color), var(--highlight-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--spacing-md);
+    }
+    .email-header p {
+      opacity: 0.8;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    .email-preview {
+      background: rgba(0, 212, 255, 0.1);
+      border: 2px solid var(--accent-color);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+    .email-preview-text {
+      font-size: 1.5rem;
+      font-family: var(--font-heading);
+      color: var(--accent-color);
+    }
+    .form-section {
+      background: var(--primary-bg);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xl);
+    }
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      color: var(--accent-color);
+      font-weight: 500;
+    }
+    .form-input {
+      width: 100%;
+      padding: var(--spacing-md);
+      background: rgba(42, 45, 52, 0.5);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-sm);
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+    .email-input-group {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .email-input-group input {
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      border-right: none;
+    }
+    .email-suffix {
+      background: rgba(0, 212, 255, 0.2);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-left: none;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: var(--spacing-md);
+      color: var(--accent-color);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: var(--spacing-md);
+      font-size: 1.1rem;
+    }
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: var(--spacing-xl);
+    }
+    .success-message h2 {
+      color: var(--highlight-color);
+      margin-bottom: var(--spacing-md);
+    }
+    .info-box {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--highlight-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+      font-size: 0.9rem;
+    }
+    .info-box h4 {
+      color: var(--highlight-color);
+      margin-bottom: var(--spacing-sm);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="email-container">
+    <div class="email-header">
+      <h1>Get Your NEXUS Email</h1>
+      <p>Request a custom @discovernexus.app email address. Perfect for keeping your dating life separate from your personal email.</p>
+    </div>
+
+    <div class="email-preview">
+      <span class="email-preview-text"><span id="previewUsername">yourname</span>@discovernexus.app</span>
+    </div>
+
+    <div class="form-section" id="requestForm">
+      <form id="emailRequestForm">
+        <div class="form-group">
+          <label for="desiredEmail">Desired Email Address</label>
+          <div class="email-input-group">
+            <input type="text" id="desiredEmail" class="form-input" placeholder="yourname" pattern="[a-zA-Z0-9._-]+" required>
+            <span class="email-suffix">@discovernexus.app</span>
+          </div>
+          <small style="opacity: 0.6; margin-top: var(--spacing-xs); display: block;">Letters, numbers, dots, dashes, underscores only</small>
+        </div>
+
+        <div class="form-group">
+          <label for="forwardTo">Forward Emails To</label>
+          <input type="email" id="forwardTo" class="form-input" placeholder="your.real.email@gmail.com" required>
+          <small style="opacity: 0.6; margin-top: var(--spacing-xs); display: block;">Your actual email where you'll receive messages</small>
+        </div>
+
+        <div class="form-group">
+          <label for="reason">Why do you want a NEXUS email? (Optional)</label>
+          <textarea id="reason" class="form-input" rows="3" placeholder="Privacy, professional separation, just want one..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary submit-btn">Request Email Address</button>
+      </form>
+
+      <div class="info-box">
+        <h4>How it works</h4>
+        <ul style="margin: 0; padding-left: var(--spacing-lg);">
+          <li>Submit your request</li>
+          <li>We'll set up your email forwarding (usually within 24 hours)</li>
+          <li>All emails to yourname@discovernexus.app go to your real inbox</li>
+          <li>Free for NEXUS members</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="success-message" id="successMessage">
+      <h2>Request Submitted!</h2>
+      <p>We'll set up your email address and notify you when it's ready.</p>
+      <p style="margin-top: var(--spacing-lg);">
+        <a href="/" class="btn btn-outline">Back to NEXUS</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script>
+    // Live preview
+    document.getElementById('desiredEmail').addEventListener('input', function(e) {
+      const preview = document.getElementById('previewUsername');
+      preview.textContent = e.target.value || 'yourname';
+    });
+
+    // Form submission
+    document.getElementById('emailRequestForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const desiredEmail = document.getElementById('desiredEmail').value.trim().toLowerCase();
+      const forwardTo = document.getElementById('forwardTo').value.trim();
+      const reason = document.getElementById('reason').value.trim();
+
+      // Validate
+      if (!/^[a-zA-Z0-9._-]+$/.test(desiredEmail)) {
+        alert('Invalid email format. Use only letters, numbers, dots, dashes, and underscores.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/.netlify/functions/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'insert',
+            payload: {
+              table: 'email_requests',
+              data: {
+                requested_email: desiredEmail + '@discovernexus.app',
+                forward_to: forwardTo,
+                reason: reason || null,
+                status: 'pending',
+                created_at: new Date().toISOString()
+              }
+            }
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        // Show success
+        document.getElementById('requestForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to submit request. Please try again or contact support.');
+      }
+    });
+  </script>
+</body>
+</html>
