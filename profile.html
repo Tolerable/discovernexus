@@ -419,9 +419,26 @@
         </div>
 
         <div class="form-group">
-          <label for="profilePhoto">Or Use Custom Photo URL</label>
+          <label>Upload Your Photo</label>
+          <div style="display: flex; gap: var(--spacing-sm); align-items: center; flex-wrap: wrap;">
+            <input type="file" id="photoUpload" accept="image/jpeg,image/png,image/webp" style="display: none;">
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('photoUpload').click()">
+              📷 Browse...
+            </button>
+            <span id="uploadStatus" style="opacity: 0.7; font-size: 0.85rem;"></span>
+          </div>
+          <div id="uploadPreview" style="display: none; margin-top: var(--spacing-sm);">
+            <img id="uploadPreviewImg" src="" alt="Preview" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover;">
+          </div>
+          <small style="opacity: 0.7; font-size: 0.85rem; margin-top: var(--spacing-xs); display: block;">
+            Images are resized to 250x250 and compressed automatically.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="profilePhoto">Or Paste Photo URL</label>
           <input type="url" id="profilePhoto" class="form-input" placeholder="https://example.com/your-photo.jpg">
-          <small style="opacity: 0.7; font-size: 0.85rem;">Link to your own photo (hosted on Imgur, your own site, etc.)</small>
+          <small style="opacity: 0.7; font-size: 0.85rem;">External URL only (not file:// paths)</small>
         </div>
 
         <div class="form-group">
@@ -983,6 +1000,101 @@
         showToast('Failed to remove tag', 'error');
       }
     }
+
+    // ===== PHOTO UPLOAD =====
+    const EZTUNES_SUPABASE_URL = 'https://bugpycickribmdfprryq.supabase.co';
+    const EZTUNES_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1Z3B5Y2lja3JpYm1kZnBycnlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk2ODQ5MzgsImV4cCI6MjA3NTI2MDkzOH0.1S1ZoV4TvhIyUjKvwYE6wZexS2aM_EMNJzV9Gn8M1CI';
+
+    // Compress and resize image to 250x250
+    async function compressImage(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const size = 250;
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Calculate crop to center square
+            const minDim = Math.min(img.width, img.height);
+            const sx = (img.width - minDim) / 2;
+            const sy = (img.height - minDim) / 2;
+
+            // Draw cropped and resized
+            ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+
+            // Convert to blob (JPEG, 75% quality)
+            canvas.toBlob((blob) => {
+              resolve(blob);
+            }, 'image/jpeg', 0.75);
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Upload photo to Supabase storage
+    async function uploadPhoto(file) {
+      const statusEl = document.getElementById('uploadStatus');
+      const previewEl = document.getElementById('uploadPreview');
+      const previewImg = document.getElementById('uploadPreviewImg');
+
+      try {
+        statusEl.textContent = 'Compressing...';
+        const compressedBlob = await compressImage(file);
+
+        statusEl.textContent = 'Uploading...';
+        const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`;
+
+        const response = await fetch(
+          `${EZTUNES_SUPABASE_URL}/storage/v1/object/profile-photos/${fileName}`,
+          {
+            method: 'POST',
+            headers: {
+              'apikey': EZTUNES_ANON_KEY,
+              'Authorization': `Bearer ${EZTUNES_ANON_KEY}`,
+              'Content-Type': 'image/jpeg'
+            },
+            body: compressedBlob
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        // Get public URL
+        const publicUrl = `${EZTUNES_SUPABASE_URL}/storage/v1/object/public/profile-photos/${fileName}`;
+
+        // Update the profilePhoto input
+        document.getElementById('profilePhoto').value = publicUrl;
+
+        // Show preview
+        previewImg.src = publicUrl;
+        previewEl.style.display = 'block';
+        statusEl.textContent = 'Uploaded!';
+
+        return publicUrl;
+      } catch (error) {
+        console.error('Upload error:', error);
+        statusEl.textContent = 'Upload failed - try again';
+        throw error;
+      }
+    }
+
+    // File input change handler
+    document.getElementById('photoUpload').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        await uploadPhoto(file);
+      }
+    });
 
     async function saveProfile() {
       try {
