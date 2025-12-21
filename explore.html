@@ -97,6 +97,21 @@
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent-color), var(--deep-purple));
       display: flex;
+      overflow: hidden;
+    }
+
+    .profile-avatar-small img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-avatar-initials {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-color), var(--deep-purple));
+      display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.5rem;
@@ -690,7 +705,7 @@
         // Also fetch AI profiles from users table (they have @nexus.ai.local emails)
         try {
           const aiResult = await supabaseQuery(`
-            SELECT id, display_name, bio, created_at FROM users
+            SELECT id, display_name, bio, profile_photo_url, created_at FROM users
             WHERE email LIKE '%@nexus.ai.local' AND id != $1
             ORDER BY created_at DESC LIMIT 20
           `, [currentUserId]);
@@ -920,10 +935,14 @@
         // Ensure tags is always an array (json_agg can return null)
         const tags = Array.isArray(profile.tags) ? profile.tags : [];
 
+        const avatarHtml = profile.profile_photo_url
+          ? `<img src="${escapeHtml(profile.profile_photo_url)}" alt="${escapeHtml(displayName)}" onerror="this.parentElement.innerHTML='${initials}'">`
+          : initials;
+
         return `
           <div class="profile-card" onclick="viewProfile('${profile.id}')">
             <div class="profile-card-header">
-              <div class="profile-avatar-small">${initials}</div>
+              <div class="profile-avatar-small">${avatarHtml}</div>
               <div class="profile-card-info">
                 <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? '<span class="ai-badge">AI</span>' : ''}</div>
                 <div class="profile-card-username">@${escapeHtml(username)}</div>

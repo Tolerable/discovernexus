@@ -385,10 +385,43 @@
           <small style="opacity: 0.7; font-size: 0.85rem; display: block; margin-top: var(--spacing-xs);">If unchecked, your age will be hidden from other users.</small>
         </div>
 
+        <!-- Avatar Selection -->
         <div class="form-group">
-          <label for="profilePhoto">Profile Photo URL</label>
+          <label>Choose Your Avatar</label>
+          <div style="margin-bottom: var(--spacing-md);">
+            <button type="button" class="btn btn-outline btn-small" onclick="showAvatarPicker()" id="avatarPickerBtn">
+              Pick an Avatar
+            </button>
+            <button type="button" class="btn btn-outline btn-small" onclick="generateRandomAvatar()" style="margin-left: var(--spacing-sm);">
+              Random Avatar
+            </button>
+          </div>
+
+          <!-- Avatar Picker Grid (hidden by default) -->
+          <div id="avatarPickerGrid" style="display: none; margin-bottom: var(--spacing-md);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: var(--spacing-sm); padding: var(--spacing-md); background: rgba(0, 212, 255, 0.05); border-radius: var(--radius-md); border: 1px solid rgba(0, 212, 255, 0.2);">
+              <!-- Avatars will be populated by JS -->
+            </div>
+            <div style="margin-top: var(--spacing-sm); display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
+              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('avataaars')" data-style="avataaars">Cartoon</button>
+              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('lorelei')" data-style="lorelei">Portrait</button>
+              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('micah')" data-style="micah">Cute</button>
+              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('notionists')" data-style="notionists">Sketch</button>
+              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('personas')" data-style="personas">Abstract</button>
+              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('bottts')" data-style="bottts">Robots</button>
+            </div>
+          </div>
+
+          <div id="selectedAvatarPreview" style="display: none; margin-bottom: var(--spacing-md);">
+            <p style="opacity: 0.7; margin-bottom: var(--spacing-xs);">Selected Avatar:</p>
+            <img id="avatarPreviewImg" src="" alt="Selected avatar" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-color);">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profilePhoto">Or Use Custom Photo URL</label>
           <input type="url" id="profilePhoto" class="form-input" placeholder="https://example.com/your-photo.jpg">
-          <small style="opacity: 0.7; font-size: 0.85rem;">Link to your profile photo (hosted on Imgur, your own site, etc.)</small>
+          <small style="opacity: 0.7; font-size: 0.85rem;">Link to your own photo (hosted on Imgur, your own site, etc.)</small>
         </div>
 
         <div class="form-group">
@@ -531,6 +564,62 @@
     let currentPhotoIndex = 0;
     let allPhotos = [];
     let currentDisplayName = '';
+    let currentAvatarStyle = 'avataaars';
+    let selectedAvatarUrl = '';
+
+    // Avatar picker functions
+    function showAvatarPicker() {
+      const grid = document.getElementById('avatarPickerGrid');
+      const isVisible = grid.style.display !== 'none';
+      grid.style.display = isVisible ? 'none' : 'block';
+      if (!isVisible) {
+        populateAvatarGrid(currentAvatarStyle);
+      }
+    }
+
+    function populateAvatarGrid(style) {
+      const gridContainer = document.querySelector('#avatarPickerGrid > div:first-child');
+      const seeds = ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'user10', 'user11', 'user12'];
+
+      gridContainer.innerHTML = seeds.map(seed => {
+        const url = `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}`;
+        return `
+          <div onclick="selectAvatar('${url}')" style="cursor: pointer; padding: var(--spacing-xs); border-radius: var(--radius-sm); border: 2px solid transparent; transition: all 0.2s ease;"
+               onmouseover="this.style.borderColor='var(--accent-color)'; this.style.background='rgba(0, 212, 255, 0.1)';"
+               onmouseout="this.style.borderColor='transparent'; this.style.background='transparent';">
+            <img src="${url}" alt="Avatar option" style="width: 100%; height: auto; border-radius: 50%;">
+          </div>
+        `;
+      }).join('');
+
+      // Highlight current style button
+      document.querySelectorAll('[data-style]').forEach(btn => {
+        btn.classList.toggle('btn-primary', btn.dataset.style === style);
+        btn.classList.toggle('btn-outline', btn.dataset.style !== style);
+      });
+    }
+
+    function changeAvatarStyle(style) {
+      currentAvatarStyle = style;
+      populateAvatarGrid(style);
+    }
+
+    function selectAvatar(url) {
+      selectedAvatarUrl = url;
+      document.getElementById('profilePhoto').value = url;
+      document.getElementById('avatarPreviewImg').src = url;
+      document.getElementById('selectedAvatarPreview').style.display = 'block';
+      document.getElementById('avatarPickerGrid').style.display = 'none';
+      showToast('Avatar selected! Remember to save your profile.', 'success');
+    }
+
+    function generateRandomAvatar() {
+      const styles = ['avataaars', 'lorelei', 'micah', 'notionists', 'personas', 'bottts'];
+      const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+      const randomSeed = 'random_' + Math.random().toString(36).substring(7);
+      const url = `https://api.dicebear.com/7.x/${randomStyle}/svg?seed=${randomSeed}`;
+      selectAvatar(url);
+    }
 
     // Initialize date of birth dropdowns
     function initializeDOBSelectors() {
