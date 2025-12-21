@@ -694,14 +694,12 @@
 
     // Photo gallery functions
     function initPhotoGallery(profilePhotoUrl, additionalPhotos, displayName) {
-      console.log('[PHOTO GALLERY] initPhotoGallery called with:', profilePhotoUrl);
       currentDisplayName = displayName;
       allPhotos = [];
 
       // Add profile photo first
       if (profilePhotoUrl && profilePhotoUrl.trim()) {
         allPhotos.push(profilePhotoUrl.trim());
-        console.log('[PHOTO GALLERY] Added profile photo to allPhotos');
       }
 
       // Add additional photos
@@ -725,12 +723,10 @@
     }
 
     function updatePhotoDisplay() {
-      console.log('[PHOTO DISPLAY] updatePhotoDisplay called, allPhotos:', allPhotos);
       const container = document.getElementById('profileAvatarContainer');
       const avatarElement = document.getElementById('profileAvatar');
 
       if (allPhotos.length === 0) {
-        console.log('[PHOTO DISPLAY] No photos, showing initials');
         // No photos, show initials
         const initials = currentDisplayName.substring(0, 2).toUpperCase();
         avatarElement.textContent = initials;
@@ -742,11 +738,7 @@
 
       // Display current photo
       const currentPhoto = allPhotos[currentPhotoIndex];
-      console.log('[PHOTO DISPLAY] Setting image src to:', currentPhoto);
-      console.log('[PHOTO DISPLAY] avatarElement before:', avatarElement.innerHTML);
-      avatarElement.innerHTML = `<img src="${currentPhoto}" alt="${currentDisplayName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="console.error('[PHOTO DISPLAY] Image failed to load:', this.src)">`;
-      console.log('[PHOTO DISPLAY] avatarElement after:', avatarElement.innerHTML);
-      console.log('[PHOTO DISPLAY] img element exists:', avatarElement.querySelector('img') !== null);
+      avatarElement.innerHTML = `<img src="${currentPhoto}" alt="${currentDisplayName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
 
       // Remove existing navigation
       container.querySelectorAll('.gallery-nav, .gallery-indicator').forEach(el => el.remove());
@@ -810,10 +802,7 @@
     async function loadProfileData() {
       try {
         const userId = getUserId();
-        console.log('[PROFILE LOAD] Loading profile for user:', userId);
         const profile = await getUserProfile(userId);
-        console.log('[PROFILE LOAD] Got profile:', profile);
-        console.log('[PROFILE LOAD] profile_photo_url from DB:', profile?.profile_photo_url);
         const tags = await getUserTags(userId);
         const matches = await getUserMatches('accepted');
 
@@ -837,6 +826,12 @@
         document.getElementById('username').value = profile.username || '';
         document.getElementById('bio').value = profile.bio || '';
         document.getElementById('profilePhoto').value = profile.profile_photo_url || '';
+
+        // Show the preview if there's a profile photo
+        if (profile.profile_photo_url) {
+          document.getElementById('avatarPreviewImg').src = profile.profile_photo_url;
+          document.getElementById('selectedAvatarPreview').style.display = 'block';
+        }
 
         // Load birth date if available
         if (profile.birth_date) {
@@ -1182,8 +1177,7 @@
         }
 
         // Now update the profile
-        console.log('[PROFILE SAVE] About to save with profile_photo_url:', profilePhoto);
-        console.log('[PROFILE SAVE] Full data:', {
+        await updateUserProfile({
           display_name: displayName,
           username: username,
           bio: bio,
@@ -1191,26 +1185,12 @@
           show_age: showAge,
           profile_photo_url: profilePhoto,
           additional_photos: additionalPhotos,
-          profile_visibility: visibility
-        });
-
-        const saveResult = await updateUserProfile({
-          display_name: displayName,
-          username: username,
-          bio: bio,
-          birth_date: birthDateISO,
-          show_age: showAge,
-          profile_photo_url: profilePhoto,
-          additional_photos: additionalPhotos, // Send as array for JSONB column
           profile_visibility: visibility,
           gender: gender,
           show_gender: showGender,
           messaging_preference: messagingPref,
           show_in_explore: showInExplore
         });
-
-        console.log('[PROFILE SAVE] ✓✓✓ Update result:', saveResult);
-        console.log('[PROFILE SAVE] Returned profile_photo_url:', saveResult?.data?.[0]?.profile_photo_url);
         showToast('Profile updated successfully', 'success');
         await loadProfileData();
       } catch (error) {
