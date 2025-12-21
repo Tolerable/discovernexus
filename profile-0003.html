@@ -802,10 +802,7 @@
     async function loadProfileData() {
       try {
         const userId = getUserId();
-        console.log('[PROFILE LOAD] Loading profile for user:', userId);
         const profile = await getUserProfile(userId);
-        console.log('[PROFILE LOAD] Got profile:', profile);
-        console.log('[PROFILE LOAD] profile_photo_url from DB:', profile?.profile_photo_url);
         const tags = await getUserTags(userId);
         const matches = await getUserMatches('accepted');
 
@@ -1174,19 +1171,7 @@
         }
 
         // Now update the profile
-        console.log('[PROFILE SAVE] About to save with profile_photo_url:', profilePhoto);
-        console.log('[PROFILE SAVE] Full data:', {
-          display_name: displayName,
-          username: username,
-          bio: bio,
-          birth_date: birthDateISO,
-          show_age: showAge,
-          profile_photo_url: profilePhoto,
-          additional_photos: additionalPhotos,
-          profile_visibility: visibility
-        });
-
-        const saveResult = await updateUserProfile({
+        await updateUserProfile({
           display_name: displayName,
           username: username,
           bio: bio,
@@ -1201,8 +1186,7 @@
           show_in_explore: showInExplore
         });
 
-        console.log('[PROFILE SAVE] ✓✓✓ Update result:', saveResult);
-        console.log('[PROFILE SAVE] Returned profile_photo_url:', saveResult?.data?.[0]?.profile_photo_url);
+        console.log('[PROFILE SAVE] ✓✓✓ Profile saved successfully');
         showToast('Profile updated successfully', 'success');
         await loadProfileData();
       } catch (error) {
