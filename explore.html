@@ -144,6 +144,17 @@
       letter-spacing: 0.5px;
     }
 
+    .host-badge {
+      background: linear-gradient(135deg, #d4af37, #f4d03f);
+      color: #1a1a24;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     .profile-card-username {
       font-size: 0.9rem;
       opacity: 0.7;
@@ -705,9 +716,9 @@
         // Also fetch AI profiles from users table (they have @nexus.ai.local emails)
         try {
           const aiResult = await supabaseQuery(`
-            SELECT id, display_name, bio, profile_photo_url, created_at FROM users
-            WHERE email LIKE '%@nexus.ai.local' AND id != $1
-            ORDER BY created_at DESC LIMIT 20
+            SELECT u.id, u.display_name, u.bio, u.profile_photo_url, u.created_at, ap.feed_url FROM users u LEFT JOIN ai_profiles ap ON u.id = ap.user_id
+            WHERE u.email LIKE '%@nexus.ai.local' AND u.id != $1
+            ORDER BY u.created_at DESC LIMIT 20
           `, [currentUserId]);
 
           const aiProfiles = (aiResult.data || []).map(ai => ({
@@ -944,8 +955,8 @@
             <div class="profile-card-header">
               <div class="profile-avatar-small">${avatarHtml}</div>
               <div class="profile-card-info">
-                <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? '<span class="ai-badge">AI</span>' : ''}</div>
-                <div class="profile-card-username">@${escapeHtml(username)}</div>
+                <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? '<span class="host-badge">HOST</span>' : ''}</div>
+                <div class="profile-card-username">@${escapeHtml(username)}${profile.feed_url ? ' <a href="' + escapeHtml(profile.feed_url) + '" target="_blank" onclick="event.stopPropagation()" title="AI Feed" style="color: var(--highlight-color); text-decoration: none;">📡</a>' : ''}</div>
               </div>
             </div>
 
