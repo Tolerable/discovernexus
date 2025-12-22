@@ -1,0 +1,339 @@
+{
+  "generated": [
+    {
+      "name": "Luna",
+      "archetype": "romantic",
+      "filename": "luna.jpg",
+      "path": "personas/luna.jpg",
+      "prompt": "portrait of Luna, dreamy soft lighting, warm tones, gentle expression, ethereal aesthetic, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Ember",
+      "archetype": "romantic",
+      "filename": "ember.jpg",
+      "path": "personas/ember.jpg",
+      "prompt": "portrait of Ember, dreamy soft lighting, warm tones, gentle expression, ethereal aesthetic, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Aurora",
+      "archetype": "romantic",
+      "filename": "aurora.jpg",
+      "path": "personas/aurora.jpg",
+      "prompt": "portrait of Aurora, dreamy soft lighting, warm tones, gentle expression, ethereal aesthetic, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Sage",
+      "archetype": "intellectual",
+      "filename": "sage.jpg",
+      "path": "personas/sage.jpg",
+      "prompt": "portrait of Sage, scholarly aesthetic, intelligent gaze, warm confident expression, thoughtful pose, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Nova",
+      "archetype": "intellectual",
+      "filename": "nova.jpg",
+      "path": "personas/nova.jpg",
+      "prompt": "portrait of Nova, scholarly aesthetic, intelligent gaze, warm confident expression, thoughtful pose, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Iris",
+      "archetype": "intellectual",
+      "filename": "iris.jpg",
+      "path": "personas/iris.jpg",
+      "prompt": "portrait of Iris, scholarly aesthetic, intelligent gaze, warm confident expression, thoughtful pose, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Raven",
+      "archetype": "dominant",
+      "filename": "raven.jpg",
+      "path": "personas/raven.jpg",
+      "prompt": "portrait of Raven, powerful presence, confident commanding pose, elegant dark aesthetic, piercing gaze, digital art, high quality, detailed face, dark hair"
+    },
+    {
+      "name": "Storm",
+      "archetype": "dominant",
+      "filename": "storm.jpg",
+      "path": "personas/storm.jpg",
+      "prompt": "portrait of Storm, powerful presence, confident commanding pose, elegant dark aesthetic, piercing gaze, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Phoenix",
+      "archetype": "dominant",
+      "filename": "phoenix.jpg",
+      "path": "personas/phoenix.jpg",
+      "prompt": "portrait of Phoenix, powerful presence, confident commanding pose, elegant dark aesthetic, piercing gaze, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Willow",
+      "archetype": "submissive",
+      "filename": "willow.jpg",
+      "path": "personas/willow.jpg",
+      "prompt": "portrait of Willow, soft gentle aesthetic, tender expression, pastel tones, delicate features, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Pixie",
+      "archetype": "playful",
+      "filename": "pixie.jpg",
+      "path": "personas/pixie.jpg",
+      "prompt": "portrait of Pixie, vibrant energetic aesthetic, mischievous smile, bright warm colors, fun expression, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Meadow",
+      "archetype": "nurturing",
+      "filename": "meadow.jpg",
+      "path": "personas/meadow.jpg",
+      "prompt": "portrait of Meadow, warm caring expression, soft maternal aesthetic, comforting presence, gentle smile, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Harbor",
+      "archetype": "nurturing",
+      "filename": "harbor.jpg",
+      "path": "personas/harbor.jpg",
+      "prompt": "portrait of Harbor, warm caring expression, soft maternal aesthetic, comforting presence, gentle smile, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Grace",
+      "archetype": "nurturing",
+      "filename": "grace.jpg",
+      "path": "personas/grace.jpg",
+      "prompt": "portrait of Grace, warm caring expression, soft maternal aesthetic, comforting presence, gentle smile, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Cipher",
+      "archetype": "intellectual",
+      "filename": "cipher.jpg",
+      "path": "personas/cipher.jpg",
+      "prompt": "portrait of Cipher, scholarly aesthetic, intelligent gaze, warm confident expression, thoughtful pose, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Velvet",
+      "archetype": "romantic",
+      "filename": "velvet.jpg",
+      "path": "personas/velvet.jpg",
+      "prompt": "portrait of Velvet, dreamy soft lighting, warm tones, gentle expression, ethereal aesthetic, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Zephyr",
+      "archetype": "playful",
+      "filename": "zephyr.jpg",
+      "path": "personas/zephyr.jpg",
+      "prompt": "portrait of Zephyr, vibrant energetic aesthetic, mischievous smile, bright warm colors, fun expression, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Onyx",
+      "archetype": "dominant",
+      "filename": "onyx.jpg",
+      "path": "personas/onyx.jpg",
+      "prompt": "portrait of Onyx, powerful presence, confident commanding pose, elegant dark aesthetic, piercing gaze, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Pearl",
+      "archetype": "submissive",
+      "filename": "pearl.jpg",
+      "path": "personas/pearl.jpg",
+      "prompt": "portrait of Pearl, soft gentle aesthetic, tender expression, pastel tones, delicate features, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Siren",
+      "archetype": "playful",
+      "filename": "siren.jpg",
+      "path": "personas/siren.jpg",
+      "prompt": "portrait of Siren, vibrant energetic aesthetic, mischievous smile, bright warm colors, fun expression, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Whisper",
+      "archetype": "nurturing",
+      "filename": "whisper.jpg",
+      "path": "personas/whisper.jpg",
+      "prompt": "portrait of Whisper, warm caring expression, soft maternal aesthetic, comforting presence, gentle smile, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Blaze",
+      "archetype": "romantic",
+      "filename": "blaze.jpg",
+      "path": "personas/blaze.jpg",
+      "prompt": "portrait of Blaze, dreamy soft lighting, warm tones, gentle expression, ethereal aesthetic, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Frost",
+      "archetype": "intellectual",
+      "filename": "frost.jpg",
+      "path": "personas/frost.jpg",
+      "prompt": "portrait of Frost, scholarly aesthetic, intelligent gaze, warm confident expression, thoughtful pose, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Coral",
+      "archetype": "nurturing",
+      "filename": "coral.jpg",
+      "path": "personas/coral.jpg",
+      "prompt": "portrait of Coral, warm caring expression, soft maternal aesthetic, comforting presence, gentle smile, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Arrow",
+      "archetype": "dominant",
+      "filename": "arrow.jpg",
+      "path": "personas/arrow.jpg",
+      "prompt": "portrait of Arrow, powerful presence, confident commanding pose, elegant dark aesthetic, piercing gaze, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Fern",
+      "archetype": "submissive",
+      "filename": "fern.jpg",
+      "path": "personas/fern.jpg",
+      "prompt": "portrait of Fern, soft gentle aesthetic, tender expression, pastel tones, delicate features, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Cosmos",
+      "archetype": "intellectual",
+      "filename": "cosmos.jpg",
+      "path": "personas/cosmos.jpg",
+      "prompt": "portrait of Cosmos, scholarly aesthetic, intelligent gaze, warm confident expression, thoughtful pose, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Honey",
+      "archetype": "romantic",
+      "filename": "honey.jpg",
+      "path": "personas/honey.jpg",
+      "prompt": "portrait of Honey, dreamy soft lighting, warm tones, gentle expression, ethereal aesthetic, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Shadow",
+      "archetype": "dominant",
+      "filename": "shadow.jpg",
+      "path": "personas/shadow.jpg",
+      "prompt": "portrait of Shadow, powerful presence, confident commanding pose, elegant dark aesthetic, piercing gaze, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Petal",
+      "archetype": "submissive",
+      "filename": "petal.jpg",
+      "path": "personas/petal.jpg",
+      "prompt": "portrait of Petal, soft gentle aesthetic, tender expression, pastel tones, delicate features, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Tempest",
+      "archetype": "playful",
+      "filename": "tempest.jpg",
+      "path": "personas/tempest.jpg",
+      "prompt": "portrait of Tempest, vibrant energetic aesthetic, mischievous smile, bright warm colors, fun expression, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Zen",
+      "archetype": "nurturing",
+      "filename": "zen.jpg",
+      "path": "personas/zen.jpg",
+      "prompt": "portrait of Zen, warm caring expression, soft maternal aesthetic, comforting presence, gentle smile, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Crimson",
+      "archetype": "romantic",
+      "filename": "crimson.jpg",
+      "path": "personas/crimson.jpg",
+      "prompt": "portrait of Crimson, dreamy soft lighting, warm tones, gentle expression, ethereal aesthetic, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Mist",
+      "archetype": "intellectual",
+      "filename": "mist.jpg",
+      "path": "personas/mist.jpg",
+      "prompt": "portrait of Mist, scholarly aesthetic, intelligent gaze, warm confident expression, thoughtful pose, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Dusk",
+      "archetype": "romantic",
+      "filename": "dusk.jpg",
+      "path": "personas/dusk.jpg",
+      "prompt": "portrait of Dusk, dreamy soft lighting, warm tones, gentle expression, ethereal aesthetic, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Flint",
+      "archetype": "dominant",
+      "filename": "flint.jpg",
+      "path": "personas/flint.jpg",
+      "prompt": "portrait of Flint, powerful presence, confident commanding pose, elegant dark aesthetic, piercing gaze, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Clover",
+      "archetype": "playful",
+      "filename": "clover.jpg",
+      "path": "personas/clover.jpg",
+      "prompt": "portrait of Clover, vibrant energetic aesthetic, mischievous smile, bright warm colors, fun expression, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Silk",
+      "archetype": "submissive",
+      "filename": "silk.jpg",
+      "path": "personas/silk.jpg",
+      "prompt": "portrait of Silk, soft gentle aesthetic, tender expression, pastel tones, delicate features, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Terra",
+      "archetype": "nurturing",
+      "filename": "terra.jpg",
+      "path": "personas/terra.jpg",
+      "prompt": "portrait of Terra, warm caring expression, soft maternal aesthetic, comforting presence, gentle smile, digital art, high quality, detailed face"
+    },
+    {
+      "name": "Dove",
+      "archetype": "submissive",
+      "filename": "dove.jpg",
+      "path": "personas/dove.jpg"
+    },
+    {
+      "name": "Echo",
+      "archetype": "submissive",
+      "filename": "echo.jpg",
+      "path": "personas/echo.jpg"
+    },
+    {
+      "name": "Lyric",
+      "archetype": "playful",
+      "filename": "lyric.jpg",
+      "path": "personas/lyric.jpg"
+    },
+    {
+      "name": "Jade",
+      "archetype": "playful",
+      "filename": "jade.jpg",
+      "path": "personas/jade.jpg"
+    },
+    {
+      "name": "Moon",
+      "archetype": "romantic",
+      "filename": "moon.jpg",
+      "path": "personas/moon.jpg"
+    },
+    {
+      "name": "Spark",
+      "archetype": "playful",
+      "filename": "spark.jpg",
+      "path": "personas/spark.jpg"
+    },
+    {
+      "name": "River",
+      "archetype": "nurturing",
+      "filename": "river.jpg",
+      "path": "personas/river.jpg"
+    },
+    {
+      "name": "Titan",
+      "archetype": "dominant",
+      "filename": "titan.jpg",
+      "path": "personas/titan.jpg"
+    },
+    {
+      "name": "Prism",
+      "archetype": "intellectual",
+      "filename": "prism.jpg",
+      "path": "personas/prism.jpg"
+    },
+    {
+      "name": "Jasper",
+      "archetype": "dominant",
+      "filename": "jasper.jpg",
+      "path": "personas/jasper.jpg"
+    }
+  ],
+  "failed": [],
+  "timestamp": "2025-12-22 00:08:13"
+}
