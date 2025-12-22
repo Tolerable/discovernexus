@@ -313,10 +313,65 @@
         max-width: 85%;
       }
     }
+
+    /* Context Menu */
+    .context-menu {
+      position: fixed;
+      background: var(--gunmetal);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      min-width: 180px;
+      z-index: 10000;
+      display: none;
+      overflow: hidden;
+    }
+
+    .context-menu.active {
+      display: block;
+    }
+
+    .context-menu-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s;
+      color: var(--text-light);
+    }
+
+    .context-menu-item:hover {
+      background: rgba(0, 212, 255, 0.1);
+    }
+
+    .context-menu-item.danger {
+      color: #ff6b6b;
+    }
+
+    .context-menu-item.danger:hover {
+      background: rgba(255, 107, 107, 0.1);
+    }
+
+    .context-menu-divider {
+      height: 1px;
+      background: rgba(0, 212, 255, 0.2);
+      margin: 4px 0;
+    }
   </style>
 </head>
 <body>
-  
+
+  <!-- Context Menu -->
+  <div class="context-menu" id="contextMenu">
+    <div class="context-menu-item" onclick="contextViewProfile()">
+      <span>👤</span> View Profile
+    </div>
+    <div class="context-menu-divider"></div>
+    <div class="context-menu-item danger" onclick="contextDeleteConversation()">
+      <span>🗑️</span> Delete Conversation
+    </div>
+  </div>
 
   <div class="messages-container">
     <!-- Conversations List -->
@@ -534,7 +589,9 @@
         const isActive = activeConversation?.userId === conv.userId;
 
         return `
-          <div class="conversation-item ${isActive ? 'active' : ''}" onclick="openConversation('${conv.userId}')">
+          <div class="conversation-item ${isActive ? 'active' : ''}"
+               onclick="openConversation('${conv.userId}')"
+               oncontextmenu="showContextMenu(event, '${conv.userId}')">
             <div class="conversation-avatar">${initials}</div>
             <div class="conversation-info">
               <div class="conversation-name">${escapeHtml(conv.displayName)}</div>
@@ -741,6 +798,94 @@
         window.location.href = `/profile-view.html?user=${activeConversation.userId}`;
       }
     }
+
+    // Context Menu Functions
+    let contextMenuUserId = null;
+
+    function showContextMenu(event, userId) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      contextMenuUserId = userId;
+      const menu = document.getElementById('contextMenu');
+
+      // Position menu at cursor
+      let x = event.clientX;
+      let y = event.clientY;
+
+      // Keep menu on screen
+      const menuWidth = 180;
+      const menuHeight = 100;
+      if (x + menuWidth > window.innerWidth) x = window.innerWidth - menuWidth - 10;
+      if (y + menuHeight > window.innerHeight) y = window.innerHeight - menuHeight - 10;
+
+      menu.style.left = x + 'px';
+      menu.style.top = y + 'px';
+      menu.classList.add('active');
+    }
+
+    function hideContextMenu() {
+      document.getElementById('contextMenu').classList.remove('active');
+      contextMenuUserId = null;
+    }
+
+    function contextViewProfile() {
+      if (contextMenuUserId) {
+        window.location.href = `/profile-view.html?user=${contextMenuUserId}`;
+      }
+      hideContextMenu();
+    }
+
+    async function contextDeleteConversation() {
+      if (!contextMenuUserId) {
+        hideContextMenu();
+        return;
+      }
+
+      const conv = conversations.find(c => c.userId === contextMenuUserId);
+      const name = conv ? conv.displayName : 'this user';
+
+      if (!confirm(`Delete conversation with ${name}? This will hide all messages from your view.`)) {
+        hideContextMenu();
+        return;
+      }
+
+      try {
+        // Add current user to deleted_by array for all messages in this conversation
+        await supabaseQuery(`
+          UPDATE messages
+          SET deleted_by = array_append(COALESCE(deleted_by, '{}'), $1::uuid)
+          WHERE (sender_id = $1 AND recipient_id = $2)
+             OR (sender_id = $2 AND recipient_id = $1)
+        `, [currentUserId, contextMenuUserId]);
+
+        showToast('Conversation deleted', 'success');
+
+        // If this was the active conversation, clear it
+        if (activeConversation && activeConversation.userId === contextMenuUserId) {
+          activeConversation = null;
+          document.getElementById('emptyState').style.display = 'flex';
+          document.getElementById('activeChat').style.display = 'none';
+        }
+
+        // Reload conversations
+        await loadConversations();
+
+      } catch (error) {
+        console.error('Failed to delete conversation:', error);
+        showToast('Failed to delete conversation', 'error');
+      }
+
+      hideContextMenu();
+    }
+
+    // Close context menu when clicking elsewhere
+    document.addEventListener('click', hideContextMenu);
+    document.addEventListener('contextmenu', (e) => {
+      if (!e.target.closest('.conversation-item')) {
+        hideContextMenu();
+      }
+    });
 
     // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
