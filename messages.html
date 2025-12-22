@@ -851,13 +851,23 @@
       }
 
       try {
-        // Add current user to deleted_by array for all messages in this conversation
-        await supabaseQuery(`
-          UPDATE messages
-          SET deleted_by = array_append(COALESCE(deleted_by, '{}'), $1::uuid)
+        // Get all message IDs in this conversation
+        const msgResult = await supabaseQuery(`
+          SELECT id, deleted_by FROM messages
           WHERE (sender_id = $1 AND recipient_id = $2)
              OR (sender_id = $2 AND recipient_id = $1)
         `, [currentUserId, contextMenuUserId]);
+
+        const messages = msgResult.data || [];
+
+        // Update each message to add current user to deleted_by
+        for (const msg of messages) {
+          const deletedBy = msg.deleted_by || [];
+          if (!deletedBy.includes(currentUserId)) {
+            deletedBy.push(currentUserId);
+            await supabaseUpdate('messages', { deleted_by: deletedBy }, { id: msg.id });
+          }
+        }
 
         showToast('Conversation deleted', 'success');
 
