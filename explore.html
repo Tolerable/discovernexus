@@ -147,12 +147,33 @@
     .host-badge {
       background: linear-gradient(135deg, #d4af37, #f4d03f);
       color: #1a1a24;
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 2px 6px;
+      padding: 3px 8px;
       border-radius: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      margin-left: 6px;
+      box-shadow: 0 1px 3px rgba(212, 175, 55, 0.3);
+    }
+
+    .feed-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(0, 212, 255, 0.15);
+      color: var(--highlight-color);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      text-decoration: none;
+      margin-left: 6px;
+      transition: all 0.2s;
+    }
+    .feed-link:hover {
+      background: rgba(0, 212, 255, 0.3);
+      transform: scale(1.05);
     }
 
     .profile-card-username {
@@ -727,10 +748,15 @@
             tags: ['AI Companion']  // Give AI a default tag so they pass filter
           }));
 
-          // Merge AI profiles (avoid duplicates)
-          const existingIds = new Set(allProfiles.map(p => p.id));
+          // Merge AI profiles - update existing with is_ai flag, or add new
           aiProfiles.forEach(ai => {
-            if (!existingIds.has(ai.id)) {
+            const existing = allProfiles.find(p => p.id === ai.id);
+            if (existing) {
+              // Update existing profile with AI flags
+              existing.is_ai = true;
+              existing.feed_url = ai.feed_url;
+              existing.tags = existing.tags || ai.tags;
+            } else {
               allProfiles.push(ai);
             }
           });
@@ -956,7 +982,7 @@
               <div class="profile-avatar-small">${avatarHtml}</div>
               <div class="profile-card-info">
                 <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? '<span class="host-badge">HOST</span>' : ''}</div>
-                <div class="profile-card-username">@${escapeHtml(username)}${profile.feed_url ? ' <a href="' + escapeHtml(profile.feed_url) + '" target="_blank" onclick="event.stopPropagation()" title="AI Feed" style="color: var(--highlight-color); text-decoration: none;">📡</a>' : ''}</div>
+                <div class="profile-card-username">@${escapeHtml(username)}${profile.feed_url ? ' <a href="' + escapeHtml(profile.feed_url) + '" target="_blank" onclick="event.stopPropagation()" title="AI Feed" class="feed-link">📡 Feed</a>' : ''}</div>
               </div>
             </div>
 
