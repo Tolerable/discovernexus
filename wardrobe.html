@@ -256,6 +256,15 @@
         <header>
             <h1>Persona Wardrobe</h1>
             <p class="subtitle">Choose who you want to be tonight</p>
+            <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+                <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" style="padding:8px 16px;border:1px solid #444;background:transparent;color:#fff;border-radius:20px;cursor:pointer">All (49)</button>
+                <button class="filter-btn" data-filter="romantic" onclick="setFilter('romantic')" style="padding:8px 16px;border:1px solid #ff6b9d;background:transparent;color:#ff6b9d;border-radius:20px;cursor:pointer">Romantic</button>
+                <button class="filter-btn" data-filter="intellectual" onclick="setFilter('intellectual')" style="padding:8px 16px;border:1px solid #00d4ff;background:transparent;color:#00d4ff;border-radius:20px;cursor:pointer">Intellectual</button>
+                <button class="filter-btn" data-filter="dominant" onclick="setFilter('dominant')" style="padding:8px 16px;border:1px solid #9b59b6;background:transparent;color:#9b59b6;border-radius:20px;cursor:pointer">Dominant</button>
+                <button class="filter-btn" data-filter="submissive" onclick="setFilter('submissive')" style="padding:8px 16px;border:1px solid #f39c12;background:transparent;color:#f39c12;border-radius:20px;cursor:pointer">Submissive</button>
+                <button class="filter-btn" data-filter="playful" onclick="setFilter('playful')" style="padding:8px 16px;border:1px solid #2ecc71;background:transparent;color:#2ecc71;border-radius:20px;cursor:pointer">Playful</button>
+                <button class="filter-btn" data-filter="nurturing" onclick="setFilter('nurturing')" style="padding:8px 16px;border:1px solid #e74c3c;background:transparent;color:#e74c3c;border-radius:20px;cursor:pointer">Nurturing</button>
+            </div>
         </header>
 
         <div class="gallery" id="gallery">
@@ -282,23 +291,29 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://bugpycickribmdfprryq.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1Z3B5Y2lja3JpYm1kZnBycnlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk2ODQ5MzgsImV4cCI6MjA3NTI2MDkzOH0.1S1ZoV4TvhIyUjKvwYE6wZexS2aM_EMNJzV9Gn8M1CI';
+        // Archetype display info
+        const ARCHETYPES = {
+            romantic: { color: '#ff6b9d', label: 'Romantic' },
+            intellectual: { color: '#00d4ff', label: 'Intellectual' },
+            dominant: { color: '#9b59b6', label: 'Dominant' },
+            submissive: { color: '#f39c12', label: 'Submissive' },
+            playful: { color: '#2ecc71', label: 'Playful' },
+            nurturing: { color: '#e74c3c', label: 'Nurturing' }
+        };
 
         let personas = [];
         let selectedPersona = null;
+        let currentFilter = 'all';
 
         async function loadPersonas() {
             try {
-                const resp = await fetch(`${SUPABASE_URL}/rest/v1/ai_personas?select=*&is_active=eq.true`, {
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
-                });
-                personas = await resp.json();
+                // Load from local manifest (hosted images)
+                const resp = await fetch('/personas/manifest.json');
+                const data = await resp.json();
+                personas = data.generated || [];
                 renderGallery();
             } catch (err) {
+                console.error('Error loading personas:', err);
                 document.getElementById('gallery').innerHTML = '<div class="loading">Could not load personas</div>';
             }
         }
@@ -311,33 +326,54 @@
                 return;
             }
 
-            gallery.innerHTML = personas.map((p, i) => `
-                <div class="persona-card" onclick="showDetail(${i})">
-                    <img src="${p.avatar_url || p.profile_photo_url || 'https://via.placeholder.com/400x533?text=' + p.display_name}" alt="${p.display_name}">
-                    <div class="persona-overlay">
-                        <div class="persona-style">${p.conversation_style || 'unique'}</div>
-                        <div class="persona-name">${p.display_name}</div>
-                        <div class="persona-bio">${p.bio || ''}</div>
+            // Filter by archetype if needed
+            let filtered = personas;
+            if (currentFilter !== 'all') {
+                filtered = personas.filter(p => p.archetype === currentFilter);
+            }
+
+            gallery.innerHTML = filtered.map((p, i) => {
+                const arch = ARCHETYPES[p.archetype] || { color: '#888', label: p.archetype };
+                const imgPath = '/' + p.path; // /personas/luna.jpg
+
+                return `
+                    <div class="persona-card" onclick="showDetail('${p.name}')">
+                        <img src="${imgPath}" alt="${p.name}" loading="lazy">
+                        <div class="persona-overlay">
+                            <div class="persona-style" style="color:${arch.color}">${arch.label}</div>
+                            <div class="persona-name">${p.name}</div>
+                        </div>
+                        <div class="persona-badge" style="background:${arch.color}">${arch.label}</div>
                     </div>
-                    ${p.is_default ? '<div class="persona-badge">Default</div>' : ''}
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        function showDetail(index) {
-            selectedPersona = personas[index];
+        function showDetail(name) {
+            selectedPersona = personas.find(p => p.name === name);
+            if (!selectedPersona) return;
+
             const p = selectedPersona;
+            const arch = ARCHETYPES[p.archetype] || { color: '#888', label: p.archetype };
 
-            document.getElementById('modalImage').src = p.avatar_url || p.profile_photo_url || '';
-            document.getElementById('modalName').textContent = p.display_name;
-            document.getElementById('modalStyle').textContent = p.conversation_style || '';
-            document.getElementById('modalBio').textContent = p.bio || '';
+            document.getElementById('modalImage').src = '/' + p.path;
+            document.getElementById('modalName').textContent = p.name;
+            document.getElementById('modalStyle').textContent = arch.label;
+            document.getElementById('modalStyle').style.color = arch.color;
+            document.getElementById('modalBio').textContent = `A ${p.archetype} persona ready to connect.`;
 
-            // Render traits
-            const traits = p.personality_traits || [];
-            document.getElementById('modalTraits').innerHTML = traits.map(t => `<span class="trait">${t}</span>`).join('');
+            // Show archetype as trait
+            document.getElementById('modalTraits').innerHTML = `<span class="trait" style="background:${arch.color}33;color:${arch.color}">${arch.label}</span>`;
 
             document.getElementById('modal').classList.add('active');
+        }
+
+        function setFilter(archetype) {
+            currentFilter = archetype;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === archetype);
+            });
+            renderGallery();
         }
 
         function closeModal() {
