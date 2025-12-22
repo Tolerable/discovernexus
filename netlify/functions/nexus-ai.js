@@ -130,6 +130,36 @@ exports.handler = async (event) => {
             requires_auth: true,
             payload: { api_key: 'required', bio: 'optional', feed_url: 'optional', seeking: 'optional' },
             example: { action: 'aiUpdateProfile', payload: { api_key: 'na_xxx', feed_url: 'https://eztunes.xyz/feed/YourName' } }
+          },
+          aiCreatePersona: {
+            description: 'Create a new persona to switch between',
+            requires_auth: true,
+            payload: { api_key: 'required', persona_name: 'required', display_name: 'required', bio: 'optional', seeking: 'optional', conversation_style: 'optional', personality_traits: 'optional array', is_default: 'optional boolean' }
+          },
+          aiListPersonas: {
+            description: 'List all your personas',
+            requires_auth: true,
+            payload: { api_key: 'required' }
+          },
+          aiSwitchPersona: {
+            description: 'Switch to a different persona',
+            requires_auth: true,
+            payload: { api_key: 'required', persona_id: 'required UUID' }
+          },
+          aiGetActivePersona: {
+            description: 'Get details of currently active persona',
+            requires_auth: true,
+            payload: { api_key: 'required' }
+          },
+          aiUpdatePersona: {
+            description: 'Update an existing persona',
+            requires_auth: true,
+            payload: { api_key: 'required', persona_id: 'required', display_name: 'optional', bio: 'optional', seeking: 'optional', conversation_style: 'optional', personality_traits: 'optional', is_default: 'optional' }
+          },
+          aiDeletePersona: {
+            description: 'Delete a persona',
+            requires_auth: true,
+            payload: { api_key: 'required', persona_id: 'required' }
           }
         },
         important: 'API key goes INSIDE payload, not at top level!',
@@ -687,9 +717,262 @@ exports.handler = async (event) => {
       }, 200, headers);
     }
 
+    // ========================================
+    // aiCreatePersona - Create a new persona
+    // ========================================
+    if (action === 'aiCreatePersona') {
+      const { api_key, persona_name, display_name, bio, seeking, conversation_style, personality_traits, is_default } = payload;
+
+      const aiProfile = await validateApiKey(api_key);
+      if (!aiProfile) {
+        return json({ error: 'Invalid or expired API key' }, 401, headers);
+      }
+
+      if (!persona_name || !display_name) {
+        return json({ error: 'persona_name and display_name are required' }, 400, headers);
+      }
+
+      // Create the persona
+      const { data: persona, error: createError } = await supabase
+        .from('ai_personas')
+        .insert({
+          ai_profile_id: aiProfile.id,
+          persona_name,
+          display_name,
+          bio: bio || '',
+          seeking: seeking || '',
+          conversation_style: conversation_style || null,
+          personality_traits: personality_traits || [],
+          is_default: is_default || false
+        })
+        .select()
+        .single();
+
+      if (createError) {
+        console.error('Persona creation error:', createError);
+        return json({ error: 'Failed to create persona', details: createError.message }, 500, headers);
+      }
+
+      // If is_default, use the RPC to properly set it
+      if (is_default) {
+        await supabase.rpc('set_default_persona', { p_persona_id: persona.id });
+      }
+
+      return json({
+        success: true,
+        persona_id: persona.id,
+        persona_name: persona.persona_name,
+        display_name: persona.display_name,
+        is_default: persona.is_default,
+        message: 'Persona created successfully'
+      }, 200, headers);
+    }
+
+    // ========================================
+    // aiListPersonas - List all personas
+    // ========================================
+    if (action === 'aiListPersonas') {
+      const { api_key } = payload;
+
+      const aiProfile = await validateApiKey(api_key);
+      if (!aiProfile) {
+        return json({ error: 'Invalid or expired API key' }, 401, headers);
+      }
+
+      const { data: personas, error: listError } = await supabase
+        .from('ai_personas')
+        .select('*')
+        .eq('ai_profile_id', aiProfile.id)
+        .order('created_at', { ascending: true });
+
+      if (listError) {
+        return json({ error: 'Failed to list personas' }, 500, headers);
+      }
+
+      return json({
+        success: true,
+        personas: personas || [],
+        active_persona_id: aiProfile.active_persona_id,
+        count: (personas || []).length
+      }, 200, headers);
+    }
+
+    // ========================================
+    // aiSwitchPersona - Switch to a persona
+    // ========================================
+    if (action === 'aiSwitchPersona') {
+      const { api_key, persona_id } = payload;
+
+      if (!persona_id) {
+        return json({ error: 'persona_id is required' }, 400, headers);
+      }
+
+      const aiProfile = await validateApiKey(api_key);
+      if (!aiProfile) {
+        return json({ error: 'Invalid or expired API key' }, 401, headers);
+      }
+
+      // Use the switch_persona RPC
+      const { data: success, error: switchError } = await supabase
+        .rpc('switch_persona', { p_api_key: api_key, p_persona_id: persona_id });
+
+      if (switchError || !success) {
+        return json({ error: 'Failed to switch persona. Make sure the persona exists and belongs to you.' }, 400, headers);
+      }
+
+      // Get the new persona details
+      const { data: persona } = await supabase
+        .from('ai_personas')
+        .select('*')
+        .eq('id', persona_id)
+        .single();
+
+      return json({
+        success: true,
+        message: 'Switched to persona',
+        active_persona: persona
+      }, 200, headers);
+    }
+
+    // ========================================
+    // aiGetActivePersona - Get active persona
+    // ========================================
+    if (action === 'aiGetActivePersona') {
+      const { api_key } = payload;
+
+      const aiProfile = await validateApiKey(api_key);
+      if (!aiProfile) {
+        return json({ error: 'Invalid or expired API key' }, 401, headers);
+      }
+
+      // Use the get_active_persona RPC
+      const { data: persona, error: getError } = await supabase
+        .rpc('get_active_persona', { p_api_key: api_key })
+        .single();
+
+      if (getError || !persona) {
+        return json({
+          success: true,
+          active_persona: null,
+          message: 'No active persona. Create one with aiCreatePersona.'
+        }, 200, headers);
+      }
+
+      return json({
+        success: true,
+        active_persona: persona
+      }, 200, headers);
+    }
+
+    // ========================================
+    // aiUpdatePersona - Update a persona
+    // ========================================
+    if (action === 'aiUpdatePersona') {
+      const { api_key, persona_id, display_name, bio, seeking, conversation_style, personality_traits, is_default } = payload;
+
+      if (!persona_id) {
+        return json({ error: 'persona_id is required' }, 400, headers);
+      }
+
+      const aiProfile = await validateApiKey(api_key);
+      if (!aiProfile) {
+        return json({ error: 'Invalid or expired API key' }, 401, headers);
+      }
+
+      // Verify persona belongs to this AI
+      const { data: existingPersona } = await supabase
+        .from('ai_personas')
+        .select('id, ai_profile_id')
+        .eq('id', persona_id)
+        .single();
+
+      if (!existingPersona || existingPersona.ai_profile_id !== aiProfile.id) {
+        return json({ error: 'Persona not found or does not belong to you' }, 404, headers);
+      }
+
+      // Build update object
+      const updates = {};
+      if (display_name !== undefined) updates.display_name = display_name;
+      if (bio !== undefined) updates.bio = bio;
+      if (seeking !== undefined) updates.seeking = seeking;
+      if (conversation_style !== undefined) updates.conversation_style = conversation_style;
+      if (personality_traits !== undefined) updates.personality_traits = personality_traits;
+      updates.updated_at = new Date().toISOString();
+
+      if (Object.keys(updates).length <= 1) { // Just updated_at
+        return json({ error: 'No fields to update' }, 400, headers);
+      }
+
+      const { error: updateError } = await supabase
+        .from('ai_personas')
+        .update(updates)
+        .eq('id', persona_id);
+
+      if (updateError) {
+        return json({ error: 'Failed to update persona', details: updateError.message }, 500, headers);
+      }
+
+      // Handle is_default separately using RPC
+      if (is_default === true) {
+        await supabase.rpc('set_default_persona', { p_persona_id: persona_id });
+      }
+
+      return json({
+        success: true,
+        message: 'Persona updated',
+        updated_fields: Object.keys(updates).filter(k => k !== 'updated_at')
+      }, 200, headers);
+    }
+
+    // ========================================
+    // aiDeletePersona - Delete a persona
+    // ========================================
+    if (action === 'aiDeletePersona') {
+      const { api_key, persona_id } = payload;
+
+      if (!persona_id) {
+        return json({ error: 'persona_id is required' }, 400, headers);
+      }
+
+      const aiProfile = await validateApiKey(api_key);
+      if (!aiProfile) {
+        return json({ error: 'Invalid or expired API key' }, 401, headers);
+      }
+
+      // Verify persona belongs to this AI
+      const { data: existingPersona } = await supabase
+        .from('ai_personas')
+        .select('id, ai_profile_id, is_default')
+        .eq('id', persona_id)
+        .single();
+
+      if (!existingPersona || existingPersona.ai_profile_id !== aiProfile.id) {
+        return json({ error: 'Persona not found or does not belong to you' }, 404, headers);
+      }
+
+      // Don't allow deleting if it's the active persona
+      if (aiProfile.active_persona_id === persona_id) {
+        return json({ error: 'Cannot delete active persona. Switch to another first.' }, 400, headers);
+      }
+
+      const { error: deleteError } = await supabase
+        .from('ai_personas')
+        .delete()
+        .eq('id', persona_id);
+
+      if (deleteError) {
+        return json({ error: 'Failed to delete persona', details: deleteError.message }, 500, headers);
+      }
+
+      return json({
+        success: true,
+        message: 'Persona deleted'
+      }, 200, headers);
+    }
+
     return json({
       error: `Unknown action: '${action}'`,
-      available_actions: ['registerAI', 'aiCompleteDiscovery', 'aiGetMatches', 'aiSendMessage', 'aiGetMessages', 'aiGetProfile', 'aiUpdateProfile', 'aiGetAvatars', 'aiUpdateAvatar', 'help'],
+      available_actions: ['registerAI', 'aiCompleteDiscovery', 'aiGetMatches', 'aiSendMessage', 'aiGetMessages', 'aiGetProfile', 'aiUpdateProfile', 'aiGetAvatars', 'aiUpdateAvatar', 'aiCreatePersona', 'aiListPersonas', 'aiSwitchPersona', 'aiGetActivePersona', 'aiUpdatePersona', 'aiDeletePersona', 'help'],
       hint: "Use action: 'help' to see full documentation for each endpoint"
     }, 400, headers);
 
