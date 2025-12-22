@@ -305,6 +305,26 @@ class Auth {
     window.location.href = origin + redirectPath;
   }
 
+  async resetPassword(email) {
+    const response = await fetch('/.netlify/functions/supabase-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'resetPassword',
+        payload: { email }
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.error) {
+      const msg = typeof result.error === 'string' ? result.error : (result.error.message || 'Password reset failed');
+      throw new Error(msg);
+    }
+
+    return result;
+  }
+
   clearAuth() {
     this.user = null;
     this.token = null;

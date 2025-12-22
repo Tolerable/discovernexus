@@ -591,8 +591,16 @@ exports.handler = async (event) => {
 
       case 'resetPassword': {
         const { email } = payload || {};
+        // Use origin header to determine correct redirect URL
+        const origin = event.headers.origin || event.headers.referer || 'https://discovernexus.app';
+        let redirectUrl = 'https://discovernexus.app/reset.html';
+        if (origin.includes('eztunes.xyz')) {
+          redirectUrl = 'https://eztunes.xyz/reset.html';
+        } else if (origin.includes('discovernexus')) {
+          redirectUrl = 'https://discovernexus.app/reset.html';
+        }
         const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: 'https://eztunes.xyz/reset.html',
+          redirectTo: redirectUrl,
         });
         if (error) return respond({ error: error.message }, 400);
         return respond({ data });
