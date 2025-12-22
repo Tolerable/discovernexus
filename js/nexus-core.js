@@ -586,13 +586,61 @@ async function sendMessage(recipientId, content, conversationId = null) {
     conversationId = `${ids[0]}_${ids[1]}`;
   }
 
-  return await supabaseInsert('messages', {
+  const result = await supabaseInsert('messages', {
     conversation_id: conversationId,
     sender_id: userId,
     recipient_id: recipientId,
     content,
     message_type: 'text'
   });
+
+  // Check if recipient is a HOST and trigger AI response
+  try {
+    await triggerHostResponse(recipientId, userId, conversationId, content);
+  } catch (e) {
+    console.log('HOST response check:', e.message);
+  }
+
+  return result;
+}
+
+/**
+ * Trigger HOST AI response if recipient is a HOST companion
+ * @param {string} recipientId - Recipient user ID
+ * @param {string} senderId - Sender user ID
+ * @param {string} conversationId - Conversation ID
+ * @param {string} userMessage - Message content
+ * @returns {Promise<object|null>} HOST response or null
+ */
+async function triggerHostResponse(recipientId, senderId, conversationId, userMessage) {
+  try {
+    const response = await fetch('/.netlify/functions/host-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipientId,
+        senderId,
+        conversationId,
+        userMessage
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HOST chat error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.isHost) {
+      console.log(`HOST ${data.hostName} responded`);
+      return data;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('HOST response error:', error);
+    return null;
+  }
 }
 
 /**
