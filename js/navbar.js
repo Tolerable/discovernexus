@@ -85,6 +85,14 @@
             transition: all 0.2s ease;
           ">Discovery</a>
 
+          <a href="/persona_gallery.html" class="nav-link" data-page="personas" style="
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary, #e8e8f0);
+            text-decoration: none;
+            transition: all 0.2s ease;
+          ">Personas</a>
+
           <!-- Auth Menu Placeholder -->
           <div id="nexusAuthMenu" style="display: flex; gap: 12px; align-items: center;">
             <!-- Will be populated by initAuth() -->
