@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Persona Gallery</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #1a1a24;
+            --accent: #00d4ff;
+            --gold: #d4af37;
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --romantic: #ff6b9d;
+            --intellectual: #00d4ff;
+            --dominant: #9b59b6;
+            --submissive: #f39c12;
+            --playful: #2ecc71;
+            --nurturing: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-dim);
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 1px solid var(--text-dim);
+            background: transparent;
+            color: var(--text);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .persona-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .persona-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .card-header {
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.5), transparent);
+        }
+
+        .card-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-archetype {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 10px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .romantic .card-archetype { background: var(--romantic); color: #000; }
+        .intellectual .card-archetype { background: var(--intellectual); color: #000; }
+        .dominant .card-archetype { background: var(--dominant); color: #fff; }
+        .submissive .card-archetype { background: var(--submissive); color: #000; }
+        .playful .card-archetype { background: var(--playful); color: #000; }
+        .nurturing .card-archetype { background: var(--nurturing); color: #fff; }
+
+        .card-body {
+            padding: 15px 20px;
+        }
+
+        .card-bio {
+            font-style: italic;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.1);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .card-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tier-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .tier-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-dim);
+        }
+
+        .tier-dot.soft { background: #88ff88; }
+        .tier-dot.medium { background: #ffdd55; }
+        .tier-dot.spicy { background: #ff8855; }
+        .tier-dot.explicit { background: #ff5555; }
+
+        .select-btn {
+            padding: 8px 15px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .select-btn:hover {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 12px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .tier-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tier-btn {
+            padding: 8px 20px;
+            border: 1px solid var(--text-dim);
+            background: transparent;
+            color: var(--text);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tier-btn.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #000;
+        }
+
+        .script-preview {
+            background: #0a0a0f;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .stats {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>NEXUS Persona Gallery</h1>
+        <p>49 AI Personas with multi-tier scripts</p>
+    </div>
+
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="romantic">Romantic</button>
+        <button class="filter-btn" data-filter="intellectual">Intellectual</button>
+        <button class="filter-btn" data-filter="dominant">Dominant</button>
+        <button class="filter-btn" data-filter="submissive">Submissive</button>
+        <button class="filter-btn" data-filter="playful">Playful</button>
+        <button class="filter-btn" data-filter="nurturing">Nurturing</button>
+    </div>
+
+    <div class="stats">
+        Showing <span id="visibleCount">49</span> of 49 personas
+    </div>
+
+    <div class="gallery" id="gallery">
+        <!-- Cards populated by JS -->
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Persona Name</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tier-selector" id="tierSelector">
+                    <button class="tier-btn active" data-tier="soft">Soft</button>
+                    <button class="tier-btn" data-tier="medium">Medium</button>
+                    <button class="tier-btn" data-tier="spicy">Spicy</button>
+                    <button class="tier-btn" data-tier="explicit">Explicit</button>
+                </div>
+                <div class="script-preview" id="scriptPreview">
+                    Script will appear here...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Persona data (loaded from JSON)
+        let personas = [];
+        let currentPersona = null;
+        let currentTier = 'medium';
+
+        // Load gallery data
+        fetch('persona_gallery.json')
+            .then(r => r.json())
+            .then(data => {
+                personas = data.personas;
+                renderGallery();
+            })
+            .catch(err => {
+                console.error('Error loading gallery:', err);
+                document.getElementById('gallery').innerHTML = '<p>Error loading gallery. Make sure persona_gallery.json exists.</p>';
+            });
+
+        function renderGallery(filter = 'all') {
+            const gallery = document.getElementById('gallery');
+            const filtered = filter === 'all'
+                ? personas
+                : personas.filter(p => p.archetype === filter);
+
+            document.getElementById('visibleCount').textContent = filtered.length;
+
+            gallery.innerHTML = filtered.map((p, idx) => `
+                <div class="persona-card ${p.archetype}" onclick="openModal(${personas.indexOf(p)})">
+                    <div class="card-header">
+                        <div class="card-name">${p.name}</div>
+                        <span class="card-archetype">${p.archetype}</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-bio">${p.bio}</p>
+                        <div class="card-tags">
+                            ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="tier-dots">
+                            <div class="tier-dot soft" title="Soft"></div>
+                            <div class="tier-dot medium" title="Medium"></div>
+                            <div class="tier-dot spicy" title="Spicy"></div>
+                            <div class="tier-dot explicit" title="Explicit"></div>
+                        </div>
+                        <button class="select-btn">View Script</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(idx) {
+            currentPersona = personas[idx];
+            document.getElementById('modalTitle').textContent = currentPersona.name;
+            updateScriptPreview();
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            currentPersona = null;
+        }
+
+        function updateScriptPreview() {
+            if (!currentPersona) return;
+
+            // Try to get script for current tier, fallback to available
+            const platforms = ['cli', 'claude_api', 'pollinations', 'claude_web', 'gpt'];
+            let script = null;
+
+            for (const platform of platforms) {
+                if (currentPersona.scripts[platform] && currentPersona.scripts[platform][currentTier]) {
+                    script = currentPersona.scripts[platform][currentTier];
+                    break;
+                }
+            }
+
+            if (!script) {
+                // Fallback to any available script
+                for (const platform of platforms) {
+                    if (currentPersona.scripts[platform]) {
+                        const tiers = Object.keys(currentPersona.scripts[platform]);
+                        if (tiers.length > 0) {
+                            script = currentPersona.scripts[platform][tiers[0]];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            document.getElementById('scriptPreview').textContent = script || 'No script available';
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderGallery(btn.dataset.filter);
+            });
+        });
+
+        // Tier buttons
+        document.querySelectorAll('.tier-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTier = btn.dataset.tier;
+                updateScriptPreview();
+            });
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
