@@ -248,7 +248,8 @@
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(0, 212, 255, 0.2);
             border-radius: 16px;
-            overflow: hidden;
+            overflow: visible;
+            position: relative;
         }
 
         .chat-header {
@@ -289,6 +290,7 @@
         .chat-header {
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .chat-header:hover {
@@ -305,18 +307,45 @@
             transform: rotate(180deg);
         }
 
-        /* Selection panel */
+        /* Selection panel - popup overlay ON TOP of header */
         .selection-panel {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: rgba(0,0,0,0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(15, 15, 25, 0.98);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 -5px 30px rgba(0, 212, 255, 0.2), 0 10px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            transition: all 0.25s ease;
+            max-height: 350px;
+            overflow-y: auto;
         }
 
         .selection-panel.expanded {
-            max-height: 400px;
-            overflow-y: auto;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        .selection-panel .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .selection-panel .close-btn:hover {
+            color: #00d4ff;
         }
 
         .selection-section {
@@ -583,8 +612,9 @@
                         <span class="expand-indicator">▼</span>
                     </div>
                     
-                    <!-- Selection Panel (expands when header clicked) -->
+                    <!-- Selection Panel (popup overlay) -->
                     <div class="selection-panel" id="selection-panel">
+                        <button class="close-btn" onclick="toggleSelectionPanel(); event.stopPropagation();">&times;</button>
                         <div class="selection-section">
                             <h4>Select Persona</h4>
                             <div class="selection-grid" id="persona-selection"></div>
