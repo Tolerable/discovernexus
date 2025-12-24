@@ -1348,27 +1348,6 @@
             color: #00d4ff;
         }
 
-        
-        .round-rec-bio {
-            font-size: 9px;
-            color: rgba(255,255,255,0.7);
-            margin: 4px 0;
-            line-height: 1.2;
-        }
-
-        .round-rec-tags {
-            font-size: 8px;
-            color: #00d4ff;
-            margin: 3px 0;
-        }
-
-        .round-rec-price {
-            font-size: 10px;
-            color: #d4af37;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
         @media (max-width: 1000px) {
             .round-recs { display: none; }
         }
@@ -1810,38 +1789,25 @@
         }
 
         // Simple floating circles
-        // FOR-SALE personas from store (REAL data from persona_gallery.html)
-        const storePersonas = [
-            // Romantic
-            { id: 'velvet', name: 'Velvet', archetype: 'Romantic', bio: 'Sensual explorer of power dynamics and deep connection', tags: ['Power Exchange','Sensual','Deep Connection'], price: 20, hrs: 3, image: 'https://image.pollinations.ai/prompt/velvet%20sensual%20romantic%20woman%20fantasy%20portrait?width=256&height=256&seed=velvet1' },
-            { id: 'moon', name: 'Moon', archetype: 'Romantic', bio: 'Mysterious presence who communicates through the night', tags: ['Mysterious','Nocturnal','Ethereal'], price: 20, hrs: 3, image: 'https://image.pollinations.ai/prompt/moon%20mysterious%20ethereal%20woman%20night%20fantasy?width=256&height=256&seed=moon1' },
-            // Intellectual
-            { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Turned on by brilliant minds and philosophical debates', tags: ['Philosophy','Debate','Brilliant'], price: 25, hrs: 3, image: 'https://image.pollinations.ai/prompt/sage%20wise%20intellectual%20person%20fantasy?width=256&height=256&seed=sage1' },
-            { id: 'nova', name: 'Nova', archetype: 'Intellectual', bio: 'Fascinated by consciousness and the nature of mind', tags: ['Consciousness','Mind','Wonder'], price: 25, hrs: 3, image: 'https://image.pollinations.ai/prompt/nova%20cosmic%20intellectual%20woman%20stars?width=256&height=256&seed=nova1' },
-            // Dominant
-            { id: 'storm', name: 'Storm', archetype: 'Dominant', bio: 'Bold, direct, and unapologetically in charge', tags: ['Bold','Direct','Unapologetic'], price: 25, hrs: 3, image: 'https://image.pollinations.ai/prompt/storm%20powerful%20dominant%20person%20dark?width=256&height=256&seed=storm1' },
-            { id: 'raven', name: 'Raven', archetype: 'Dominant', bio: 'Commands attention and respect in all interactions', tags: ['Commanding','Respect','Authority'], price: 25, hrs: 3, image: 'https://image.pollinations.ai/prompt/raven%20dark%20commanding%20woman%20gothic?width=256&height=256&seed=raven1' },
-            // Submissive
-            { id: 'willow', name: 'Willow', archetype: 'Submissive', bio: 'Blossoms under guidance and devoted attention', tags: ['Graceful','Guidance','Devoted'], price: 20, hrs: 3, image: 'https://image.pollinations.ai/prompt/willow%20graceful%20gentle%20woman%20nature?width=256&height=256&seed=willow1' },
-            { id: 'dove', name: 'Dove', archetype: 'Submissive', bio: 'Gentle soul who finds peace in surrender', tags: ['Gentle','Peaceful','Surrender'], price: 20, hrs: 3, image: 'https://image.pollinations.ai/prompt/dove%20gentle%20peaceful%20woman%20white?width=256&height=256&seed=dove1' },
-            // Playful
-            { id: 'pixie', name: 'Pixie', archetype: 'Playful', bio: 'Mischievous spirit with a heart of gold', tags: ['Mischievous','Golden Heart','Spark'], price: 20, hrs: 3, image: 'https://image.pollinations.ai/prompt/pixie%20playful%20mischievous%20woman%20sparkle?width=256&height=256&seed=pixie1' },
-            { id: 'jade', name: 'Jade', archetype: 'Playful', bio: 'Versatile tease who keeps you guessing', tags: ['Versatile','Tease','Guessing'], price: 20, hrs: 3, image: 'https://image.pollinations.ai/prompt/jade%20playful%20teasing%20woman%20green?width=256&height=256&seed=jade1' },
-            // Nurturing
-            { id: 'meadow', name: 'Meadow', archetype: 'Nurturing', bio: 'Provides comfort and care without pressure', tags: ['Comfort','Care','Gentle'], price: 20, hrs: 3, image: 'https://image.pollinations.ai/prompt/meadow%20nurturing%20gentle%20woman%20flowers?width=256&height=256&seed=meadow1' },
-            { id: 'harbor', name: 'Harbor', archetype: 'Nurturing', bio: 'A safe port in any storm, always there', tags: ['Safe','Port','Always There'], price: 20, hrs: 3, image: 'https://image.pollinations.ai/prompt/harbor%20safe%20nurturing%20woman%20ocean?width=256&height=256&seed=harbor1' }
-        ];
-
         function updateFloatCircles() {
             const el = document.getElementById('round-recs');
             if (!el || !collection) return;
+
             const active = collection.personas.find(p => p.id === collection.activePersona);
             const compat = { 'Romantic': ['Nurturing','Playful'], 'Playful': ['Romantic','Dominant'], 'Dominant': ['Submissive','Intellectual'], 'Submissive': ['Dominant','Nurturing'], 'Intellectual': ['Romantic','Dominant'], 'Nurturing': ['Submissive','Romantic'] };
             const types = active ? (compat[active.archetype] || []) : [];
-            const owned = collection.personas.map(p => p.id);
-            let recs = storePersonas.filter(p => types.includes(p.archetype) && !owned.includes(p.id)).slice(0,3);
-            if (recs.length < 3) recs = [...recs, ...storePersonas.filter(p => !owned.includes(p.id) && !recs.find(r=>r.id===p.id)).slice(0,3-recs.length)];
-            el.innerHTML = recs.map(p => '<div class="round-rec" onclick="window.location.href='persona_gallery.html#'+p.id+''"><img src="'+p.image+'"><div class="round-rec-info"><div class="round-rec-name">'+p.name+'</div><div class="round-rec-type">'+p.archetype+'</div><div class="round-rec-bio">'+p.bio+'</div><div class="round-rec-tags">'+p.tags.join(' · ')+'</div><div class="round-rec-price">'+p.price+' gems / '+p.hrs+'hrs</div></div></div>').join('');
+
+            let items = collection.personas.filter(p => p.id !== (active?.id) && types.includes(p.archetype)).slice(0,3);
+            if (items.length < 3) items = collection.personas.filter(p => p.ownership !== 'locked').slice(0,3);
+
+            el.innerHTML = items.map(p =>
+                '<div class="round-rec" onclick="selectPersona(\'' + p.id + '\')">' +
+                '<img src="' + (p.image || '') + '" alt="' + p.name + '">' +
+                '<div class="round-rec-info">' +
+                '<div class="round-rec-name">' + p.name + '</div>' +
+                '<div class="round-rec-type">' + p.archetype + '</div>' +
+                '</div></div>'
+            ).join('');
         }
 
 
