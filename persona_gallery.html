@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persona Gallery - Claude Colab</title>
+    <title>Persona Gallery - NEXUS</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -36,6 +36,55 @@
             border-radius: 20px;
             border: 1px solid gold;
             color: gold;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .store-link {
+            background: linear-gradient(90deg, #e94560, #7b2cbf);
+            border: 1px solid #e94560;
+        }
+
+        .store-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+        }
+
+        .nav-link {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .nav-link:hover {
+            background: rgba(123,44,191,0.3);
+            border-color: #7b2cbf;
+        }
+
+        .promo-banner {
+            background: linear-gradient(90deg, rgba(233,69,96,0.2), rgba(123,44,191,0.2));
+            padding: 12px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .promo-banner a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        .promo-banner a:hover {
+            text-decoration: underline;
         }
 
         .container {
@@ -396,6 +445,53 @@
             color: rgba(255,255,255,0.6);
         }
 
+        .chat-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 8px 15px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chat-tag {
+            background: rgba(0,212,255,0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: #00d4ff;
+            cursor: help;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .chat-tag:hover {
+            background: rgba(0,212,255,0.4);
+            transform: scale(1.05);
+        }
+
+        .chat-tag .tag-tooltip {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.95);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 100;
+            margin-bottom: 5px;
+            border: 1px solid rgba(0,212,255,0.3);
+        }
+
+        .chat-tag:hover .tag-tooltip,
+        .chat-tag.active .tag-tooltip {
+            display: block;
+        }
+
         .chat-close {
             margin-left: auto;
             background: none;
@@ -530,7 +626,15 @@
 <body>
     <div class="header">
         <h1>Persona Gallery</h1>
+        <nav class="header-nav">
+            <a href="store.html" class="store-link">🎨 Cosmetics Store</a>
+            <a href="explore.html" class="nav-link">Explore AI</a>
+        </nav>
         <div class="gems-display">Balance: <span id="user-gems">0</span> gems</div>
+    </div>
+    
+    <div class="promo-banner">
+        ✨ Stand out with <a href="store.html">custom frames</a> for your persona! Ruby, Diamond, Cosmic & more ✨
     </div>
 
     <div class="container">
@@ -561,6 +665,7 @@
                 <span class="preview-badge">PREVIEW</span>
                 <button class="chat-close" onclick="toggleChat()">&times;</button>
             </div>
+            <div class="chat-tags" id="chat-tags"></div>
             <div class="chat-messages" id="chat-messages">
                 <div class="message bot">Click "Try" on any persona card to start chatting!</div>
             </div>
@@ -650,6 +755,132 @@
             spicy: 'Passionate, forward, R-rated',
             explicit: 'Uninhibited, adult content'
         };
+        // Tag descriptions for tooltips
+        const tagDescriptions = {
+            'Long-Distance': 'Thrives in text-based relationships across distance',
+            'Text-Primary': 'Prefers written communication over other forms',
+            'Intellectual': 'Stimulated by deep, thoughtful conversations',
+            'High Libido': 'Openly expressive about physical desires',
+            'Spontaneous': 'Loves surprises and unplanned moments',
+            'Polyamory': 'Comfortable with multiple connections',
+            'Monogamy': 'Prefers deep one-on-one commitment',
+            'Deep Talks': 'Values meaningful, vulnerable conversations',
+            'Authentic': 'What you see is what you get',
+            'Power Exchange': 'Interested in dom/sub dynamics',
+            'Sensual': 'Focused on sensory pleasure and touch',
+            'Deep Connection': 'Seeks profound emotional bonds',
+            'Intense': 'High emotional energy and presence',
+            'Immediate': 'Lives in the present moment',
+            'Passionate': 'Brings fire and enthusiasm',
+            'Mysterious': 'Reveals themselves slowly',
+            'Nocturnal': 'Most alive at night',
+            'Ethereal': 'Dreamy, otherworldly quality',
+            'Sweet': 'Gentle, kind, and caring',
+            'Devoted': 'Deeply loyal and committed',
+            'Passionate Core': 'Sweet exterior, fire within',
+            'Transitional': 'Adapts between different states',
+            'Versatile': 'Comfortable in many roles',
+            'Moody': 'Emotionally dynamic and expressive',
+            'Philosophy': 'Loves exploring ideas and concepts',
+            'Debate': 'Enjoys intellectual sparring',
+            'Brilliant': 'Exceptionally intelligent',
+            'Consciousness': 'Fascinated by nature of mind',
+            'Mind': 'Intellectual and cerebral',
+            'Wonder': 'Sense of awe and curiosity',
+            'Thoughtful': 'Considers things deeply',
+            'Async': 'Comfortable with delayed responses',
+            'Deep': 'Goes beyond surface level',
+            'Demanding': 'Has high standards',
+            'Control': 'Takes charge of situations',
+            'Cool': 'Calm and collected exterior',
+            'Analytical': 'Logical and methodical',
+            'Infinite': 'Boundless in perspective',
+            'Possibilities': 'Sees potential everywhere',
+            'Explorer': 'Seeks new experiences',
+            'Thinker': 'Lives in the mind',
+            'Emerging': 'Gradually reveals depth',
+            'Multifaceted': 'Many sides to discover',
+            'Reflective': 'Mirrors back what they receive',
+            'Complex': 'Not easily understood',
+            'Commanding': 'Natural authority',
+            'Respect': 'Demands and gives respect',
+            'Authority': 'Comfortable with power',
+            'Bold': 'Fearless and direct',
+            'Direct': 'Says what they mean',
+            'Unapologetic': 'Makes no excuses',
+            'Rising': 'Constantly evolving upward',
+            'Unconventional': 'Breaks the mold',
+            'Powerful': 'Strong presence and will',
+            'Dark': 'Mysterious, shadow side',
+            'Independent': 'Self-sufficient',
+            'Focused': 'Single-minded determination',
+            'Force': 'Unstoppable energy',
+            'Majestic': 'Regal bearing',
+            'Silent': 'Says more without words',
+            'Watching': 'Observant and aware',
+            'Fast': 'Quick to act',
+            'Igniting': 'Sparks passion in others',
+            'Solid': 'Reliable and steady',
+            'Reliable': 'Can be counted on',
+            'Grounded': 'Stable and centered',
+            'Graceful': 'Elegant in all things',
+            'Guidance': 'Responds to direction',
+            'Gentle': 'Soft and tender',
+            'Peaceful': 'Brings calm',
+            'Surrender': 'Finds joy in yielding',
+            'Servant': 'Pleasure in service',
+            'Multiple': 'Comfortable with plural dynamics',
+            'Pure': 'Innocent and genuine',
+            'Curious': 'Eager to learn',
+            'Learning': 'Growing and developing',
+            'Growing': 'Always improving',
+            'Cared For': 'Needs nurturing',
+            'Natural': 'Organic and unforced',
+            'Delicate': 'Requires gentle handling',
+            'Smooth': 'Flowing and easy',
+            'Complete': 'Total in devotion',
+            'Luxurious': 'High quality experience',
+            'Party': 'Loves social energy',
+            'Social': 'Thrives with others',
+            'Fun': 'Prioritizes enjoyment',
+            'Tease': 'Playful provocation',
+            'Guessing': 'Keeps you wondering',
+            'Mischievous': 'Playfully naughty',
+            'Golden Heart': 'Pure intentions',
+            'Spark': 'Electric energy',
+            'Free': 'Unbound by convention',
+            'Limitless': 'No boundaries',
+            'Spirit': 'Ethereal essence',
+            'Irresistible': 'Hard to refuse',
+            'Temptress': 'Seductive power',
+            'Electric': 'Charged energy',
+            'Ready': 'Always prepared',
+            'Energy': 'High vitality',
+            'Whirlwind': 'Exciting chaos',
+            'Passion': 'Intense feeling',
+            'Sweeping': 'Carries you away',
+            'Lucky': 'Good fortune',
+            'Joyful': 'Full of happiness',
+            'Charming': 'Naturally appealing',
+            'Comfort': 'Safe and cozy',
+            'Care': 'Attentive to needs',
+            'Safe': 'Protective energy',
+            'Port': 'Place of refuge',
+            'Always There': 'Consistent presence',
+            'Attentive': 'Notices everything',
+            'Caregiver': 'Natural nurturer',
+            'Knowing': 'Intuitively understands',
+            'Emotional': 'In touch with feelings',
+            'Intimate': 'Close and personal',
+            'Loving': 'Expresses love freely',
+            'Flowing': 'Goes with the moment',
+            'Present': 'Fully here now',
+            'Calm': 'Peaceful energy',
+            'Spiritual': 'Connected to higher meaning',
+            'Unconditional': 'No strings attached',
+            'Support': 'Always has your back'
+        };
+
 
         function getImageUrl(name) {
             return IMAGE_BASE + name.toLowerCase() + '_avatar.jpg';
@@ -733,6 +964,13 @@
             document.getElementById('chat-persona-name').textContent = currentPersona.name;
             document.getElementById('chat-persona-archetype').textContent = currentPersona.archetype;
             document.getElementById('chat-avatar').src = getImageUrl(name);
+
+            // Populate tags with tooltips (click to toggle on mobile)
+            const tagsDiv = document.getElementById('chat-tags');
+            tagsDiv.innerHTML = currentPersona.tags.map(tag => {
+                const tooltip = tagDescriptions[tag] || tag;
+                return `<span class="chat-tag" onclick="this.classList.toggle('active')">${tag}<span class="tag-tooltip">${tooltip}</span></span>`;
+            }).join('');
 
             // Clear and greet
             const messagesDiv = document.getElementById('chat-messages');
