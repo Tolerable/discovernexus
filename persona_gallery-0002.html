@@ -485,12 +485,6 @@
             background: rgba(0,0,0,0.2);
         }
 
-        .persona-avatar-wrapper {
-            position: relative;
-            width: 60px;
-            height: 60px;
-        }
-
         .persona-avatar {
             width: 60px;
             height: 60px;
@@ -498,65 +492,6 @@
             object-fit: cover;
             border: 3px solid rgba(255,255,255,0.2);
             transition: all 0.3s;
-        }
-
-        .persona-avatar-wrapper .frame-icon {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            font-size: 14px;
-            z-index: 10;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
-
-        /* Frame effects on card avatar */
-        .persona-avatar-wrapper.frame-none .persona-avatar { border: 2px dashed rgba(255,255,255,0.3); }
-        .persona-avatar-wrapper.frame-ruby .persona-avatar { border: 3px solid #e74c3c; box-shadow: 0 0 12px rgba(231, 76, 60, 0.6); }
-        .persona-avatar-wrapper.frame-diamond .persona-avatar { border: 3px solid #ecf0f1; box-shadow: 0 0 12px rgba(255,255,255,0.6); }
-        .persona-avatar-wrapper.frame-emerald .persona-avatar { border: 3px solid #2ecc71; box-shadow: 0 0 12px rgba(46, 204, 113, 0.6); }
-        .persona-avatar-wrapper.frame-sapphire .persona-avatar { border: 3px solid #3498db; box-shadow: 0 0 12px rgba(52, 152, 219, 0.6); }
-        .persona-avatar-wrapper.frame-cosmic .persona-avatar { border: 3px solid #9b59b6; box-shadow: 0 0 15px rgba(155, 89, 182, 0.7); }
-        .persona-avatar-wrapper.frame-mythic .persona-avatar {
-            border: 3px solid transparent;
-            background: linear-gradient(#1a1a2e, #1a1a2e) padding-box,
-                        linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db) border-box;
-            animation: mythicGlow 3s ease infinite;
-        }
-
-        /* Frame controls on card */
-        .card-frame-controls {
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 2px;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .persona-card:hover .card-frame-controls {
-            opacity: 1;
-        }
-
-        .card-frame-btn {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 8px;
-            background: rgba(20, 20, 30, 0.95);
-            color: #d4af37;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .card-frame-btn:hover {
-            transform: scale(1.2);
-            background: rgba(212, 175, 55, 0.3);
         }
 
         .persona-card:hover .persona-avatar {
@@ -732,39 +667,11 @@
             background: linear-gradient(90deg, #d4af37, #f39c12);
             color: #1a1a2e;
             font-weight: 700;
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            border-radius: 50%;
-            font-size: 18px;
-            position: relative;
         }
 
         .buy-btn:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             box-shadow: 0 5px 20px rgba(212,175,55,0.5);
-        }
-
-        .buy-btn .buy-tooltip {
-            position: absolute;
-            bottom: 120%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.95);
-            color: #d4af37;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-            border: 1px solid rgba(212,175,55,0.5);
-        }
-
-        .buy-btn:hover .buy-tooltip {
-            opacity: 1;
         }
 
         /* Persona Modal Overlay */
@@ -1066,7 +973,7 @@
         }
 
         .chat-header {
-            padding: 10px 12px;
+            padding: 12px 15px;
             background: rgba(123,44,191,0.3);
             display: flex;
             align-items: center;
@@ -1074,96 +981,31 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .chat-header-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            overflow: visible;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .chat-header-avatar img {
-            width: 100%;
-            height: 100%;
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
-        .chat-header-avatar .frame-icon {
-            position: absolute;
-            top: -4px;
-            right: -4px;
+        .chat-persona-info h3 {
             font-size: 14px;
-            z-index: 10;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 2px;
         }
 
-        /* Frame effects on header avatar */
-        .chat-header-avatar.frame-none { border: 2px dashed rgba(255,255,255,0.3); }
-        .chat-header-avatar.frame-ruby { border: 3px solid #e74c3c; box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); }
-        .chat-header-avatar.frame-diamond { border: 3px solid #ecf0f1; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .chat-header-avatar.frame-emerald { border: 3px solid #2ecc71; box-shadow: 0 0 10px rgba(46, 204, 113, 0.5); }
-        .chat-header-avatar.frame-sapphire { border: 3px solid #3498db; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
-        .chat-header-avatar.frame-cosmic { border: 3px solid #9b59b6; box-shadow: 0 0 12px rgba(155, 89, 182, 0.6); }
-        .chat-header-avatar.frame-mythic {
-            border: 3px solid transparent;
-            background: linear-gradient(#1a1a2e, #1a1a2e) padding-box,
-                        linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db) border-box;
-            animation: mythicGlow 3s ease infinite;
-        }
-
-        .chat-header-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .chat-header-top {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
-        }
-
-        .chat-header-name {
-            font-size: 15px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .chat-header-archetype {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 2px 6px;
-            border-radius: 8px;
-        }
-
-        .chat-header-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3px;
-        }
-
-        .chat-header-tag {
-            background: rgba(0,212,255,0.2);
-            padding: 1px 6px;
-            border-radius: 8px;
-            font-size: 9px;
-            color: #00d4ff;
-            cursor: help;
-        }
-
-        .chat-avatar {
-            display: none;
-        }
-
-        .chat-persona-info {
-            display: none;
+        .chat-persona-info span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
         }
 
         .chat-tags {
-            display: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 8px 15px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .chat-tag {
@@ -1391,21 +1233,22 @@
                     <a href="store.html" class="frame-bar-link">More</a>
                 </div>
             </div>
+            <div class="session-state" id="session-state">
+                <span class="host-label">HOST:</span>
+                <span class="host-value">Default</span>
+                <span class="persona-label">Persona:</span>
+                <span class="persona-value">None</span>
+            </div>
             <div class="chat-header" id="chat-header-main">
-                <div class="chat-header-avatar frame-none" id="chat-header-avatar">
-                    <img id="chat-avatar" src="" alt="">
-                    <span class="frame-icon" id="chat-frame-icon"></span>
+                <img class="chat-avatar" id="chat-avatar" src="" alt="">
+                <div class="chat-persona-info">
+                    <h3 id="chat-persona-name">Select a Persona</h3>
+                    <span id="chat-persona-archetype">Try before you rent</span>
                 </div>
-                <div class="chat-header-content">
-                    <div class="chat-header-top">
-                        <span class="chat-header-name" id="chat-persona-name">Select a Persona</span>
-                        <span class="chat-header-archetype archetype-romantic" id="chat-persona-archetype">Try</span>
-                        <span class="preview-badge">PREVIEW</span>
-                    </div>
-                    <div class="chat-header-tags" id="chat-tags"></div>
-                </div>
+                <span class="preview-badge">PREVIEW</span>
                 <button class="chat-close" onclick="toggleChat()">&times;</button>
             </div>
+            <div class="chat-tags" id="chat-tags"></div>
             <div class="chat-messages" id="chat-messages">
                 <div class="message bot">Click "Try" on any persona card to start chatting!</div>
             </div>
@@ -1653,48 +1496,11 @@
         function prevFrame() {
             currentFrameIndex = (currentFrameIndex - 1 + frames.length) % frames.length;
             updateFrameDisplay();
-            updateChatHeaderFrame();
         }
 
         function nextFrame() {
             currentFrameIndex = (currentFrameIndex + 1) % frames.length;
             updateFrameDisplay();
-            updateChatHeaderFrame();
-        }
-
-        // Per-card frame selection
-        const cardFrameIndexes = {}; // Track frame index per persona
-
-        function prevCardFrame(personaName) {
-            if (!cardFrameIndexes[personaName]) cardFrameIndexes[personaName] = 0;
-            cardFrameIndexes[personaName] = (cardFrameIndexes[personaName] - 1 + frames.length) % frames.length;
-            updateCardFrame(personaName);
-        }
-
-        function nextCardFrame(personaName) {
-            if (!cardFrameIndexes[personaName]) cardFrameIndexes[personaName] = 0;
-            cardFrameIndexes[personaName] = (cardFrameIndexes[personaName] + 1) % frames.length;
-            updateCardFrame(personaName);
-        }
-
-        function updateCardFrame(personaName) {
-            const frameIdx = cardFrameIndexes[personaName] || 0;
-            const frame = frames[frameIdx];
-            const wrapper = document.querySelector(`.persona-avatar-wrapper[data-persona="${personaName}"]`);
-
-            if (!wrapper) return;
-
-            // Remove old frame classes, add new one
-            frames.forEach(f => wrapper.classList.remove(f.class));
-            wrapper.classList.add(frame.class);
-
-            // Update icon
-            const icon = wrapper.querySelector('.frame-icon');
-            if (icon) icon.textContent = frame.icon || '';
-
-            // Store on card for reference
-            const card = wrapper.closest('.persona-card');
-            if (card) card.dataset.frame = frameIdx;
         }
 
         function buyFrame() {
@@ -1760,16 +1566,10 @@
         function renderPersonas(list) {
             const grid = document.getElementById('persona-grid');
             grid.innerHTML = list.map(p => `
-                <div class="persona-card tier-soft" data-name="${p.name}" data-archetype="${p.archetype}" data-frame="0" onclick="toggleCard(this)">
+                <div class="persona-card tier-soft" data-name="${p.name}" data-archetype="${p.archetype}" onclick="toggleCard(this)">
                     <div class="persona-header">
-                        <div class="persona-avatar-wrapper frame-none" data-persona="${p.name}">
-                            <img class="persona-avatar" src="${getImageUrl(p.name)}" alt="${p.name}" onerror="this.style.display='none';">
-                            <span class="frame-icon"></span>
-                            <div class="card-frame-controls">
-                                <button class="card-frame-btn" onclick="event.stopPropagation(); prevCardFrame('${p.name}')">◀</button>
-                                <button class="card-frame-btn" onclick="event.stopPropagation(); nextCardFrame('${p.name}')">▶</button>
-                            </div>
-                        </div>
+                        <img class="persona-avatar" src="${getImageUrl(p.name)}" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="persona-avatar-placeholder" style="display:none;">${p.name[0]}</div>
                         <div class="persona-header-info">
                             <div class="persona-name">${p.name}</div>
                             <span class="persona-archetype archetype-${p.archetype}">${p.archetype}</span>
@@ -1802,7 +1602,7 @@
                         <div class="action-btns">
                             <button class="try-btn" onclick="event.stopPropagation(); tryPersona('${p.name}')">Try</button>
                             <button class="rent-btn" onclick="event.stopPropagation(); openPersonaModal('${p.name}')">Rent</button>
-                            <button class="buy-btn" onclick="event.stopPropagation(); quickBuy('${p.name}')">💰<span class="buy-tooltip">BUY</span></button>
+                            <button class="buy-btn" onclick="event.stopPropagation(); quickBuy('${p.name}')">Buy</button>
                         </div>
                     </div>
                 </div>
@@ -2001,19 +1801,18 @@
                 updateCompatibilityDisplay(compat);
             }
 
-            // Update chat header - new consolidated structure
+            // Update chat header
             document.getElementById('chat-persona-name').textContent = currentPersona.name;
-            const archetypeEl = document.getElementById('chat-persona-archetype');
-            archetypeEl.textContent = currentPersona.archetype;
-            archetypeEl.className = 'chat-header-archetype archetype-' + currentPersona.archetype;
+            document.getElementById('chat-persona-archetype').textContent = currentPersona.archetype;
             document.getElementById('chat-avatar').src = getImageUrl(name);
 
-            // Populate tags in the new header tags area
+            // Populate tags with tooltips from database
             const tagsDiv = document.getElementById('chat-tags');
-            tagsDiv.innerHTML = currentPersona.tags.slice(0, 3).map(tag => {
+            tagsDiv.innerHTML = currentPersona.tags.map(tag => {
+                // Get definition from loaded database tags
                 const tooltip = tagDescriptions[tag] || `${tag} - A personality trait`;
                 const safeTooltip = tooltip.replace(/'/g, "\'").replace(/"/g, '\"');
-                return `<span class="chat-header-tag"
+                return `<span class="chat-tag"
                     onmouseenter="showTagTooltip(event, '${safeTooltip}')"
                     onmouseleave="hideTagTooltip()"
                     onclick="toggleTagTooltip(event, '${safeTooltip}')"
@@ -2028,24 +1827,8 @@
 
             // Update frame display with this persona's image
             updateFrameDisplay();
-            updateChatHeaderFrame();
 
             if (!chatOpen) toggleChat();
-        }
-
-        // Sync chat header avatar with current frame
-        function updateChatHeaderFrame() {
-            const frame = frames[currentFrameIndex];
-            const headerAvatar = document.getElementById('chat-header-avatar');
-            const headerIcon = document.getElementById('chat-frame-icon');
-
-            if (!headerAvatar) return;
-
-            // Remove old frame classes, add new one
-            frames.forEach(f => headerAvatar.classList.remove(f.class));
-            headerAvatar.classList.add(frame.class);
-
-            if (headerIcon) headerIcon.textContent = frame.icon || '';
         }
 
         async function sendMessage() {
