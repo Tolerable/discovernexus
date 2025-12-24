@@ -95,144 +95,6 @@
 
 
         /* Frame Selector */
-        .frame-selector {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.9);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 16px;
-            padding: 15px;
-            width: 200px;
-            z-index: 500;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .frame-selector h4 {
-            color: #d4af37;
-            font-size: 12px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .frame-preview {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 10px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            position: relative;
-        }
-
-        .frame-none { background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3); }
-        .frame-ruby { background: linear-gradient(135deg, #e74c3c, #c0392b); box-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
-        .frame-diamond { background: linear-gradient(135deg, #ecf0f1, #bdc3c7); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
-        .frame-emerald { background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 0 20px rgba(46, 204, 113, 0.5); }
-        .frame-sapphire { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 0 20px rgba(52, 152, 219, 0.5); }
-        .frame-cosmic { background: linear-gradient(135deg, #9b59b6, #1a1a2e, #00d4ff); box-shadow: 0 0 25px rgba(155, 89, 182, 0.6); }
-        .frame-mythic { background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db); background-size: 300% 300%; animation: mythicShift 3s ease infinite; }
-
-        @keyframes mythicShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .frame-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .frame-nav button {
-            background: rgba(0, 212, 255, 0.2);
-            border: 1px solid rgba(0, 212, 255, 0.4);
-            color: #00d4ff;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-
-        .frame-nav button:hover {
-            background: rgba(0, 212, 255, 0.4);
-            transform: scale(1.1);
-        }
-
-        .frame-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .frame-price {
-            text-align: center;
-            color: #d4af37;
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-
-        .frame-buy-btn {
-            width: 100%;
-            background: linear-gradient(90deg, #d4af37, #f39c12);
-            border: none;
-            color: #000;
-            padding: 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 8px;
-        }
-
-        .frame-buy-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
-
-        .frame-bundle-hint {
-            font-size: 10px;
-            color: rgba(255,255,255,0.5);
-            text-align: center;
-        }
-
-        .frame-toggle {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(90deg, #d4af37, #f39c12);
-            border: none;
-            color: #000;
-            padding: 12px;
-            border-radius: 12px 0 0 12px;
-            cursor: pointer;
-            font-size: 18px;
-            z-index: 499;
-            display: none;
-        }
-
-        .frame-selector.hidden {
-            transform: translateX(250px) translateY(-50%);
-        }
-
-        .frame-selector.hidden + .frame-toggle {
-            display: block;
-        }
-
-        @media (max-width: 1200px) {
-            .frame-selector {
-                display: none;
-            }
-        }
-
 
         /* Frame styles for avatar */
         .frame-none .chat-avatar { border: 2px dashed rgba(255,255,255,0.3); }
@@ -255,50 +117,81 @@
         }
 
         /* Frame selector bar in chat header */
+        /* Frame selector bar in chat popup */
         .frame-bar {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            background: rgba(0,0,0,0.3);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.4);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        .frame-bar-label {
-            font-size: 10px;
-            color: rgba(255,255,255,0.5);
-            text-transform: uppercase;
-        }
-
-        .frame-bar-nav {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex: 1;
-        }
-
-        .frame-bar-nav button {
+        .frame-bar-arrow {
             background: rgba(212, 175, 55, 0.2);
             border: 1px solid rgba(212, 175, 55, 0.4);
             color: #d4af37;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .frame-bar-nav button:hover {
+        .frame-bar-arrow:hover {
             background: rgba(212, 175, 55, 0.4);
+            transform: scale(1.1);
+        }
+
+        .frame-bar-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .frame-bar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Frame effects on preview avatar */
+        .frame-bar-preview.frame-none { border: 2px dashed rgba(255,255,255,0.3); }
+        .frame-bar-preview.frame-ruby { border: 3px solid #e74c3c; box-shadow: 0 0 15px rgba(231, 76, 60, 0.6); }
+        .frame-bar-preview.frame-diamond { border: 3px solid #ecf0f1; box-shadow: 0 0 15px rgba(255,255,255,0.6); }
+        .frame-bar-preview.frame-emerald { border: 3px solid #2ecc71; box-shadow: 0 0 15px rgba(46, 204, 113, 0.6); }
+        .frame-bar-preview.frame-sapphire { border: 3px solid #3498db; box-shadow: 0 0 15px rgba(52, 152, 219, 0.6); }
+        .frame-bar-preview.frame-cosmic { border: 3px solid #9b59b6; box-shadow: 0 0 20px rgba(155, 89, 182, 0.7), 0 0 30px rgba(0, 212, 255, 0.3); }
+        .frame-bar-preview.frame-mythic {
+            border: 3px solid transparent;
+            background: linear-gradient(#1a1a2e, #1a1a2e) padding-box,
+                        linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db) border-box;
+            animation: mythicGlow 3s ease infinite;
+        }
+
+        @keyframes mythicGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.6); }
+            33% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.6); }
+            66% { box-shadow: 0 0 20px rgba(155, 89, 182, 0.6); }
+        }
+
+        .frame-bar-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
         .frame-bar-name {
-            font-size: 12px;
+            font-size: 13px;
             color: #d4af37;
             font-weight: 600;
-            min-width: 60px;
-            text-align: center;
         }
 
         .frame-bar-price {
@@ -310,16 +203,18 @@
             background: linear-gradient(90deg, #d4af37, #f39c12);
             border: none;
             color: #000;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            text-decoration: none;
         }
 
         .frame-bar-buy:hover {
             transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
         }
 
         .container {
@@ -460,43 +355,6 @@
             flex: 1;
         }
 
-        /* Frame preview in card header */
-        .card-frame-preview {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            flex-shrink: 0;
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .card-frame-preview:hover {
-            transform: scale(1.15);
-        }
-
-        .card-frame-none { background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3); }
-        .card-frame-ruby { background: linear-gradient(135deg, #e74c3c, #c0392b); box-shadow: 0 0 12px rgba(231, 76, 60, 0.5); }
-        .card-frame-diamond { background: linear-gradient(135deg, #ecf0f1, #bdc3c7); box-shadow: 0 0 12px rgba(255,255,255,0.5); }
-        .card-frame-emerald { background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 0 12px rgba(46, 204, 113, 0.5); }
-        .card-frame-sapphire { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 0 12px rgba(52, 152, 219, 0.5); }
-        .card-frame-cosmic { background: linear-gradient(135deg, #9b59b6, #1a1a2e, #00d4ff); box-shadow: 0 0 15px rgba(155, 89, 182, 0.6); }
-        .card-frame-mythic {
-            background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db);
-            background-size: 300% 300%;
-            animation: cardMythicShift 3s ease infinite;
-            box-shadow: 0 0 15px rgba(243, 156, 18, 0.5);
-        }
-
-        @keyframes cardMythicShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
 
         .persona-name {
             font-size: 18px;
@@ -938,14 +796,16 @@
                 <button class="chat-close" onclick="toggleChat()">&times;</button>
             </div>
             <div class="frame-bar">
-                <span class="frame-bar-label">Frame:</span>
-                <div class="frame-bar-nav">
-                    <button onclick="prevFrame()">◀</button>
-                    <span class="frame-bar-name" id="frame-name">None</span>
-                    <button onclick="nextFrame()">▶</button>
+                <button class="frame-bar-arrow" onclick="prevFrame()">◀</button>
+                <div class="frame-bar-preview frame-none" id="frame-preview">
+                    <img id="frame-preview-img" src="" alt="">
                 </div>
-                <span class="frame-bar-price" id="frame-price"></span>
-                <button class="frame-bar-buy" onclick="buyFrame()">+ Add</button>
+                <button class="frame-bar-arrow" onclick="nextFrame()">▶</button>
+                <div class="frame-bar-info">
+                    <span class="frame-bar-name" id="frame-name">None</span>
+                    <span class="frame-bar-price" id="frame-price">Free</span>
+                </div>
+                <a href="store.html" class="frame-bar-buy">🎨 Get Frames</a>
             </div>
             <div class="chat-tags" id="chat-tags"></div>
             <div class="chat-messages" id="chat-messages">
@@ -1105,19 +965,24 @@
         // Frame functions
         function updateFrameDisplay() {
             const frame = frames[currentFrameIndex];
-            const header = document.getElementById('chat-header-main');
+            const preview = document.getElementById('frame-preview');
+            const previewImg = document.getElementById('frame-preview-img');
             const nameEl = document.getElementById('frame-name');
             const priceEl = document.getElementById('frame-price');
 
-            if (!header) return;
+            if (!preview) return;
 
-            // Remove old frame classes
-            frames.forEach(f => header.classList.remove(f.class));
-            // Add current frame class
-            header.classList.add(frame.class);
+            // Update preview image to match current persona
+            if (currentPersona && previewImg) {
+                previewImg.src = getImageUrl(currentPersona.name);
+            }
 
-            if (nameEl) nameEl.textContent = frame.name;
-            if (priceEl) priceEl.textContent = frame.price === 0 ? '' : frame.price + ' gems';
+            // Remove old frame classes, add new one
+            frames.forEach(f => preview.classList.remove(f.class));
+            preview.classList.add(frame.class);
+
+            if (nameEl) nameEl.textContent = frame.name + ' Frame';
+            if (priceEl) priceEl.textContent = frame.price === 0 ? 'Free' : frame.price + ' gems';
         }
 
         function prevFrame() {
@@ -1145,35 +1010,13 @@
             }
         }
 
-        // Card frame helpers
-        function getCardFrameClass(index) {
-            const frameClasses = ['ruby', 'emerald', 'sapphire', 'diamond', 'cosmic', 'mythic'];
-            return frameClasses[index % frameClasses.length];
-        }
-
-        function getCardFrameInfo(index) {
-            const frameClass = getCardFrameClass(index);
-            const frame = frames.find(f => f.class === 'frame-' + frameClass);
-            return frame ? { name: frame.name, price: frame.price } : { name: 'None', price: 0 };
-        }
-
-        function previewCardFrame(personaName, frameClass) {
-            // Find frame index
-            const idx = frames.findIndex(f => f.class === 'frame-' + frameClass);
-            if (idx >= 0) currentFrameIndex = idx;
-            tryPersona(personaName);
-        }
-
         function getImageUrl(name) {
             return IMAGE_BASE + name.toLowerCase() + '_avatar.jpg';
         }
 
         function renderPersonas(list) {
             const grid = document.getElementById('persona-grid');
-            grid.innerHTML = list.map((p, idx) => {
-            const frameClass = getCardFrameClass(idx);
-            const frameInfo = getCardFrameInfo(idx);
-            return `
+            grid.innerHTML = list.map(p => `
                 <div class="persona-card tier-soft" data-name="${p.name}" data-archetype="${p.archetype}" onclick="toggleCard(this)">
                     <div class="persona-header">
                         <img class="persona-avatar" src="${getImageUrl(p.name)}" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -1182,9 +1025,7 @@
                             <div class="persona-name">${p.name}</div>
                             <span class="persona-archetype archetype-${p.archetype}">${p.archetype}</span>
                         </div>
-                        <div class="card-frame-preview card-frame-${frameClass}" onclick="event.stopPropagation(); previewCardFrame('${p.name}', '${frameClass}')" title="${frameInfo.name} Frame • ${frameInfo.price > 0 ? frameInfo.price + ' gems' : 'Free'}">
-                            ✨
-                        </div>
+
                     </div>
                     <div class="persona-info">
                         <div class="persona-bio">${p.bio}</div>
@@ -1215,7 +1056,7 @@
                         </div>
                     </div>
                 </div>
-            `}).join('');
+            `).join('');
         }
 
         function toggleCard(card) {
@@ -1535,89 +1376,7 @@ Be genuine, be YOU, but help users find their perfect match!`;
     </script>
 
     <!-- Frame Selector Panel -->
-    <div class="frame-selector" id="frame-selector">
-        <h4>🎨 Try a Frame</h4>
-        <div class="frame-preview" id="frame-preview">
-            <span id="frame-preview-initial">?</span>
-        </div>
-        <div class="frame-nav">
-            <button onclick="prevFrame()">◀</button>
-            <span class="frame-name" id="frame-name">None</span>
-            <button onclick="nextFrame()">▶</button>
-        </div>
-        <div class="frame-price" id="frame-price">Free</div>
-        <button class="frame-buy-btn" onclick="buyFrame()">Add Frame</button>
-        <div class="frame-bundle-hint">💡 Bundle with persona rental for 10% off!</div>
-    </div>
-
-    <script>
-        // Frame data
-        const frames = [
-            { name: 'None', class: 'frame-none', price: 0 },
-            { name: 'Ruby', class: 'frame-ruby', price: 15 },
-            { name: 'Diamond', class: 'frame-diamond', price: 25 },
-            { name: 'Emerald', class: 'frame-emerald', price: 20 },
-            { name: 'Sapphire', class: 'frame-sapphire', price: 20 },
-            { name: 'Cosmic', class: 'frame-cosmic', price: 50 },
-            { name: 'Mythic', class: 'frame-mythic', price: 100 }
-        ];
-
-        let currentFrameIndex = 0;
-
-        function updateFramePreview() {
-            const frame = frames[currentFrameIndex];
-            const preview = document.getElementById('frame-preview');
-            const name = document.getElementById('frame-name');
-            const price = document.getElementById('frame-price');
-            const initial = document.getElementById('frame-preview-initial');
-
-            // Update preview
-            preview.className = 'frame-preview ' + frame.class;
-
-            // Show persona initial if one is selected
-            if (currentPersona) {
-                initial.textContent = currentPersona.name[0];
-            }
-
-            name.textContent = frame.name;
-            price.textContent = frame.price === 0 ? 'Free' : frame.price + ' gems';
-        }
-
-        function prevFrame() {
-            currentFrameIndex = (currentFrameIndex - 1 + frames.length) % frames.length;
-            updateFramePreview();
-        }
-
-        function nextFrame() {
-            currentFrameIndex = (currentFrameIndex + 1) % frames.length;
-            updateFramePreview();
-        }
-
-        function buyFrame() {
-            const frame = frames[currentFrameIndex];
-            if (frame.price === 0) {
-                alert('No frame selected!');
-                return;
-            }
-
-            if (currentPersona) {
-                const bundlePrice = Math.floor((currentPersona.price + frame.price) * 0.9);
-                alert(`Bundle Deal!\n\n${currentPersona.name} + ${frame.name} Frame\n\nRegular: ${currentPersona.price + frame.price} gems\nBundle: ${bundlePrice} gems (10% off!)\n\n(Purchase integration coming soon!)`);
-            } else {
-                alert(`${frame.name} Frame: ${frame.price} gems\n\n(Purchase integration coming soon!)`);
-            }
-        }
-
-        // Update frame preview when persona is selected
-        const originalTryPersona = tryPersona;
-        tryPersona = function(name) {
-            originalTryPersona(name);
-            updateFramePreview();
-        };
-
-        // Initialize
-        updateFramePreview();
-    </script>
+    
 
     <script src="/js/navbar.js"></script>
 </body>
