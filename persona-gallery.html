@@ -510,6 +510,56 @@
             margin-left: auto;
         }
 
+        /* Compatibility Section */
+        .persona-compatibility {
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .compat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 6px;
+        }
+
+        .compat-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .compat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            font-size: 10px;
+            color: #d4af37;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .compat-badge:hover {
+            background: rgba(212, 175, 55, 0.3);
+            transform: scale(1.05);
+        }
+
+        .compat-badge.host-compat {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: rgba(0, 212, 255, 0.3);
+            color: #00d4ff;
+        }
+
+        .compat-badge .compat-icon {
+            font-size: 10px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header {
@@ -644,6 +694,35 @@
         let currentTier = 'soft';
         let chatOpen = false;
 
+        // Compatibility mappings - which archetypes pair well together
+        const archetypeCompatibility = {
+            romantic: ['nurturing', 'submissive', 'playful'],
+            intellectual: ['dominant', 'romantic', 'nurturing'],
+            dominant: ['submissive', 'intellectual', 'playful'],
+            submissive: ['dominant', 'nurturing', 'romantic'],
+            playful: ['romantic', 'dominant', 'playful'],
+            nurturing: ['submissive', 'romantic', 'intellectual']
+        };
+
+        // Compatible HOST types for each archetype
+        const hostCompatibility = {
+            romantic: ['Intimate', 'Private', 'Creative'],
+            intellectual: ['Academic', 'Debate', 'Philosophy'],
+            dominant: ['Power Exchange', 'Training', 'Discipline'],
+            submissive: ['Guidance', 'Protection', 'Service'],
+            playful: ['Social', 'Gaming', 'Adventure'],
+            nurturing: ['Support', 'Comfort', 'Healing']
+        };
+
+        function getCompatiblePersonas(archetype) {
+            const compatArchetypes = archetypeCompatibility[archetype] || [];
+            return compatArchetypes.map(a => a.charAt(0).toUpperCase() + a.slice(1));
+        }
+
+        function getCompatibleHosts(archetype) {
+            return hostCompatibility[archetype] || [];
+        }
+
         const tierDescriptions = {
             soft: 'Friendly, appropriate, PG-13',
             medium: 'Flirtatious, playful innuendo',
@@ -686,6 +765,13 @@
                                 </select>
                                 <div class="tier-description">${tierDescriptions.soft}</div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="persona-compatibility">
+                        <div class="compat-label">Pairs well with</div>
+                        <div class="compat-badges">
+                            ${getCompatiblePersonas(p.archetype).map(a => `<span class="compat-badge" onclick="event.stopPropagation(); filterByArchetype('${a.toLowerCase()}')">${a}</span>`).join('')}
+                            ${getCompatibleHosts(p.archetype).slice(0, 2).map(h => `<span class="compat-badge host-compat"><span class="compat-icon">🖥</span>${h}</span>`).join('')}
                         </div>
                     </div>
                     <div class="persona-footer">
@@ -800,6 +886,17 @@ Keep responses short (1-3 sentences), warm, and in character.`;
             if (!persona) return;
 
             alert(`Renting ${persona.name} for ${persona.price} gems!\n\n3 hours of full access as ${persona.name}.\n\n(Economy integration coming soon!)`);
+        }
+
+        // Filter by archetype (called from compatibility badges)
+        function filterByArchetype(archetype) {
+            // Update button state
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            const targetBtn = document.querySelector(`[data-filter="${archetype}"]`);
+            if (targetBtn) targetBtn.classList.add('active');
+
+            // Filter personas
+            renderPersonas(personas.filter(p => p.archetype === archetype));
         }
 
         // Filter functionality

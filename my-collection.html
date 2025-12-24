@@ -681,6 +681,13 @@
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
+        .aside-ownership.locked {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .aside-ownership.locked .aside-ownership-text { color: #e74c3c; }
+
         .aside-ownership-icon {
             font-size: 16px;
         }
@@ -1159,12 +1166,126 @@
                 height: 300px;
             }
         }
+    
+        /* Floating Recommendation Bubbles - Mobile App Style */
+        .floating-recs {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .floating-rec-bubble {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-rec-bubble:hover {
+            transform: scale(1.15);
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .floating-rec-bubble img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .floating-rec-bubble .bubble-initial {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+        }
+
+        .floating-rec-bubble .bubble-tooltip {
+            position: absolute;
+            right: 65px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #00d4ff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .floating-rec-bubble:hover .bubble-tooltip {
+            opacity: 1;
+        }
+
+        .floating-rec-bubble.host-type {
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        .floating-rec-bubble.host-type:hover {
+            border-color: #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .floating-rec-bubble.host-type .bubble-initial {
+            background: linear-gradient(135deg, #d4af37, #7b2cbf);
+        }
+
+        .floating-recs-label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        @media (max-width: 900px) {
+            .floating-recs {
+                right: 10px;
+                gap: 8px;
+            }
+            .floating-rec-bubble {
+                width: 46px;
+                height: 46px;
+            }
+            .floating-rec-bubble .bubble-tooltip {
+                display: none;
+            }
+        }
+
     </style>
     <script src="/auth.js"></script>
     <script src="/js/nexus-core.js"></script>
     <script src="/js/pollinations.js"></script>
 </head>
 <body>
+    <!-- Floating Recommendation Bubbles -->
+    <div class="floating-recs" id="floating-recs">
+        <div class="floating-recs-label">For You</div>
+        <!-- Populated by JS -->
+    </div>
+
     <div class="container">
         <!-- Recommended for You -->
         <div class="recommendations" id="recommendations-section">
@@ -1585,10 +1706,10 @@
                     { id: 'Queer-Solo-Brat', name: 'Queer-Solo-Brat', tags: ['Queer', 'Solo', 'Brat'], gemsRemaining: 0, gender: 'neutral' }
                 ],
                 personas: [
-                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic with deep emotional intelligence.', gemsRemaining: 30, gender: 'female', image: 'https://image.pollinations.ai/prompt/beautiful%20romantic%20woman%20fantasy%20portrait%20soft%20lighting?width=256&height=256&seed=luna1' },
-                    { id: 'ember', name: 'Ember', archetype: 'Playful', bio: 'Fiery and fun-loving, always up for adventure.', gemsRemaining: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/playful%20fiery%20woman%20fantasy%20portrait%20vibrant%20colors?width=256&height=256&seed=ember2' },
-                    { id: 'max', name: 'Max', archetype: 'Dominant', bio: 'Confident and commanding, yet caring.', gemsRemaining: 35, gender: 'male', image: 'https://image.pollinations.ai/prompt/confident%20dominant%20man%20fantasy%20portrait%20dark%20aesthetic?width=256&height=256&seed=max3' },
-                    { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Thoughtful conversationalist who loves deep discussions.', gemsRemaining: 0, gender: 'neutral', image: 'https://image.pollinations.ai/prompt/wise%20intellectual%20androgynous%20person%20fantasy%20portrait?width=256&height=256&seed=sage4' }
+                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic with deep emotional intelligence.', gemsRemaining: 30, gender: 'female', image: 'https://image.pollinations.ai/prompt/beautiful%20romantic%20woman%20fantasy%20portrait%20soft%20lighting?width=256&height=256&seed=luna1', ownership: 'owned' },
+                    { id: 'ember', name: 'Ember', archetype: 'Playful', bio: 'Fiery and fun-loving, always up for adventure.', gemsRemaining: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/playful%20fiery%20woman%20fantasy%20portrait%20vibrant%20colors?width=256&height=256&seed=ember2', ownership: 'rented', rentalMins: 165, rentalTotal: 180 },
+                    { id: 'max', name: 'Max', archetype: 'Dominant', bio: 'Confident and commanding, yet caring.', gemsRemaining: 35, gender: 'male', image: 'https://image.pollinations.ai/prompt/confident%20dominant%20man%20fantasy%20portrait%20dark%20aesthetic?width=256&height=256&seed=max3', ownership: 'owned' },
+                    { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Thoughtful conversationalist who loves deep discussions.', gemsRemaining: 0, gender: 'neutral', image: 'https://image.pollinations.ai/prompt/wise%20intellectual%20androgynous%20person%20fantasy%20portrait?width=256&height=256&seed=sage4', ownership: 'locked' }
                 ],
                 activeHost: 'Bi-Poly-Dom-PE',
                 activePersona: 'luna',
@@ -1797,24 +1918,52 @@
             ).join('');
             document.getElementById('aside-tags').innerHTML = tagsHtml || '<span class="aside-tag">No tags</span>';
 
-            // Check ownership (for demo, personas with > 100 gems = owned, else rented)
-            const isOwned = persona.gemsRemaining > 100 || persona.ownership === 'owned';
+            // Format time display
+            function formatTime(minutes) {
+                const hrs = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                return hrs > 0 ? hrs + 'h ' + mins + 'm' : mins + 'm';
+            }
+
+            function formatTimeShort(minutes) {
+                const hrs = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                return (hrs < 10 ? '0' : '') + hrs + ':' + (mins < 10 ? '0' : '') + mins;
+            }
+
+            // Check ownership status
             const ownershipDiv = document.getElementById('aside-ownership');
             const editBtn = document.getElementById('aside-edit-btn');
             const bioDiv = document.getElementById('aside-bio');
 
-            if (isOwned) {
+            if (persona.ownership === 'owned') {
                 ownershipDiv.className = 'aside-ownership owned';
                 ownershipDiv.innerHTML = '<span class="aside-ownership-icon">✓</span><span class="aside-ownership-text">You own this</span>';
                 editBtn.style.display = 'block';
                 bioDiv.className = 'aside-bio';
                 bioDiv.textContent = persona.bio || 'No bio set.';
-            } else {
+            } else if (persona.ownership === 'rented' && persona.rentalMins > 0) {
+                const remaining = formatTimeShort(persona.rentalMins);
+                const total = formatTimeShort(persona.rentalTotal || 180);
+                const label = persona.rentalTotal === 180 ? '3hr Rental' : formatTime(persona.rentalTotal) + ' Rental';
                 ownershipDiv.className = 'aside-ownership rented';
-                ownershipDiv.innerHTML = '<span class="aside-ownership-icon">⏱</span><span class="aside-ownership-text">Renting (' + persona.gemsRemaining + ' gems left)</span>';
+                ownershipDiv.innerHTML = '<span class="aside-ownership-icon">⏱</span><span class="aside-ownership-text">Rented ' + remaining + '/' + total + ' (' + label + ')</span>';
                 editBtn.style.display = 'none';
                 bioDiv.className = 'aside-bio fogged';
                 bioDiv.textContent = persona.bio ? persona.bio.substring(0, 50) + '...' : 'Bio hidden for rentals.';
+            } else if (persona.gemsRemaining > 0) {
+                // Legacy: gems-based display
+                ownershipDiv.className = 'aside-ownership rented';
+                ownershipDiv.innerHTML = '<span class="aside-ownership-icon">⏱</span><span class="aside-ownership-text">Active (' + persona.gemsRemaining + ' gems left)</span>';
+                editBtn.style.display = 'none';
+                bioDiv.className = 'aside-bio';
+                bioDiv.textContent = persona.bio || '';
+            } else {
+                ownershipDiv.className = 'aside-ownership locked';
+                ownershipDiv.innerHTML = '<span class="aside-ownership-icon">🔒</span><span class="aside-ownership-text">Locked - needs gems</span>';
+                editBtn.style.display = 'none';
+                bioDiv.className = 'aside-bio fogged';
+                bioDiv.textContent = 'Unlock to view bio.';
             }
         }
 
@@ -2373,6 +2522,49 @@ Stay in character as ${persona?.name}. The HOST tags define your interaction sty
         </div>
     </div>
 
-    <script src="/js/navbar.js"></script>
+    <script src="/js/navbar.js">
+        // Populate floating recommendation bubbles
+        function populateFloatingRecs() {
+            const container = document.getElementById('floating-recs');
+            if (!container) return;
+
+            // Get recommended personas and hosts
+            const recPersonas = demoData.personas.filter(p => p.ownership !== 'locked').slice(0, 3);
+            const recHosts = demoData.hosts.slice(0, 2);
+
+            let html = '<div class="floating-recs-label">For You</div>';
+
+            // Add persona bubbles
+            recPersonas.forEach(p => {
+                html += `
+                    <div class="floating-rec-bubble" onclick="selectPersona('${p.id}')" title="${p.name}">
+                        ${p.image
+                            ? `<img src="${p.image}" alt="${p.name}">`
+                            : `<div class="bubble-initial">${p.name[0]}</div>`
+                        }
+                        <div class="bubble-tooltip">${p.name} - ${p.archetype}</div>
+                    </div>
+                `;
+            });
+
+            // Add host bubbles
+            recHosts.forEach(h => {
+                html += `
+                    <div class="floating-rec-bubble host-type" onclick="selectHost('${h.id}')" title="${h.name}">
+                        <div class="bubble-initial">${h.name[0]}</div>
+                        <div class="bubble-tooltip">HOST: ${h.name}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Call on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(populateFloatingRecs, 500);
+        });
+
+    </script>
 </body>
 </html>

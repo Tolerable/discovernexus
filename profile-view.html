@@ -380,6 +380,96 @@
       opacity: 0.6;
     }
 
+    /* You Might Like Section */
+    .suggestions-section {
+      margin-top: var(--spacing-xl);
+    }
+
+    .suggestions-scroll {
+      display: flex;
+      gap: var(--spacing-md);
+      overflow-x: auto;
+      padding: var(--spacing-sm) 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .suggestions-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .suggestions-scroll::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    .suggestions-scroll::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 3px;
+    }
+
+    .suggestion-card {
+      flex-shrink: 0;
+      width: 180px;
+      padding: var(--spacing-md);
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: var(--radius-md);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+      color: var(--text-light);
+    }
+
+    .suggestion-card:hover {
+      border-color: var(--accent-color);
+      background: rgba(0, 212, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .suggestion-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      margin: 0 auto var(--spacing-sm);
+      background: linear-gradient(135deg, var(--accent-color), var(--highlight-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      overflow: hidden;
+      border: 2px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .suggestion-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .suggestion-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: var(--spacing-xs);
+      color: var(--accent-color);
+    }
+
+    .suggestion-reason {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    .suggestion-match {
+      display: inline-block;
+      margin-top: var(--spacing-xs);
+      padding: 2px 8px;
+      background: rgba(212, 175, 55, 0.2);
+      border-radius: var(--radius-sm);
+      font-size: 0.7rem;
+      color: var(--highlight-color);
+    }
+
     @media (max-width: 768px) {
       .profile-header {
         flex-direction: column;
@@ -482,6 +572,16 @@
       </div>
       <div class="photo-gallery" id="photoGallery">
         <!-- Photos populated by JS -->
+      </div>
+    </div>
+
+    <!-- You Might Also Like -->
+    <div class="section suggestions-section" id="suggestionsSection" style="display: none;">
+      <div class="section-header">
+        <h2 class="section-title">You Might Also Like</h2>
+      </div>
+      <div class="suggestions-scroll" id="suggestionsScroll">
+        <!-- Populated by JS -->
       </div>
     </div>
   </div>
@@ -971,8 +1071,47 @@
       }
     }
 
+    // Load similar users based on shared tags
+    async function loadSuggestions() {
+      // Only show suggestions when viewing someone else's profile
+      const isOwnProfile = currentUserId && String(currentUserId) === String(viewingUserId);
+      if (isOwnProfile || isPreviewMode) return;
+
+      try {
+        // Get users who share tags with the viewed profile
+        const suggestions = await NexusCore.getSuggestedUsers({
+          basedOnUser: viewingUserId,
+          excludeUser: currentUserId,
+          limit: 8
+        });
+
+        if (!suggestions || suggestions.length === 0) return;
+
+        const container = document.getElementById('suggestionsScroll');
+        container.innerHTML = suggestions.map(user => `
+          <a href="/profile-view.html?user=${user.id}" class="suggestion-card">
+            <div class="suggestion-avatar">
+              ${user.profile_photo_url
+                ? `<img src="${NexusCore.escapeHtml(user.profile_photo_url)}" alt="${NexusCore.escapeHtml(user.display_name || 'User')}">`
+                : (user.display_name || 'U').charAt(0).toUpperCase()}
+            </div>
+            <div class="suggestion-name">${NexusCore.escapeHtml(user.display_name || 'Anonymous')}</div>
+            <div class="suggestion-reason">${user.shared_tags || 0} shared tags</div>
+            ${user.compatibility ? `<div class="suggestion-match">${user.compatibility}% match</div>` : ''}
+          </a>
+        `).join('');
+
+        document.getElementById('suggestionsSection').style.display = 'block';
+      } catch (error) {
+        console.error('Error loading suggestions:', error);
+      }
+    }
+
     // Initialize
-    document.addEventListener('DOMContentLoaded', loadProfile);
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadProfile();
+      await loadSuggestions();
+    });
   </script>
   <!-- Age Verification & Cookie Consent -->
   <script src="/js/age-gate.js"></script>
