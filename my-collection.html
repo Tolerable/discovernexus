@@ -1786,18 +1786,17 @@
         function loadDemoCollection() {
             collection = {
                 hosts: [
-                    { id: 'Bi-Poly-Dom-PE', name: 'Bi-Poly-Dom-PE', tags: ['Bisexual', 'Polyamorous', 'Dominant', 'PE'], gemsRemaining: 45, gender: 'male' },
-                    { id: 'Pan-ENM-Sub-Rope', name: 'Pan-ENM-Sub-Rope', tags: ['Pansexual', 'ENM', 'Submissive', 'Rope'], gemsRemaining: 25, gender: 'female' },
-                    { id: 'Straight-Mono-Switch', name: 'Straight-Mono-Switch', tags: ['Straight', 'Mono', 'Switch'], gemsRemaining: 15, gender: 'male' },
-                    { id: 'Queer-Solo-Brat', name: 'Queer-Solo-Brat', tags: ['Queer', 'Solo', 'Brat'], gemsRemaining: 0, gender: 'neutral' }
+                    { id: 'str-mono-rom', name: 'Str-Mono-Rom-Van', bio: 'Blue-collar guy who values loyalty and straightforward communication.', tags: ['Straight', 'Monogamous', 'Traditional'], gemsRemaining: 50, gender: 'male', image: 'https://image.pollinations.ai/prompt/traditional%20male%20host%20frame%20digital?width=256&height=256&seed=host1', ownership: 'owned' },
+                    { id: 'bi-open-flirt', name: 'Bi-Open-Flirt-Swi', bio: 'Open-minded, comfortable with himself, curious about others.', tags: ['Bisexual', 'Open', 'Switch'], gemsRemaining: 30, gender: 'male', image: 'https://image.pollinations.ai/prompt/open%20minded%20male%20host%20frame?width=256&height=256&seed=host2', ownership: 'owned' },
+                    { id: 'pan-mono-play', name: 'Pan-Mono-Play-Touch', bio: 'Sweet, nurturing, old-fashioned romantic.', tags: ['Pansexual', 'Monogamous', 'Romantic'], gemsRemaining: 0, gender: 'female', image: 'https://image.pollinations.ai/prompt/romantic%20female%20host%20frame?width=256&height=256&seed=host3', ownership: 'locked' }
                 ],
                 personas: [
-                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic with deep emotional intelligence.', gemsRemaining: 30, gender: 'female', image: 'https://image.pollinations.ai/prompt/beautiful%20romantic%20woman%20fantasy%20portrait%20soft%20lighting?width=256&height=256&seed=luna1', ownership: 'owned' },
-                    { id: 'ember', name: 'Ember', archetype: 'Playful', bio: 'Fiery and fun-loving, always up for adventure.', gemsRemaining: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/playful%20fiery%20woman%20fantasy%20portrait%20vibrant%20colors?width=256&height=256&seed=ember2', ownership: 'rented', rentalMins: 165, rentalTotal: 180 },
-                    { id: 'max', name: 'Max', archetype: 'Dominant', bio: 'Confident and commanding, yet caring.', gemsRemaining: 35, gender: 'male', image: 'https://image.pollinations.ai/prompt/confident%20dominant%20man%20fantasy%20portrait%20dark%20aesthetic?width=256&height=256&seed=max3', ownership: 'owned' },
-                    { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Thoughtful conversationalist who loves deep discussions.', gemsRemaining: 0, gender: 'neutral', image: 'https://image.pollinations.ai/prompt/wise%20intellectual%20androgynous%20person%20fantasy%20portrait?width=256&height=256&seed=sage4', ownership: 'locked' }
+                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic who loves late-night conversations.', tags: ['Long-Distance', 'Text-Primary', 'Intellectual'], gemsRemaining: 40, gender: 'female', image: 'https://image.pollinations.ai/prompt/luna%20dreamy%20romantic%20woman%20moonlight?width=256&height=256&seed=luna1', ownership: 'owned' },
+                    { id: 'ember', name: 'Ember', archetype: 'Romantic', bio: 'Passionate and uninhibited, loves in abundance.', tags: ['High Libido', 'Spontaneous', 'Polyamory'], gemsRemaining: 25, gender: 'female', image: 'https://image.pollinations.ai/prompt/ember%20passionate%20fiery%20woman?width=256&height=256&seed=ember1', ownership: 'rented', rentalMins: 120, rentalTotal: 180 },
+                    { id: 'velvet', name: 'Velvet', archetype: 'Romantic', bio: 'Sensual explorer of power dynamics and deep connection.', tags: ['Power Exchange', 'Sensual', 'Deep Connection'], gemsRemaining: 35, gender: 'female', image: 'https://image.pollinations.ai/prompt/velvet%20sensual%20romantic%20woman?width=256&height=256&seed=velvet1', ownership: 'owned' },
+                    { id: 'aurora', name: 'Aurora', archetype: 'Romantic', bio: 'Devoted and genuine, seeks one deep connection.', tags: ['Monogamy', 'Deep Talks', 'Authentic'], gemsRemaining: 0, gender: 'female', image: 'https://image.pollinations.ai/prompt/aurora%20devoted%20genuine%20woman?width=256&height=256&seed=aurora1', ownership: 'locked' }
                 ],
-                activeHost: 'Bi-Poly-Dom-PE',
+                activeHost: 'str-mono-rom',
                 activePersona: 'luna',
                 hostSlots: 6,
                 personaSlots: 6,
