@@ -1249,14 +1249,7 @@
         }
 
         .floating-recs-label {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.4);
-            text-align: center;
-            padding: 8px 0;
+            display: none;
         }
 
         @media (max-width: 900px) {
@@ -1281,7 +1274,6 @@
 <body>
     <!-- Floating Recommendation Bubbles -->
     <div class="floating-recs" id="floating-recs">
-        <div class="floating-recs-label">For You</div>
         <!-- Populated by JS -->
     </div>
 
@@ -1715,6 +1707,7 @@
             updateCounts();
             updateChatState();
             generateRecommendations();
+            populateFloatingRecs();
         }
 
         // Render HOSTs grid with slots
@@ -2514,13 +2507,13 @@ Stay in character as ${persona?.name}. The HOST tags define your interaction sty
         // Populate floating recommendation bubbles
         function populateFloatingRecs() {
             const container = document.getElementById('floating-recs');
-            if (!container) return;
+            if (!container || !collection) return;
 
             // Get recommended personas and hosts
-            const recPersonas = demoData.personas.filter(p => p.ownership !== 'locked').slice(0, 3);
-            const recHosts = demoData.hosts.slice(0, 2);
+            const recPersonas = (collection.personas || []).filter(p => p.ownership !== 'locked').slice(0, 4);
+            const recHosts = (collection.hosts || []).slice(0, 3);
 
-            let html = '<div class="floating-recs-label">For You</div>';
+            let html = '';
 
             // Add persona bubbles
             recPersonas.forEach(p => {
