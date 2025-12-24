@@ -535,7 +535,7 @@
         /* Chat Layout with Aside */
         .chat-layout {
             display: flex;
-            gap: 20px;
+            gap: 15px;
         }
 
         .chat-main {
@@ -544,7 +544,7 @@
         }
 
         .chat-aside {
-            width: 280px;
+            width: 240px;
             flex-shrink: 0;
         }
 
@@ -730,10 +730,82 @@
             border-color: rgba(0, 212, 255, 0.5);
         }
 
+
+        /* Right Column - Recommendations */
+        .chat-aside-right {
+            width: 200px;
+            flex-shrink: 0;
+        }
+
+        .right-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 12px;
+            position: sticky;
+            top: 90px;
+        }
+
+        .right-panel-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .right-rec-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .right-rec-item:hover {
+            background: rgba(0,212,255,0.1);
+        }
+
+        .right-rec-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(0,212,255,0.3);
+            margin-bottom: 8px;
+        }
+
+        .right-rec-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .right-rec-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+
+        .right-rec-type {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 1100px) {
+            .chat-aside-right { display: none; }
+        }
+
         @media (max-width: 900px) {
             .chat-layout {
                 flex-direction: column;
             }
+            .chat-aside { width: 100%; }
             .chat-aside {
                 width: 100%;
             }
@@ -1171,61 +1243,7 @@
         
 
     
-        /* Simple Floating Circles - Right Side */
-        .float-circles {
-            position: fixed;
-            right: 30px;
-            top: 120px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 100;
-        }
-
-        .float-circle {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid rgba(0, 212, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .float-circle:hover {
-            transform: scale(1.1);
-            border-color: #00d4ff;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-        }
-
-        .float-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .float-circle-label {
-            position: absolute;
-            right: 85px;
-            background: rgba(0,0,0,0.9);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            color: #00d4ff;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.2s;
-            pointer-events: none;
-        }
-
-        .float-circle:hover .float-circle-label {
-            opacity: 1;
-        }
-
-        @media (max-width: 900px) {
-            .float-circles { display: none; }
-        }
+        
 
     </style>
     <script src="/auth.js"></script>
@@ -1233,7 +1251,6 @@
     <script src="/js/pollinations.js"></script>
 </head>
 <body>
-    <div class="float-circles" id="float-circles"></div>
     <div class="container">
         <!-- Tab Navigation -->
         <nav class="tab-nav">
@@ -1355,6 +1372,12 @@
                 </div>
             </div>
             </div>
+            </div>
+            <!-- Right Column -->
+            <div class="chat-aside-right">
+                <div class="right-panel" id="right-recs">
+                    <div class="right-panel-title">Suggested</div>
+                </div>
             </div>
             </div>
         </div>
@@ -1659,7 +1682,7 @@
 
         // Simple floating circles
         function updateFloatCircles() {
-            const el = document.getElementById('float-circles');
+            const el = document.getElementById('right-recs');
             if (!el || !collection) return;
 
             const active = collection.personas.find(p => p.id === collection.activePersona);
@@ -1669,12 +1692,15 @@
             let items = collection.personas.filter(p => p.id !== (active?.id) && types.includes(p.archetype)).slice(0,3);
             if (items.length < 3) items = collection.personas.filter(p => p.ownership !== 'locked').slice(0,3);
 
-            el.innerHTML = items.map(p =>
-                '<div class="float-circle" onclick="selectPersona(\'' + p.id + '\')" style="position:relative;">' +
-                '<img src="' + (p.image || '') + '" alt="' + p.name + '" onerror="this.style.display=\'none\'">' +
-                '<span class="float-circle-label">' + p.name + '</span>' +
+            let html = '<div class="right-panel-title">Suggested</div>';
+            html += items.map(p =>
+                '<div class="right-rec-item" onclick="selectPersona(\'' + p.id + '\')">' +
+                '<div class="right-rec-avatar"><img src="' + (p.image || '') + '" alt="' + p.name + '"></div>' +
+                '<div class="right-rec-name">' + p.name + '</div>' +
+                '<div class="right-rec-type">' + p.archetype + '</div>' +
                 '</div>'
             ).join('');
+            el.innerHTML = html;
         }
 
         // Render the collection
