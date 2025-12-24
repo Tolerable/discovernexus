@@ -889,7 +889,8 @@
             hosts: [],
             personas: [],
             activeHost: null,
-            activePersona: null
+            activePersona: null,
+            gemBalance: 800  // User's current gem balance
         };
 
         // Chat history
@@ -1086,7 +1087,8 @@
                 activeHost: 'Bi-Poly-Dom-PE',
                 activePersona: 'luna',
                 hostSlots: 6,
-                personaSlots: 6
+                personaSlots: 6,
+                gemBalance: 800
             };
             renderCollection();
         }
@@ -1358,18 +1360,56 @@
             document.getElementById('modal-name').textContent = name;
             document.getElementById('modal-avatar').textContent = name[0];
 
+            // Show current balance
+            document.getElementById('modal-balance').textContent = collection.gemBalance + ' gems';
+
+            // Check if user can afford unlock
+            const unlockCost = 25; // gems for 3 hours
+            const canAfford = collection.gemBalance >= unlockCost;
+            document.getElementById('unlock-cost').textContent = unlockCost + ' gems';
+
+            if (!canAfford) {
+                document.getElementById('unlock-now-section').style.opacity = '0.5';
+                document.getElementById('unlock-now-section').style.pointerEvents = 'none';
+            } else {
+                document.getElementById('unlock-now-section').style.opacity = '1';
+                document.getElementById('unlock-now-section').style.pointerEvents = 'auto';
+            }
+
             // Show correct options based on type
             if (type === 'persona') {
-                document.getElementById('modal-subtitle').textContent = 'Out of time - extend access!';
+                document.getElementById('modal-subtitle').textContent = 'Unlock access';
                 document.getElementById('persona-options').style.display = 'flex';
                 document.getElementById('host-options').style.display = 'none';
             } else {
-                document.getElementById('modal-subtitle').textContent = 'Get gems to unlock!';
+                document.getElementById('modal-subtitle').textContent = 'Unlock access';
                 document.getElementById('persona-options').style.display = 'none';
                 document.getElementById('host-options').style.display = 'flex';
             }
 
             document.getElementById('add-time-modal').style.display = 'flex';
+        }
+
+        // Unlock now with existing gems
+        function unlockNow() {
+            const unlockCost = 25;
+            if (collection.gemBalance >= unlockCost) {
+                collection.gemBalance -= unlockCost;
+
+                // Add time to the item
+                if (modalTarget.type === 'host') {
+                    const host = collection.hosts.find(h => h.id === modalTarget.id);
+                    if (host) host.gemsRemaining += 25;
+                } else {
+                    const persona = collection.personas.find(p => p.id === modalTarget.id);
+                    if (persona) persona.gemsRemaining += 25;
+                }
+
+                closeAddTimeModal();
+                renderCollection();
+
+                // TODO: Save to backend
+            }
         }
 
         // Persona actions
@@ -1436,6 +1476,26 @@
                     <p id="modal-subtitle" style="color:rgba(255,255,255,0.5);font-size:12px;">Out of gems</p>
                 </div>
             </div>
+
+            <!-- Current Balance -->
+            <div class="balance-display" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:10px;padding:12px 15px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="color:rgba(255,255,255,0.7);font-size:13px;">Your Balance:</span>
+                <span id="modal-balance" style="color:#d4af37;font-weight:700;font-size:16px;">0 gems</span>
+            </div>
+
+            <!-- Unlock Now Option -->
+            <div id="unlock-now-section" class="modal-options" style="margin-bottom:15px;">
+                <div class="gem-option popular" onclick="unlockNow()" style="background:rgba(46,204,113,0.1);border-color:#2ecc71;">
+                    <span class="gem-badge" style="background:#2ecc71;">Unlock Now</span>
+                    <div>
+                        <span class="gem-amount" style="color:#2ecc71;">Add 3 Hours</span>
+                        <span class="option-desc">Use your gems</span>
+                    </div>
+                    <span class="gem-price" id="unlock-cost">25 gems</span>
+                </div>
+            </div>
+
+            <div style="text-align:center;color:rgba(255,255,255,0.4);font-size:11px;margin-bottom:10px;">— or get more gems —</div>
 
             <!-- Persona options: Rent / Buy / Gift -->
             <div id="persona-options" class="modal-options">
