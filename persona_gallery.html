@@ -1278,9 +1278,9 @@
                                 <span class="time">3 hrs</span>
                                 <span class="price" id="price-3hr">-- gems</span>
                             </button>
-                            <button class="rent-time-btn" data-hours="24" onclick="selectRentTime(this, 24)">
-                                <span class="time">24 hrs</span>
-                                <span class="price" id="price-24hr">-- gems</span>
+                            <button class="rent-time-btn" data-hours="6" onclick="selectRentTime(this, 6)">
+                                <span class="time">6 hrs</span>
+                                <span class="price" id="price-6hr">-- gems</span>
                             </button>
                         </div>
                         <button class="confirm-rent-btn" id="confirm-rent-btn" onclick="confirmRent()">Rent Now</button>
@@ -1626,12 +1626,12 @@
             const basePrice = persona.price;
             const price1hr = Math.round(basePrice * 0.5);
             const price3hr = basePrice;
-            const price24hr = Math.round(basePrice * 4);
+            const price6hr = Math.round(basePrice * 1.75);
             const foreverPrice = Math.round(basePrice * 20);
 
             document.getElementById('price-1hr').textContent = price1hr + ' gems';
             document.getElementById('price-3hr').textContent = price3hr + ' gems';
-            document.getElementById('price-24hr').textContent = price24hr + ' gems';
+            document.getElementById('price-6hr').textContent = price6hr + ' gems';
             document.getElementById('forever-price').textContent = '(' + foreverPrice + ' gems)';
 
             // Reset rent button selection
@@ -1672,7 +1672,7 @@
             let price;
             switch(selectedRentHours) {
                 case 1: price = Math.round(basePrice * 0.5); break;
-                case 24: price = Math.round(basePrice * 4); break;
+                case 6: price = Math.round(basePrice * 1.75); break;
                 default: price = basePrice;
             }
             document.getElementById('confirm-rent-btn').textContent =
@@ -1685,7 +1685,7 @@
             let price;
             switch(selectedRentHours) {
                 case 1: price = Math.round(basePrice * 0.5); break;
-                case 24: price = Math.round(basePrice * 4); break;
+                case 6: price = Math.round(basePrice * 1.75); break;
                 default: price = basePrice;
             }
 
