@@ -285,114 +285,6 @@
             cursor: pointer;
         }
 
-        /* Expandable header */
-        .chat-header {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .chat-header:hover {
-            background: linear-gradient(90deg, rgba(0, 212, 255, 0.15), rgba(123, 44, 191, 0.15));
-        }
-
-        .expand-indicator {
-            margin-left: auto;
-            font-size: 18px;
-            transition: transform 0.3s ease;
-        }
-
-        .chat-header.expanded .expand-indicator {
-            transform: rotate(180deg);
-        }
-
-        /* Selection panel */
-        .selection-panel {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .selection-panel.expanded {
-            max-height: 400px;
-            overflow-y: auto;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-        }
-
-        .selection-section {
-            padding: 15px 20px;
-        }
-
-        .selection-section h4 {
-            font-size: 11px;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .selection-grid {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .selection-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 15px;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(0, 212, 255, 0.2);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 140px;
-        }
-
-        .selection-item:hover {
-            border-color: rgba(0, 212, 255, 0.5);
-            background: rgba(0, 212, 255, 0.1);
-        }
-
-        .selection-item.selected {
-            border-color: #00d4ff;
-            background: rgba(0, 212, 255, 0.15);
-        }
-
-        .selection-item.inactive {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .selection-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
-        }
-
-        .selection-avatar.male { background: linear-gradient(135deg, #4a90d9, #2c5aa0); }
-        .selection-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
-
-        .selection-info { flex: 1; }
-
-        .selection-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .selection-meta {
-            font-size: 10px;
-            color: rgba(255,255,255,0.5);
-        }
-
         .chat-messages {
             height: 400px;
             overflow-y: auto;
@@ -505,31 +397,6 @@
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
         ::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.3); border-radius: 4px; }
 
-        .empty-slot {
-            border-style: dashed;
-            opacity: 0.6;
-            cursor: pointer;
-        }
-
-        .empty-slot:hover {
-            opacity: 0.8;
-            border-color: rgba(0, 212, 255, 0.4);
-        }
-
-        .load-more-card {
-            border-style: dashed;
-            border-color: rgba(212, 175, 55, 0.3);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .load-more-card:hover {
-            border-color: rgba(212, 175, 55, 0.6);
-            background: rgba(212, 175, 55, 0.05);
-        }
-
         @media (max-width: 768px) {
             .collection-grid {
                 grid-template-columns: 1fr;
@@ -571,7 +438,7 @@
 
                 <!-- Active chat state (hidden by default) -->
                 <div id="active-chat" style="display:none;">
-                    <div class="chat-header" id="chat-header" onclick="toggleSelectionPanel()">
+                    <div class="chat-header">
                         <div class="card-avatar-container">
                             <div class="card-avatar" id="chat-avatar">?</div>
                             <span class="host-badge" id="chat-host-badge">HOST</span>
@@ -580,19 +447,7 @@
                             <div class="chat-persona-name" id="chat-persona-name">Loading...</div>
                             <div class="chat-host-name" id="chat-host-id">HOST: ---</div>
                         </div>
-                        <span class="expand-indicator">▼</span>
-                    </div>
-                    
-                    <!-- Selection Panel (expands when header clicked) -->
-                    <div class="selection-panel" id="selection-panel">
-                        <div class="selection-section">
-                            <h4>Select Persona</h4>
-                            <div class="selection-grid" id="persona-selection"></div>
-                        </div>
-                        <div class="selection-section">
-                            <h4>Select HOST</h4>
-                            <div class="selection-grid" id="host-selection"></div>
-                        </div>
+                        <button class="change-btn" onclick="showTab('personas')">Change</button>
                     </div>
                     <div class="chat-messages" id="chat-messages">
                         <!-- Messages will be added here -->
@@ -688,99 +543,45 @@
             }
         }
 
-        // Selection panel state
-        let selectionPanelOpen = false;
-
-        // Toggle selection panel
-        function toggleSelectionPanel() {
-            selectionPanelOpen = !selectionPanelOpen;
-            const panel = document.getElementById('selection-panel');
-            const header = document.getElementById('chat-header');
-
-            if (selectionPanelOpen) {
-                panel.classList.add('expanded');
-                header.classList.add('expanded');
-                renderSelectionPanel();
-            } else {
-                panel.classList.remove('expanded');
-                header.classList.remove('expanded');
-            }
-        }
-
-        // Render selection panel options
-        function renderSelectionPanel() {
-            const personaGrid = document.getElementById('persona-selection');
-            const hostGrid = document.getElementById('host-selection');
-
-            // Render persona options
-            personaGrid.innerHTML = collection.personas.map(p => {
-                const isActive = p.gemsRemaining > 0;
-                const isSelected = p.id === collection.activePersona;
-                return `
-                    <div class="selection-item ${isSelected ? 'selected' : ''} ${isActive ? '' : 'inactive'}"
-                         onclick="${isActive ? `quickSelectPersona('${p.id}')` : ''}">
-                        <div class="selection-avatar ${p.gender}">${p.name[0]}</div>
-                        <div class="selection-info">
-                            <div class="selection-name">${p.name}</div>
-                            <div class="selection-meta">${p.archetype} ${isActive ? '' : '(No gems)'}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Render host options
-            hostGrid.innerHTML = collection.hosts.map(h => {
-                const isActive = h.gemsRemaining > 0;
-                const isSelected = h.id === collection.activeHost;
-                return `
-                    <div class="selection-item ${isSelected ? 'selected' : ''} ${isActive ? '' : 'inactive'}"
-                         onclick="${isActive ? `quickSelectHost('${h.id}')` : ''}">
-                        <div class="selection-avatar ${h.gender}">${h.name[0]}</div>
-                        <div class="selection-info">
-                            <div class="selection-name">${h.name.substring(0,12)}${h.name.length > 12 ? '..' : ''}</div>
-                            <div class="selection-meta">${h.tags.length} tags ${isActive ? '' : '(No gems)'}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Quick select from panel (auto-closes)
-        function quickSelectPersona(id) {
-            collection.activePersona = id;
-            renderPersonas();
-            updateChatState();
-            toggleSelectionPanel();
-        }
-
-        function quickSelectHost(id) {
-            collection.activeHost = id;
-            renderHosts();
-            updateChatState();
-            toggleSelectionPanel();
-        }
-
-        // Slot limits
-        const MAX_SLOTS = 6;
-
-        // Demo collection for testing (experienced user - Rev gets unlocked items)
+        // Demo collection for testing
         function loadDemoCollection() {
             collection = {
                 hosts: [
-                    { id: 'Bi-Poly-Dom-PE', name: 'Bi-Poly-Dom-PE', tags: ['Bisexual', 'Polyamorous', 'Dominant', 'PE'], gemsRemaining: 45, gender: 'male' },
-                    { id: 'Pan-ENM-Sub-Rope', name: 'Pan-ENM-Sub-Rope', tags: ['Pansexual', 'ENM', 'Submissive', 'Rope'], gemsRemaining: 25, gender: 'female' },
-                    { id: 'Straight-Mono-Switch', name: 'Straight-Mono-Switch', tags: ['Straight', 'Mono', 'Switch'], gemsRemaining: 15, gender: 'male' }
+                    {
+                        id: 'Bi-Poly-Dom-PE',
+                        name: 'Bi-Poly-Dom-PE',
+                        tags: ['Bisexual', 'Polyamorous', 'Dominant', 'Power Exchange'],
+                        gemsRemaining: 45,
+                        gender: 'male'
+                    },
+                    {
+                        id: 'Pan-ENM-Sub-Rope',
+                        name: 'Pan-ENM-Sub-Rope',
+                        tags: ['Pansexual', 'ENM', 'Submissive', 'Rope'],
+                        gemsRemaining: 0,
+                        gender: 'female'
+                    }
                 ],
                 personas: [
-                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic with deep emotional intelligence.', gemsRemaining: 30, gender: 'female' },
-                    { id: 'ember', name: 'Ember', archetype: 'Playful', bio: 'Fiery and fun-loving, always up for adventure.', gemsRemaining: 20, gender: 'female' },
-                    { id: 'max', name: 'Max', archetype: 'Dominant', bio: 'Confident and commanding, yet caring.', gemsRemaining: 35, gender: 'male' },
-                    { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Thoughtful conversationalist who loves deep discussions.', gemsRemaining: 0, gender: 'neutral' }
+                    {
+                        id: 'luna',
+                        name: 'Luna',
+                        archetype: 'Romantic',
+                        bio: 'A dreamy romantic with deep emotional intelligence.',
+                        gemsRemaining: 30,
+                        gender: 'female'
+                    },
+                    {
+                        id: 'max',
+                        name: 'Max',
+                        archetype: 'Dominant',
+                        bio: 'Confident and commanding, yet caring.',
+                        gemsRemaining: 0,
+                        gender: 'male'
+                    }
                 ],
                 activeHost: 'Bi-Poly-Dom-PE',
-                activePersona: 'luna',
-                hostSlots: 6,
-                personaSlots: 6
+                activePersona: 'luna'
             };
             renderCollection();
         }
@@ -793,20 +594,25 @@
             updateChatState();
         }
 
-        // Render HOSTs grid with slots
+        // Render HOSTs grid
         function renderHosts() {
             const grid = document.getElementById('hosts-grid');
-            const slots = collection.hostSlots || 6;
-            const hosts = collection.hosts || [];
+            if (collection.hosts.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-collection">
+                        <h3>No HOSTs Yet</h3>
+                        <p>Browse the store to add HOSTs to your collection.</p>
+                        <a href="persona_hosts.html" class="browse-btn">Browse HOSTs</a>
+                    </div>
+                `;
+                return;
+            }
 
-            let html = '';
-
-            // Render owned hosts
-            hosts.forEach(host => {
+            grid.innerHTML = collection.hosts.map(host => {
                 const isActive = host.gemsRemaining > 0;
                 const isSelected = host.id === collection.activeHost;
 
-                html += `
+                return `
                     <div class="collection-card ${isActive ? '' : 'inactive'} ${isSelected ? 'selected' : ''}">
                         <div class="card-header">
                             <div class="card-avatar-container">
@@ -830,58 +636,28 @@
                         </div>
                     </div>
                 `;
-            });
-
-            // Add empty slots
-            const emptySlots = Math.max(0, slots - hosts.length);
-            for (let i = 0; i < emptySlots; i++) {
-                html += `
-                    <div class="collection-card empty-slot" onclick="window.location.href='persona_hosts.html'">
-                        <div class="card-header">
-                            <div class="card-avatar-container">
-                                <div class="card-avatar" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);">+</div>
-                            </div>
-                            <div class="card-info">
-                                <h3 style="color:rgba(255,255,255,0.3);">Empty Slot</h3>
-                                <span class="meta">Click to browse HOSTs</span>
-                            </div>
-                        </div>
-                        <div class="card-footer" style="border-top:none;">
-                            <span></span>
-                            <span style="color:rgba(0,212,255,0.5);font-size:12px;">Browse Store</span>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Add Load More button
-            html += `
-                <div class="collection-card load-more-card" onclick="unlockMoreSlots('host')">
-                    <div style="text-align:center;padding:30px 0;">
-                        <div style="font-size:24px;margin-bottom:10px;">+</div>
-                        <div style="font-size:14px;color:#d4af37;">Load More Slots</div>
-                        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:5px;">50 gems per slot</div>
-                    </div>
-                </div>
-            `;
-
-            grid.innerHTML = html;
+            }).join('');
         }
 
-        // Render Personas grid with slots
+        // Render Personas grid
         function renderPersonas() {
             const grid = document.getElementById('personas-grid');
-            const slots = collection.personaSlots || 6;
-            const personas = collection.personas || [];
+            if (collection.personas.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-collection">
+                        <h3>No Personas Yet</h3>
+                        <p>Browse the store to add Personas to your collection.</p>
+                        <a href="persona_hosts.html" class="browse-btn">Browse Personas</a>
+                    </div>
+                `;
+                return;
+            }
 
-            let html = '';
-
-            // Render owned personas
-            personas.forEach(persona => {
+            grid.innerHTML = collection.personas.map(persona => {
                 const isActive = persona.gemsRemaining > 0;
                 const isSelected = persona.id === collection.activePersona;
 
-                html += `
+                return `
                     <div class="collection-card ${isActive ? '' : 'inactive'} ${isSelected ? 'selected' : ''}">
                         <div class="card-header">
                             <div class="card-avatar-container">
@@ -903,42 +679,7 @@
                         </div>
                     </div>
                 `;
-            });
-
-            // Add empty slots
-            const emptySlots = Math.max(0, slots - personas.length);
-            for (let i = 0; i < emptySlots; i++) {
-                html += `
-                    <div class="collection-card empty-slot" onclick="window.location.href='persona_hosts.html'">
-                        <div class="card-header">
-                            <div class="card-avatar-container">
-                                <div class="card-avatar" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);">+</div>
-                            </div>
-                            <div class="card-info">
-                                <h3 style="color:rgba(255,255,255,0.3);">Empty Slot</h3>
-                                <span class="meta">Click to browse Personas</span>
-                            </div>
-                        </div>
-                        <div class="card-footer" style="border-top:none;">
-                            <span></span>
-                            <span style="color:rgba(0,212,255,0.5);font-size:12px;">Browse Store</span>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Add Load More button
-            html += `
-                <div class="collection-card load-more-card" onclick="unlockMoreSlots('persona')">
-                    <div style="text-align:center;padding:30px 0;">
-                        <div style="font-size:24px;margin-bottom:10px;">+</div>
-                        <div style="font-size:14px;color:#d4af37;">Load More Slots</div>
-                        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:5px;">50 gems per slot</div>
-                    </div>
-                </div>
-            `;
-
-            grid.innerHTML = html;
+            }).join('');
         }
 
         // Update tab counts
@@ -1031,12 +772,6 @@
             messages.scrollTop = messages.scrollHeight;
 
             chatHistory.push({ role: sender, content: text });
-        }
-
-        // Unlock more slots (costs gems)
-        function unlockMoreSlots(type) {
-            const cost = 50;
-            alert(`Unlock additional ${type} slot for ${cost} gems?\n\nComing soon!`);
         }
 
         // Initialize
