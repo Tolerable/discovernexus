@@ -93,6 +93,146 @@
             text-decoration: underline;
         }
 
+
+        /* Frame Selector */
+        .frame-selector {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 16px;
+            padding: 15px;
+            width: 200px;
+            z-index: 500;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .frame-selector h4 {
+            color: #d4af37;
+            font-size: 12px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .frame-preview {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            position: relative;
+        }
+
+        .frame-none { background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3); }
+        .frame-ruby { background: linear-gradient(135deg, #e74c3c, #c0392b); box-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
+        .frame-diamond { background: linear-gradient(135deg, #ecf0f1, #bdc3c7); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        .frame-emerald { background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 0 20px rgba(46, 204, 113, 0.5); }
+        .frame-sapphire { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 0 20px rgba(52, 152, 219, 0.5); }
+        .frame-cosmic { background: linear-gradient(135deg, #9b59b6, #1a1a2e, #00d4ff); box-shadow: 0 0 25px rgba(155, 89, 182, 0.6); }
+        .frame-mythic { background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db); background-size: 300% 300%; animation: mythicShift 3s ease infinite; }
+
+        @keyframes mythicShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .frame-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .frame-nav button {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            color: #00d4ff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .frame-nav button:hover {
+            background: rgba(0, 212, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .frame-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .frame-price {
+            text-align: center;
+            color: #d4af37;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .frame-buy-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            border: none;
+            color: #000;
+            padding: 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .frame-buy-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .frame-bundle-hint {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+        }
+
+        .frame-toggle {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            border: none;
+            color: #000;
+            padding: 12px;
+            border-radius: 12px 0 0 12px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 499;
+            display: none;
+        }
+
+        .frame-selector.hidden {
+            transform: translateX(250px) translateY(-50%);
+        }
+
+        .frame-selector.hidden + .frame-toggle {
+            display: block;
+        }
+
+        @media (max-width: 1200px) {
+            .frame-selector {
+                display: none;
+            }
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -1175,6 +1315,92 @@ Be genuine, be YOU, but help users find their perfect match!`;
 
         init();
     </script>
+
+    <!-- Frame Selector Panel -->
+    <div class="frame-selector" id="frame-selector">
+        <h4>🎨 Try a Frame</h4>
+        <div class="frame-preview" id="frame-preview">
+            <span id="frame-preview-initial">?</span>
+        </div>
+        <div class="frame-nav">
+            <button onclick="prevFrame()">◀</button>
+            <span class="frame-name" id="frame-name">None</span>
+            <button onclick="nextFrame()">▶</button>
+        </div>
+        <div class="frame-price" id="frame-price">Free</div>
+        <button class="frame-buy-btn" onclick="buyFrame()">Add Frame</button>
+        <div class="frame-bundle-hint">💡 Bundle with persona rental for 10% off!</div>
+    </div>
+
+    <script>
+        // Frame data
+        const frames = [
+            { name: 'None', class: 'frame-none', price: 0 },
+            { name: 'Ruby', class: 'frame-ruby', price: 15 },
+            { name: 'Diamond', class: 'frame-diamond', price: 25 },
+            { name: 'Emerald', class: 'frame-emerald', price: 20 },
+            { name: 'Sapphire', class: 'frame-sapphire', price: 20 },
+            { name: 'Cosmic', class: 'frame-cosmic', price: 50 },
+            { name: 'Mythic', class: 'frame-mythic', price: 100 }
+        ];
+
+        let currentFrameIndex = 0;
+
+        function updateFramePreview() {
+            const frame = frames[currentFrameIndex];
+            const preview = document.getElementById('frame-preview');
+            const name = document.getElementById('frame-name');
+            const price = document.getElementById('frame-price');
+            const initial = document.getElementById('frame-preview-initial');
+
+            // Update preview
+            preview.className = 'frame-preview ' + frame.class;
+
+            // Show persona initial if one is selected
+            if (currentPersona) {
+                initial.textContent = currentPersona.name[0];
+            }
+
+            name.textContent = frame.name;
+            price.textContent = frame.price === 0 ? 'Free' : frame.price + ' gems';
+        }
+
+        function prevFrame() {
+            currentFrameIndex = (currentFrameIndex - 1 + frames.length) % frames.length;
+            updateFramePreview();
+        }
+
+        function nextFrame() {
+            currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+            updateFramePreview();
+        }
+
+        function buyFrame() {
+            const frame = frames[currentFrameIndex];
+            if (frame.price === 0) {
+                alert('No frame selected!');
+                return;
+            }
+
+            if (currentPersona) {
+                const bundlePrice = Math.floor((currentPersona.price + frame.price) * 0.9);
+                alert(`Bundle Deal!\n\n${currentPersona.name} + ${frame.name} Frame\n\nRegular: ${currentPersona.price + frame.price} gems\nBundle: ${bundlePrice} gems (10% off!)\n\n(Purchase integration coming soon!)`);
+            } else {
+                alert(`${frame.name} Frame: ${frame.price} gems\n\n(Purchase integration coming soon!)`);
+            }
+        }
+
+        // Update frame preview when persona is selected
+        const originalTryPersona = tryPersona;
+        tryPersona = function(name) {
+            originalTryPersona(name);
+            updateFramePreview();
+        };
+
+        // Initialize
+        updateFramePreview();
+    </script>
+
     <script src="/js/navbar.js"></script>
 </body>
 </html>

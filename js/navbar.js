@@ -53,55 +53,73 @@
           gap: var(--spacing-lg, 24px);
           align-items: center;
         ">
-          <a href="/" class="nav-link" data-page="home" style="
-            font-size: 0.95rem;
+          <a href="/" class="nexus-nav-link" data-page="home" style="
+            font-size: 0.9rem;
             font-weight: 500;
-            color: var(--text-primary, #e8e8f0);
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 16px;
             transition: all 0.2s ease;
+            background: transparent;
           ">Home</a>
 
-          <a href="/tags.html" class="nav-link" data-page="tags" style="
-            font-size: 0.95rem;
+          <a href="/tags.html" class="nexus-nav-link" data-page="tags" style="
+            font-size: 0.9rem;
             font-weight: 500;
-            color: var(--text-primary, #e8e8f0);
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 16px;
             transition: all 0.2s ease;
+            background: transparent;
           ">Tags</a>
 
-          <a href="/explore.html" class="nav-link" data-page="explore" style="
-            font-size: 0.95rem;
+          <a href="/explore.html" class="nexus-nav-link" data-page="explore" style="
+            font-size: 0.9rem;
             font-weight: 500;
-            color: var(--text-primary, #e8e8f0);
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 16px;
             transition: all 0.2s ease;
+            background: transparent;
           ">Explore</a>
 
-          <a href="/discover.html" class="nav-link" data-page="discover" style="
-            font-size: 0.95rem;
+          <a href="/discover.html" class="nexus-nav-link" data-page="discover" style="
+            font-size: 0.9rem;
             font-weight: 500;
-            color: var(--text-primary, #e8e8f0);
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 16px;
             transition: all 0.2s ease;
+            background: transparent;
           ">Discovery</a>
 
-          <a href="/persona_gallery.html" class="nav-link" data-page="personas" style="
-            font-size: 0.95rem;
+          <a href="/persona_gallery.html" class="nexus-nav-link" data-page="personas" style="
+            font-size: 0.9rem;
             font-weight: 500;
-            color: var(--text-primary, #e8e8f0);
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 16px;
             transition: all 0.2s ease;
+            background: transparent;
           ">Personas</a>
 
-          <a href="/persona_hosts.html" class="nav-link" data-page="hosts" style="
-            font-size: 0.95rem;
+          <a href="/persona_hosts.html" class="nexus-nav-link" data-page="hosts" style="
+            font-size: 0.9rem;
             font-weight: 500;
-            color: var(--text-primary, #e8e8f0);
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 16px;
             transition: all 0.2s ease;
+            background: transparent;
           ">HOSTs</a>
 
-          <a href="/store.html" class="nav-link" data-page="store" style="
+          <a href="/store.html" class="nexus-nav-link" data-page="store" style="
             font-size: 0.95rem;
             font-weight: 500;
             color: var(--highlight-color, #d4af37);
@@ -147,14 +165,16 @@
    * Add hover effects to nav links
    */
   function addNavHoverEffects() {
-    const links = document.querySelectorAll('.nav-link');
+    const links = document.querySelectorAll('.nexus-nav-link');
     links.forEach(link => {
       link.addEventListener('mouseenter', () => {
-        link.style.color = 'var(--highlight-color, #d4af37)';
+        link.style.color = '#00d4ff';
+        link.style.background = 'rgba(0, 212, 255, 0.1)';
       });
       link.addEventListener('mouseleave', () => {
         if (!link.classList.contains('active')) {
-          link.style.color = 'var(--text-primary, #e8e8f0)';
+          link.style.color = 'rgba(255, 255, 255, 0.85)';
+          link.style.background = 'transparent';
         }
       });
     });
@@ -165,7 +185,7 @@
    */
   function highlightCurrentPage() {
     const path = window.location.pathname;
-    const links = document.querySelectorAll('.nav-link');
+    const links = document.querySelectorAll('.nexus-nav-link');
 
     links.forEach(link => {
       link.classList.remove('active');
@@ -218,7 +238,7 @@
             color: var(--text-primary, #e8e8f0);
             text-decoration: none;
             transition: all 0.2s ease;
-          " class="nav-link">Messages</a>
+          " class="nexus-nav-link">Messages</a>
 
           <div style="position: relative;">
             <button id="profileMenuBtn" style="

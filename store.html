@@ -1415,7 +1415,12 @@
 
         // Load wallet from server
         async function loadWallet() {
-            const token = localStorage.getItem(AUTH_TOKEN_KEY);
+            // Wait for auth to initialize if available
+            if (window.auth && window.auth.init) {
+                await window.auth.init();
+            }
+
+            const token = localStorage.getItem('sn_auth_token');
             if (!token) {
                 console.log('Not logged in - showing 0 gems');
                 updateGemDisplay();
