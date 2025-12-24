@@ -116,15 +116,25 @@
             66% { box-shadow: 0 0 20px rgba(155, 89, 182, 0.6); }
         }
 
-        /* Frame selector bar in chat header */
-        /* Frame selector bar in chat popup */
+        /* Frame selector bar - ABOVE chat popup */
         .frame-bar {
-            display: flex;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            display: none;
             align-items: center;
             gap: 12px;
             padding: 12px 15px;
-            background: rgba(0,0,0,0.4);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(20, 20, 30, 0.98);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-bottom: none;
+            border-radius: 16px 16px 0 0;
+            margin-bottom: -1px;
+        }
+
+        .chat-popup.open .frame-bar {
+            display: flex;
         }
 
         .frame-bar-arrow {
@@ -537,11 +547,12 @@
             width: 380px;
             height: 520px;
             background: #1a1a2e;
-            border-radius: 16px;
+            border-radius: 0 0 16px 16px;
             border: 1px solid rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(212, 175, 55, 0.4);
             display: none;
             flex-direction: column;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 10px 50px rgba(0,0,0,0.5);
         }
 
@@ -786,15 +797,7 @@
     <!-- Chat Widget -->
     <div class="chat-widget">
         <div class="chat-popup" id="chat-popup">
-            <div class="chat-header" id="chat-header-main">
-                <img class="chat-avatar" id="chat-avatar" src="" alt="">
-                <div class="chat-persona-info">
-                    <h3 id="chat-persona-name">Select a Persona</h3>
-                    <span id="chat-persona-archetype">Try before you rent</span>
-                </div>
-                <span class="preview-badge">PREVIEW</span>
-                <button class="chat-close" onclick="toggleChat()">&times;</button>
-            </div>
+            <!-- Frame selector bar - positioned above popup -->
             <div class="frame-bar">
                 <button class="frame-bar-arrow" onclick="prevFrame()">◀</button>
                 <div class="frame-bar-preview frame-none" id="frame-preview">
@@ -806,6 +809,15 @@
                     <span class="frame-bar-price" id="frame-price">Free</span>
                 </div>
                 <a href="store.html" class="frame-bar-buy">🎨 Get Frames</a>
+            </div>
+            <div class="chat-header" id="chat-header-main">
+                <img class="chat-avatar" id="chat-avatar" src="" alt="">
+                <div class="chat-persona-info">
+                    <h3 id="chat-persona-name">Select a Persona</h3>
+                    <span id="chat-persona-archetype">Try before you rent</span>
+                </div>
+                <span class="preview-badge">PREVIEW</span>
+                <button class="chat-close" onclick="toggleChat()">&times;</button>
             </div>
             <div class="chat-tags" id="chat-tags"></div>
             <div class="chat-messages" id="chat-messages">
@@ -974,7 +986,16 @@
 
             // Update preview image to match current persona
             if (currentPersona && previewImg) {
-                previewImg.src = getImageUrl(currentPersona.name);
+                const imgUrl = getImageUrl(currentPersona.name);
+                previewImg.src = imgUrl;
+                previewImg.onerror = function() {
+                    // Fallback to placeholder
+                    this.style.display = 'none';
+                    preview.innerHTML = '<span style="font-size:24px;color:#fff;">' + currentPersona.name[0] + '</span>';
+                };
+                previewImg.onload = function() {
+                    this.style.display = 'block';
+                };
             }
 
             // Remove old frame classes, add new one
@@ -1112,6 +1133,9 @@
             messagesDiv.innerHTML = `
                 <div class="message bot">Hi! I'm ${currentPersona.name}. ${currentPersona.bio}. What would you like to talk about?</div>
             `;
+
+            // Update frame display with this persona's image
+            updateFrameDisplay();
 
             if (!chatOpen) toggleChat();
         }
