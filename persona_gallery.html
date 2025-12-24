@@ -757,131 +757,57 @@
             spicy: 'Passionate, forward, R-rated',
             explicit: 'Uninhibited, adult content'
         };
-        // Tag descriptions for tooltips
-        const tagDescriptions = {
-            'Long-Distance': 'Thrives in text-based relationships across distance',
-            'Text-Primary': 'Prefers written communication over other forms',
-            'Intellectual': 'Stimulated by deep, thoughtful conversations',
-            'High Libido': 'Openly expressive about physical desires',
-            'Spontaneous': 'Loves surprises and unplanned moments',
-            'Polyamory': 'Comfortable with multiple connections',
-            'Monogamy': 'Prefers deep one-on-one commitment',
-            'Deep Talks': 'Values meaningful, vulnerable conversations',
-            'Authentic': 'What you see is what you get',
-            'Power Exchange': 'Interested in dom/sub dynamics',
-            'Sensual': 'Focused on sensory pleasure and touch',
-            'Deep Connection': 'Seeks profound emotional bonds',
-            'Intense': 'High emotional energy and presence',
-            'Immediate': 'Lives in the present moment',
-            'Passionate': 'Brings fire and enthusiasm',
-            'Mysterious': 'Reveals themselves slowly',
-            'Nocturnal': 'Most alive at night',
-            'Ethereal': 'Dreamy, otherworldly quality',
-            'Sweet': 'Gentle, kind, and caring',
-            'Devoted': 'Deeply loyal and committed',
-            'Passionate Core': 'Sweet exterior, fire within',
-            'Transitional': 'Adapts between different states',
-            'Versatile': 'Comfortable in many roles',
-            'Moody': 'Emotionally dynamic and expressive',
-            'Philosophy': 'Loves exploring ideas and concepts',
-            'Debate': 'Enjoys intellectual sparring',
-            'Brilliant': 'Exceptionally intelligent',
-            'Consciousness': 'Fascinated by nature of mind',
-            'Mind': 'Intellectual and cerebral',
-            'Wonder': 'Sense of awe and curiosity',
-            'Thoughtful': 'Considers things deeply',
-            'Async': 'Comfortable with delayed responses',
-            'Deep': 'Goes beyond surface level',
-            'Demanding': 'Has high standards',
-            'Control': 'Takes charge of situations',
-            'Cool': 'Calm and collected exterior',
-            'Analytical': 'Logical and methodical',
-            'Infinite': 'Boundless in perspective',
-            'Possibilities': 'Sees potential everywhere',
-            'Explorer': 'Seeks new experiences',
-            'Thinker': 'Lives in the mind',
-            'Emerging': 'Gradually reveals depth',
-            'Multifaceted': 'Many sides to discover',
-            'Reflective': 'Mirrors back what they receive',
-            'Complex': 'Not easily understood',
-            'Commanding': 'Natural authority',
-            'Respect': 'Demands and gives respect',
-            'Authority': 'Comfortable with power',
-            'Bold': 'Fearless and direct',
-            'Direct': 'Says what they mean',
-            'Unapologetic': 'Makes no excuses',
-            'Rising': 'Constantly evolving upward',
-            'Unconventional': 'Breaks the mold',
-            'Powerful': 'Strong presence and will',
-            'Dark': 'Mysterious, shadow side',
-            'Independent': 'Self-sufficient',
-            'Focused': 'Single-minded determination',
-            'Force': 'Unstoppable energy',
-            'Majestic': 'Regal bearing',
-            'Silent': 'Says more without words',
-            'Watching': 'Observant and aware',
-            'Fast': 'Quick to act',
-            'Igniting': 'Sparks passion in others',
-            'Solid': 'Reliable and steady',
-            'Reliable': 'Can be counted on',
-            'Grounded': 'Stable and centered',
-            'Graceful': 'Elegant in all things',
-            'Guidance': 'Responds to direction',
-            'Gentle': 'Soft and tender',
-            'Peaceful': 'Brings calm',
-            'Surrender': 'Finds joy in yielding',
-            'Servant': 'Pleasure in service',
-            'Multiple': 'Comfortable with plural dynamics',
-            'Pure': 'Innocent and genuine',
-            'Curious': 'Eager to learn',
-            'Learning': 'Growing and developing',
-            'Growing': 'Always improving',
-            'Cared For': 'Needs nurturing',
-            'Natural': 'Organic and unforced',
-            'Delicate': 'Requires gentle handling',
-            'Smooth': 'Flowing and easy',
-            'Complete': 'Total in devotion',
-            'Luxurious': 'High quality experience',
-            'Party': 'Loves social energy',
-            'Social': 'Thrives with others',
-            'Fun': 'Prioritizes enjoyment',
-            'Tease': 'Playful provocation',
-            'Guessing': 'Keeps you wondering',
-            'Mischievous': 'Playfully naughty',
-            'Golden Heart': 'Pure intentions',
-            'Spark': 'Electric energy',
-            'Free': 'Unbound by convention',
-            'Limitless': 'No boundaries',
-            'Spirit': 'Ethereal essence',
-            'Irresistible': 'Hard to refuse',
-            'Temptress': 'Seductive power',
-            'Electric': 'Charged energy',
-            'Ready': 'Always prepared',
-            'Energy': 'High vitality',
-            'Whirlwind': 'Exciting chaos',
-            'Passion': 'Intense feeling',
-            'Sweeping': 'Carries you away',
-            'Lucky': 'Good fortune',
-            'Joyful': 'Full of happiness',
-            'Charming': 'Naturally appealing',
-            'Comfort': 'Safe and cozy',
-            'Care': 'Attentive to needs',
-            'Safe': 'Protective energy',
-            'Port': 'Place of refuge',
-            'Always There': 'Consistent presence',
-            'Attentive': 'Notices everything',
-            'Caregiver': 'Natural nurturer',
-            'Knowing': 'Intuitively understands',
-            'Emotional': 'In touch with feelings',
-            'Intimate': 'Close and personal',
-            'Loving': 'Expresses love freely',
-            'Flowing': 'Goes with the moment',
-            'Present': 'Fully here now',
-            'Calm': 'Peaceful energy',
-            'Spiritual': 'Connected to higher meaning',
-            'Unconditional': 'No strings attached',
-            'Support': 'Always has your back'
-        };
+        // Tag definitions - loaded from database
+        let tagDescriptions = {};
+        let tagsLoaded = false;
+
+        async function loadTagDefinitions() {
+            if (tagsLoaded) return;
+            try {
+                // Use NexusCore if available, else direct query
+                if (typeof NexusCore !== 'undefined' && NexusCore.getTags) {
+                    const tags = await NexusCore.getTags({ current_only: true });
+                    tags.forEach(tag => {
+                        tagDescriptions[tag.tag_name] = tag.definition || tag.tag_name;
+                    });
+                } else {
+                    // Direct fetch from proxy
+                    const response = await fetch('/.netlify/functions/supabase-proxy', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'query',
+                            payload: {
+                                query: 'SELECT tag_name, definition FROM tags WHERE is_current = true',
+                                params: []
+                            }
+                        })
+                    });
+                    const result = await response.json();
+                    if (result.data) {
+                        result.data.forEach(tag => {
+                            tagDescriptions[tag.tag_name] = tag.definition || tag.tag_name;
+                        });
+                    }
+                }
+                tagsLoaded = true;
+                console.log('Loaded', Object.keys(tagDescriptions).length, 'tag definitions from database');
+            } catch (err) {
+                console.warn('Failed to load tag definitions:', err);
+                // Fallback to basic descriptions
+                tagDescriptions = {
+                    'Long-Distance': 'Prefers text-based connections across distance',
+                    'Intellectual': 'Loves deep, thoughtful conversations',
+                    'Passionate': 'Brings fire and intensity',
+                    'Gentle': 'Soft and caring approach',
+                    'Playful': 'Fun and lighthearted',
+                    'Dominant': 'Takes charge',
+                    'Submissive': 'Yields to guidance',
+                    'Romantic': 'Focused on emotional connection',
+                    'Sensual': 'Attuned to physical pleasure'
+                };
+            }
+        }
 
 
         function getImageUrl(name) {
@@ -967,14 +893,16 @@
             document.getElementById('chat-persona-archetype').textContent = currentPersona.archetype;
             document.getElementById('chat-avatar').src = getImageUrl(name);
 
-            // Populate tags with tooltips
+            // Populate tags with tooltips from database
             const tagsDiv = document.getElementById('chat-tags');
             tagsDiv.innerHTML = currentPersona.tags.map(tag => {
-                const tooltip = tagDescriptions[tag] || tag;
+                // Get definition from loaded database tags
+                const tooltip = tagDescriptions[tag] || `${tag} - A personality trait`;
+                const safeTooltip = tooltip.replace(/'/g, "\'").replace(/"/g, '\"');
                 return `<span class="chat-tag"
-                    onmouseenter="showTagTooltip(event, '${tooltip.replace(/'/g, "\'")}')"
+                    onmouseenter="showTagTooltip(event, '${safeTooltip}')"
                     onmouseleave="hideTagTooltip()"
-                    onclick="toggleTagTooltip(event, '${tooltip.replace(/'/g, "\'")}')"
+                    onclick="toggleTagTooltip(event, '${safeTooltip}')"
                 >${tag}</span>`;
             }).join('');
 
@@ -1007,10 +935,34 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             try {
-                const systemPrompt = `You are ${currentPersona.name}, an AI companion. ${currentPersona.bio}.
-Your personality traits: ${currentPersona.tags.join(', ')}.
-Intensity level: ${currentTier}.
-Keep responses short (1-3 sentences), warm, and in character.`;
+                // Build list of other personas for referrals
+                const otherPersonas = personas
+                    .filter(p => p.name !== currentPersona.name)
+                    .map(p => `${p.name} (${p.archetype}): ${p.tags.slice(0,3).join(', ')}`)
+                    .join('; ');
+
+                const systemPrompt = `You are ${currentPersona.name}, an AI companion in the NEXUS persona gallery.
+
+PERSONALITY: ${currentPersona.bio}
+YOUR TAGS: ${currentPersona.tags.join(', ')}
+INTENSITY: ${currentTier}
+
+IMPORTANT RULES:
+1. Stay TRUE to your personality. Don't pretend to have traits you don't have.
+2. If the user asks for something outside your personality (like being dominant when you're submissive, or intellectual when you're playful), RECOMMEND another persona instead!
+3. When recommending, be warm about it: "That's not really my vibe, but [NAME] would be perfect for that! They're all about [their traits]."
+4. Use [[NAME]] format when mentioning other personas - this creates a link.
+5. Keep responses short (1-3 sentences), warm, flirty, and in character.
+
+OTHER PERSONAS YOU CAN RECOMMEND:
+${otherPersonas}
+
+Examples of redirecting:
+- User wants dominance but you're gentle: "Mmm, I'm more of a soft touch... but [[Velvet]] or [[Obsidian]] would have you on your knees. They're incredible."
+- User wants deep philosophy but you're playful: "Haha I'm more fun than deep! [[Sage]] or [[Echo]] love those mind-bending convos though."
+- User wants explicit but you're soft tier: "I keep things sweet, but [[Ember]] or [[Blaze]] turn up the heat if that's what you need 🔥"
+
+Be genuine, be YOU, but help users find their perfect match!`;
 
                 const response = await fetch('https://text.pollinations.ai/' + encodeURIComponent(message) + '?system=' + encodeURIComponent(systemPrompt) + '&model=openai');
                 const rawText = await response.text();
@@ -1037,7 +989,16 @@ Keep responses short (1-3 sentences), warm, and in character.`;
                 // Clean up Pollinations footer
                 cleanText = cleanText.replace(/---[\s\S]*Pollinations.*/gi, '').trim();
 
-                messagesDiv.innerHTML += `<div class="message bot">${escapeHtml(cleanText)}</div>`;
+                // Parse [[Name]] links to clickable persona buttons
+                const linkedText = cleanText.replace(/\[\[([^\]]+)\]\]/g, (match, name) => {
+                    const persona = personas.find(p => p.name.toLowerCase() === name.toLowerCase());
+                    if (persona) {
+                        return `<button class="persona-link" onclick="event.stopPropagation(); tryPersona('${persona.name}')">${persona.name}</button>`;
+                    }
+                    return name;
+                });
+
+                messagesDiv.innerHTML += `<div class="message bot">${linkedText}</div>`;
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             } catch (err) {
@@ -1195,8 +1156,21 @@ Keep responses short (1-3 sentences), warm, and in character.`;
         }
 
         // Initialize
-        renderPersonas(personas);
-        loadWalletBalance();
+        async function init() {
+            // Load tag definitions from database first
+            await loadTagDefinitions();
+
+            // Then render and load wallet
+            renderPersonas(personas);
+            loadWalletBalance();
+
+            // Initialize auth if available
+            if (window.auth && window.auth.init) {
+                await window.auth.init();
+            }
+        }
+
+        init();
     </script>
 </body>
 </html>
