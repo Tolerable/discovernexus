@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXUS Store - Cosmetics & Frames</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#00d4ff">
+    <link rel="stylesheet" href="/css/nexus-base.css">
     <style>
         :root {
             --primary-bg: #0a0a0f;
@@ -23,6 +29,7 @@
         }
 
         body {
+            padding-top: 70px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, var(--primary-bg) 0%, #1a1a2e 100%);
             color: #fff;
@@ -727,11 +734,9 @@
             }
         }
     </style>
-    <!-- Auth keys -->
-    <script>
-        const AUTH_TOKEN_KEY = 'sn_auth_token';
-        const USER_KEY = 'sn_user';
-    </script>
+    <!-- Auth and navigation -->
+    <script src="/auth.js"></script>
+    <script src="/js/nexus-core.js"></script>
 </head>
 <body>
     <header class="store-header">
@@ -1556,5 +1561,6 @@
         console.log('Available for purchase: Avatar frames, title cards, emoji packs, identity tools');
         console.log('Interactive try-on system: Click frame previews to see how you look!');
     </script>
+    <script src="/js/navbar.js"></script>
 </body>
 </html>

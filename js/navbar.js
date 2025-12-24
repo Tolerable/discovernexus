@@ -93,6 +93,14 @@
             transition: all 0.2s ease;
           ">Personas</a>
 
+          <a href="/store.html" class="nav-link" data-page="store" style="
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--highlight-color, #d4af37);
+            text-decoration: none;
+            transition: all 0.2s ease;
+          ">🎨 Store</a>
+
           <!-- Auth Menu Placeholder -->
           <div id="nexusAuthMenu" style="display: flex; gap: 12px; align-items: center;">
             <!-- Will be populated by initAuth() -->
@@ -162,7 +170,9 @@
         (page === 'home' && (path === '/' || path === '/index.html')) ||
         (page === 'tags' && path.includes('/tags.html')) ||
         (page === 'explore' && path.includes('/explore.html')) ||
-        (page === 'discover' && path.includes('/discover.html'))
+        (page === 'discover' && path.includes('/discover.html')) ||
+        (page === 'personas' && path.includes('/persona_gallery.html')) ||
+        (page === 'store' && path.includes('/store.html'))
       ) {
         link.classList.add('active');
         link.style.color = 'var(--accent-color, #00d4ff)';
