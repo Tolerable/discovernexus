@@ -1,0 +1,53 @@
+<div class="chat-container" id="chat-container">
+                <!-- No selection state -->
+                <div class="no-selection" id="no-selection">
+                    <h3>No HOST + Persona Selected</h3>
+                    <p>Choose a HOST and Persona from your collection to start chatting.</p>
+                    <a href="persona_hosts.html" class="browse-btn">Browse HOST Personas</a>
+                </div>
+
+                <!-- Active chat state (hidden by default) -->
+                <div id="active-chat" style="display:none;">
+                    <div class="chat-header" id="chat-header" onclick="toggleSelectionPanel()">
+                        <div class="card-avatar-container">
+                            <div class="card-avatar" id="chat-avatar" onclick="event.stopPropagation(); showPersonaPopup();" style="cursor:pointer;">?</div>
+                            <span class="host-badge" id="chat-host-badge">HOST</span>
+                        </div>
+                        <div class="chat-persona-info">
+                            <div class="chat-persona-name" id="chat-persona-name">Loading...</div>
+                            <div class="chat-host-name" id="chat-host-id">HOST: ---</div>
+                        </div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    
+                    <!-- Selection Panel (wizard-style popup) -->
+                    <div class="selection-panel" id="selection-panel">
+                        <button class="close-btn" onclick="toggleSelectionPanel(); event.stopPropagation();">&times;</button>
+
+                        <!-- Step 1: Select HOST -->
+                        <div class="wizard-step" id="step-host">
+                            <div class="wizard-header">
+                                <span class="step-indicator">1/2</span>
+                                <h4>Select HOST</h4>
+                            </div>
+                            <div class="selection-grid" id="host-selection"></div>
+                        </div>
+
+                        <!-- Step 2: Select Persona -->
+                        <div class="wizard-step" id="step-persona" style="display:none;">
+                            <div class="wizard-header">
+                                <span class="step-indicator">2/2</span>
+                                <h4>Select Persona</h4>
+                                <button class="back-btn" onclick="wizardBack()">← Back</button>
+                            </div>
+                            <div class="selection-grid" id="persona-selection"></div>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Messages will be added here -->
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="chat-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendMessage()">
+                        <button class="chat-send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
