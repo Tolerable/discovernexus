@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Collection - NEXUS</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <meta name="theme-color" content="#00d4ff">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding-top: 70px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 25px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            border-color: rgba(0, 212, 255, 0.6);
+            color: #00d4ff;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border-color: transparent;
+            color: white;
+        }
+
+        .tab-btn .count {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Collection Grid */
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Collection Card */
+        .collection-card {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .collection-card:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .collection-card.inactive {
+            opacity: 0.5;
+            filter: grayscale(0.7);
+        }
+
+        .collection-card.inactive::after {
+            content: 'No Gems Active';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: #d4af37;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-avatar-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+
+        .card-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            object-fit: cover;
+        }
+
+        .card-avatar.male { background: linear-gradient(135deg, #4a90d9, #2c5aa0); }
+        .card-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+
+        .host-badge {
+            position: absolute;
+            bottom: -2px;
+            left: -2px;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            color: #0a0a0f;
+            font-size: 7px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+
+        .frame-emoji {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            font-size: 14px;
+        }
+
+        .card-info h3 {
+            font-size: 14px;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 4px;
+        }
+
+        .card-info .meta {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .card-tag {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .gems-remaining {
+            font-size: 12px;
+            color: #d4af37;
+        }
+
+        .use-btn {
+            padding: 8px 20px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .use-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .use-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .add-gems-btn {
+            padding: 8px 20px;
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            border: none;
+            border-radius: 20px;
+            color: #1a1a2e;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Chat Interface Tab */
+        .chat-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(123, 44, 191, 0.1));
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-persona-info {
+            flex: 1;
+        }
+
+        .chat-persona-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+
+        .chat-host-name {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .change-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            color: #00d4ff;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.ai {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+
+        .chat-send-btn {
+            padding: 12px 25px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* No selection state */
+        .no-selection {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .no-selection h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #00d4ff;
+        }
+
+        .no-selection p {
+            margin-bottom: 25px;
+        }
+
+        .browse-btn {
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* Empty collection */
+        .empty-collection {
+            text-align: center;
+            padding: 80px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .empty-collection h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.3); border-radius: 4px; }
+
+        @media (max-width: 768px) {
+            .collection-grid {
+                grid-template-columns: 1fr;
+            }
+            .chat-messages {
+                height: 300px;
+            }
+        }
+    </style>
+    <script src="/auth.js"></script>
+    <script src="/js/nexus-core.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="showTab('chat')">
+                <span>Chat</span>
+            </button>
+            <button class="tab-btn" onclick="showTab('hosts')">
+                <span>My HOSTs</span>
+                <span class="count" id="host-count">0</span>
+            </button>
+            <button class="tab-btn" onclick="showTab('personas')">
+                <span>My Personas</span>
+                <span class="count" id="persona-count">0</span>
+            </button>
+        </nav>
+
+        <!-- Chat Tab -->
+        <div class="tab-content active" id="tab-chat">
+            <div class="chat-container" id="chat-container">
+                <!-- No selection state -->
+                <div class="no-selection" id="no-selection">
+                    <h3>No HOST + Persona Selected</h3>
+                    <p>Choose a HOST and Persona from your collection to start chatting.</p>
+                    <a href="persona_hosts.html" class="browse-btn">Browse HOST Personas</a>
+                </div>
+
+                <!-- Active chat state (hidden by default) -->
+                <div id="active-chat" style="display:none;">
+                    <div class="chat-header">
+                        <div class="card-avatar-container">
+                            <div class="card-avatar" id="chat-avatar">?</div>
+                            <span class="host-badge" id="chat-host-badge">HOST</span>
+                        </div>
+                        <div class="chat-persona-info">
+                            <div class="chat-persona-name" id="chat-persona-name">Loading...</div>
+                            <div class="chat-host-name" id="chat-host-id">HOST: ---</div>
+                        </div>
+                        <button class="change-btn" onclick="showTab('personas')">Change</button>
+                    </div>
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Messages will be added here -->
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="chat-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendMessage()">
+                        <button class="chat-send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOSTs Tab -->
+        <div class="tab-content" id="tab-hosts">
+            <div class="collection-grid" id="hosts-grid">
+                <div class="empty-collection">
+                    <h3>No HOSTs Yet</h3>
+                    <p>Browse the store to add HOSTs to your collection.</p>
+                    <a href="persona_hosts.html" class="browse-btn">Browse HOSTs</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personas Tab -->
+        <div class="tab-content" id="tab-personas">
+            <div class="collection-grid" id="personas-grid">
+                <div class="empty-collection">
+                    <h3>No Personas Yet</h3>
+                    <p>Browse the store to add Personas to your collection.</p>
+                    <a href="persona_hosts.html" class="browse-btn">Browse Personas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User's collection data
+        let collection = {
+            hosts: [],
+            personas: [],
+            activeHost: null,
+            activePersona: null
+        };
+
+        // Chat history
+        let chatHistory = [];
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+        }
+
+        // Load user's collection from backend
+        async function loadCollection() {
+            const token = localStorage.getItem('sn_auth_token');
+            if (!token) {
+                console.log('Not logged in');
+                return;
+            }
+
+            try {
+                const response = await fetch('/.netlify/functions/supabase-proxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'getUserCollection',
+                        payload: {}
+                    })
+                });
+
+                const result = await response.json();
+                if (result.data) {
+                    collection = result.data;
+                    renderCollection();
+                }
+            } catch (err) {
+                console.error('Failed to load collection:', err);
+                // Use demo data for now
+                loadDemoCollection();
+            }
+        }
+
+        // Demo collection for testing
+        function loadDemoCollection() {
+            collection = {
+                hosts: [
+                    {
+                        id: 'Bi-Poly-Dom-PE',
+                        name: 'Bi-Poly-Dom-PE',
+                        tags: ['Bisexual', 'Polyamorous', 'Dominant', 'Power Exchange'],
+                        gemsRemaining: 45,
+                        gender: 'male'
+                    },
+                    {
+                        id: 'Pan-ENM-Sub-Rope',
+                        name: 'Pan-ENM-Sub-Rope',
+                        tags: ['Pansexual', 'ENM', 'Submissive', 'Rope'],
+                        gemsRemaining: 0,
+                        gender: 'female'
+                    }
+                ],
+                personas: [
+                    {
+                        id: 'luna',
+                        name: 'Luna',
+                        archetype: 'Romantic',
+                        bio: 'A dreamy romantic with deep emotional intelligence.',
+                        gemsRemaining: 30,
+                        gender: 'female'
+                    },
+                    {
+                        id: 'max',
+                        name: 'Max',
+                        archetype: 'Dominant',
+                        bio: 'Confident and commanding, yet caring.',
+                        gemsRemaining: 0,
+                        gender: 'male'
+                    }
+                ],
+                activeHost: 'Bi-Poly-Dom-PE',
+                activePersona: 'luna'
+            };
+            renderCollection();
+        }
+
+        // Render the collection
+        function renderCollection() {
+            renderHosts();
+            renderPersonas();
+            updateCounts();
+            updateChatState();
+        }
+
+        // Render HOSTs grid
+        function renderHosts() {
+            const grid = document.getElementById('hosts-grid');
+            if (collection.hosts.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-collection">
+                        <h3>No HOSTs Yet</h3>
+                        <p>Browse the store to add HOSTs to your collection.</p>
+                        <a href="persona_hosts.html" class="browse-btn">Browse HOSTs</a>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = collection.hosts.map(host => {
+                const isActive = host.gemsRemaining > 0;
+                const isSelected = host.id === collection.activeHost;
+
+                return `
+                    <div class="collection-card ${isActive ? '' : 'inactive'} ${isSelected ? 'selected' : ''}">
+                        <div class="card-header">
+                            <div class="card-avatar-container">
+                                <div class="card-avatar ${host.gender}">${host.name[0]}</div>
+                                <span class="host-badge">HOST</span>
+                            </div>
+                            <div class="card-info">
+                                <h3>${host.name}</h3>
+                                <span class="meta">${host.tags.length} tags</span>
+                            </div>
+                        </div>
+                        <div class="card-tags">
+                            ${host.tags.slice(0, 4).map(t => `<span class="card-tag">${t}</span>`).join('')}
+                        </div>
+                        <div class="card-footer">
+                            <span class="gems-remaining">${host.gemsRemaining} gems left</span>
+                            ${isActive ?
+                                `<button class="use-btn" onclick="selectHost('${host.id}')">${isSelected ? 'Selected' : 'Use'}</button>` :
+                                `<button class="add-gems-btn" onclick="addGems('host', '${host.id}')">+ Gems</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render Personas grid
+        function renderPersonas() {
+            const grid = document.getElementById('personas-grid');
+            if (collection.personas.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-collection">
+                        <h3>No Personas Yet</h3>
+                        <p>Browse the store to add Personas to your collection.</p>
+                        <a href="persona_hosts.html" class="browse-btn">Browse Personas</a>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = collection.personas.map(persona => {
+                const isActive = persona.gemsRemaining > 0;
+                const isSelected = persona.id === collection.activePersona;
+
+                return `
+                    <div class="collection-card ${isActive ? '' : 'inactive'} ${isSelected ? 'selected' : ''}">
+                        <div class="card-header">
+                            <div class="card-avatar-container">
+                                <div class="card-avatar ${persona.gender}">${persona.name[0]}</div>
+                                <span class="frame-emoji">${persona.gender === 'female' ? '💎' : '⚡'}</span>
+                            </div>
+                            <div class="card-info">
+                                <h3>${persona.name}</h3>
+                                <span class="meta">${persona.archetype}</span>
+                            </div>
+                        </div>
+                        <p style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:15px;">${persona.bio}</p>
+                        <div class="card-footer">
+                            <span class="gems-remaining">${persona.gemsRemaining} gems left</span>
+                            ${isActive ?
+                                `<button class="use-btn" onclick="selectPersona('${persona.id}')">${isSelected ? 'Selected' : 'Use'}</button>` :
+                                `<button class="add-gems-btn" onclick="addGems('persona', '${persona.id}')">+ Gems</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update tab counts
+        function updateCounts() {
+            document.getElementById('host-count').textContent = collection.hosts.length;
+            document.getElementById('persona-count').textContent = collection.personas.length;
+        }
+
+        // Update chat state based on selection
+        function updateChatState() {
+            const noSelection = document.getElementById('no-selection');
+            const activeChat = document.getElementById('active-chat');
+
+            if (collection.activeHost && collection.activePersona) {
+                noSelection.style.display = 'none';
+                activeChat.style.display = 'block';
+
+                // Update chat header
+                const persona = collection.personas.find(p => p.id === collection.activePersona);
+                const host = collection.hosts.find(h => h.id === collection.activeHost);
+
+                if (persona) {
+                    document.getElementById('chat-avatar').textContent = persona.name[0];
+                    document.getElementById('chat-avatar').className = 'card-avatar ' + persona.gender;
+                    document.getElementById('chat-persona-name').textContent = persona.name;
+                }
+                if (host) {
+                    document.getElementById('chat-host-id').textContent = 'HOST: ' + host.id;
+                }
+            } else {
+                noSelection.style.display = 'block';
+                activeChat.style.display = 'none';
+            }
+        }
+
+        // Select a HOST
+        function selectHost(hostId) {
+            collection.activeHost = hostId;
+            renderHosts();
+            updateChatState();
+        }
+
+        // Select a Persona
+        function selectPersona(personaId) {
+            collection.activePersona = personaId;
+            renderPersonas();
+            updateChatState();
+        }
+
+        // Add gems to a HOST or Persona
+        function addGems(type, id) {
+            // TODO: Open gems purchase modal
+            alert(`Add gems to ${type}: ${id}\n\nGems purchase coming soon!`);
+        }
+
+        // Send chat message
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Add user message to chat
+            addChatMessage(message, 'user');
+            input.value = '';
+
+            // Get AI response
+            try {
+                const persona = collection.personas.find(p => p.id === collection.activePersona);
+                const host = collection.hosts.find(h => h.id === collection.activeHost);
+
+                // TODO: Call AI API
+                // For now, simulate response
+                setTimeout(() => {
+                    addChatMessage(`Hello! I'm ${persona?.name || 'your companion'}. How can I help you today?`, 'ai');
+                }, 1000);
+
+            } catch (err) {
+                console.error('Chat error:', err);
+                addChatMessage('Sorry, I had trouble responding. Please try again.', 'ai');
+            }
+        }
+
+        // Add message to chat
+        function addChatMessage(text, sender) {
+            const messages = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = 'chat-message ' + sender;
+            div.textContent = text;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+
+            chatHistory.push({ role: sender, content: text });
+        }
+
+        // Initialize
+        loadDemoCollection(); // Use demo data for now
+        // loadCollection(); // Use this when backend is ready
+    </script>
+    <script src="/js/navbar.js"></script>
+</body>
+</html>

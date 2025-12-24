@@ -171,6 +171,15 @@
             object-fit: cover;
         }
 
+        .frame-bar-preview .frame-icon {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 16px;
+            z-index: 10;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
         /* Frame effects on preview avatar */
         .frame-bar-preview.frame-none { border: 2px dashed rgba(255,255,255,0.3); }
         .frame-bar-preview.frame-ruby { border: 3px solid #e74c3c; box-shadow: 0 0 15px rgba(231, 76, 60, 0.6); }
@@ -939,6 +948,7 @@
                 <button class="frame-bar-arrow" onclick="prevFrame()">◀</button>
                 <div class="frame-bar-preview frame-none" id="frame-preview">
                     <img id="frame-preview-img" src="" alt="">
+                    <span class="frame-icon" id="frame-icon"></span>
                 </div>
                 <button class="frame-bar-arrow" onclick="nextFrame()">▶</button>
                 <div class="frame-bar-info">
@@ -1057,13 +1067,13 @@
 
         // Frame data
         const frames = [
-            { name: 'None', class: 'frame-none', price: 0 },
-            { name: 'Ruby', class: 'frame-ruby', price: 15 },
-            { name: 'Diamond', class: 'frame-diamond', price: 25 },
-            { name: 'Emerald', class: 'frame-emerald', price: 20 },
-            { name: 'Sapphire', class: 'frame-sapphire', price: 20 },
-            { name: 'Cosmic', class: 'frame-cosmic', price: 50 },
-            { name: 'Mythic', class: 'frame-mythic', price: 100 }
+            { name: 'None', class: 'frame-none', price: 0, icon: '' },
+            { name: 'Ruby', class: 'frame-ruby', price: 15, icon: '❤️' },
+            { name: 'Diamond', class: 'frame-diamond', price: 25, icon: '💎' },
+            { name: 'Emerald', class: 'frame-emerald', price: 20, icon: '💚' },
+            { name: 'Sapphire', class: 'frame-sapphire', price: 20, icon: '💙' },
+            { name: 'Cosmic', class: 'frame-cosmic', price: 50, icon: '🌟' },
+            { name: 'Mythic', class: 'frame-mythic', price: 100, icon: '🌌' }
         ];
         let currentFrameIndex = 0;
         let chatOpen = false;
@@ -1134,6 +1144,7 @@
             const previewImg = document.getElementById('frame-preview-img');
             const nameEl = document.getElementById('frame-name');
             const priceEl = document.getElementById('frame-price');
+            const iconEl = document.getElementById('frame-icon');
 
             if (!preview) return;
 
@@ -1157,6 +1168,7 @@
 
             if (nameEl) nameEl.textContent = frame.name + ' Frame';
             if (priceEl) priceEl.textContent = frame.price === 0 ? 'Free' : frame.price + ' gems';
+            if (iconEl) iconEl.textContent = frame.icon || '';
         }
 
         function prevFrame() {

@@ -532,3 +532,77 @@ a:hover {
     background-position: -200% 0;
   }
 }
+
+/* === HOST INDICATOR BADGE (7 o'clock position) === */
+/* Shows when a HOST model is active on an avatar */
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.host-indicator {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+  background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+  color: var(--bg-dark);
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.host-indicator::before {
+  content: '⚡';
+  margin-right: 2px;
+}
+
+/* Larger variant for profile pages */
+.host-indicator.large {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  bottom: 8%;
+  left: 8%;
+}
+
+/* Minimal variant - just icon */
+.host-indicator.minimal {
+  padding: 3px 5px;
+  font-size: 0.7rem;
+}
+
+.host-indicator.minimal::before {
+  margin-right: 0;
+}
+
+.host-indicator.minimal span {
+  display: none;
+}
+
+/* Frame emoji position (2 o'clock - for persona frames) */
+.frame-emoji {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  font-size: 1.2rem;
+  z-index: 10;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Combined: Frame at 2 o'clock, HOST at 7 o'clock */
+.avatar-container .frame-emoji {
+  top: 0;
+  right: 0;
+  transform: translate(25%, -25%);
+}
+
+.avatar-container .host-indicator {
+  bottom: 0;
+  left: 0;
+  transform: translate(-15%, 15%);
+}

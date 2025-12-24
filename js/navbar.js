@@ -290,6 +290,26 @@
               " class="dropdown-item">
                 👤 Profile
               </a>
+              <a href="/my-collection.html" style="
+                display: block;
+                padding: 12px 20px;
+                color: var(--text-primary, #e8e8f0);
+                text-decoration: none;
+                font-size: 0.95rem;
+                transition: background 0.2s ease;
+              " class="dropdown-item">
+                🎭 My Collection
+              </a>
+              <a href="/wardrobe.html" style="
+                display: block;
+                padding: 12px 20px;
+                color: var(--text-primary, #e8e8f0);
+                text-decoration: none;
+                font-size: 0.95rem;
+                transition: background 0.2s ease;
+              " class="dropdown-item">
+                👗 Wardrobe
+              </a>
               <a href="/email-request.html" style="
                 display: block;
                 padding: 12px 20px;
