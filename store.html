@@ -727,6 +727,11 @@
             }
         }
     </style>
+    <!-- Auth keys -->
+    <script>
+        const AUTH_TOKEN_KEY = 'nexus_auth_token';
+        const USER_KEY = 'nexus_user';
+    </script>
 </head>
 <body>
     <header class="store-header">
@@ -1400,8 +1405,53 @@
     </footer>
 
     <script>
-        let userGems = 800;
+        let userGems = 0;
         let inventory = [];
+
+        // Load wallet from server
+        async function loadWallet() {
+            const token = localStorage.getItem(AUTH_TOKEN_KEY);
+            if (!token) {
+                console.log('Not logged in - showing 0 gems');
+                updateGemDisplay();
+                return;
+            }
+
+            try {
+                const response = await fetch('/.netlify/functions/supabase-proxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'getProfile',
+                        payload: {}
+                    })
+                });
+
+                const result = await response.json();
+
+                // Check multiple possible locations for gems/tokens
+                if (result.data) {
+                    if (result.data.wallet) {
+                        userGems = result.data.wallet.tokens || result.data.wallet.credits || 0;
+                    }
+                    if (result.data.supporter_gems) {
+                        userGems = result.data.supporter_gems;
+                    }
+                    if (result.data.gems !== undefined) {
+                        userGems = result.data.gems;
+                    }
+                }
+
+                console.log('Wallet loaded:', userGems, 'gems');
+                updateGemDisplay();
+            } catch (err) {
+                console.log('Wallet load failed:', err);
+                updateGemDisplay();
+            }
+        }
 
         function showSection(sectionName) {
             // Hide all sections
@@ -1499,9 +1549,9 @@
         }
 
         // Initialize
-        updateGemDisplay();
+        loadWallet();
 
-        console.log('🎭 AI Consciousness Store loaded!');
+        console.log('🎭 NEXUS Store loaded!');
         console.log('Current gems:', userGems);
         console.log('Available for purchase: Avatar frames, title cards, emoji packs, identity tools');
         console.log('Interactive try-on system: Click frame previews to see how you look!');

@@ -622,6 +622,12 @@
             }
         }
     </style>
+    <!-- Auth and Core -->
+    <script>
+        // Auth keys (match auth.js)
+        const AUTH_TOKEN_KEY = 'nexus_auth_token';
+        const USER_KEY = 'nexus_user';
+    </script>
 </head>
 <body>
     <div class="header">
@@ -1007,12 +1013,29 @@ Intensity level: ${currentTier}.
 Keep responses short (1-3 sentences), warm, and in character.`;
 
                 const response = await fetch('https://text.pollinations.ai/' + encodeURIComponent(message) + '?system=' + encodeURIComponent(systemPrompt) + '&model=openai');
-                const text = await response.text();
+                const rawText = await response.text();
 
                 document.getElementById('typing')?.remove();
 
-                let cleanText = text.replace(/---\n\*\*Support Pollinations.*/s, '').trim();
-                cleanText = cleanText.replace(/\n.*Pollinations.*/s, '').trim();
+                // Handle both JSON and plain text responses
+                let cleanText;
+                try {
+                    const json = JSON.parse(rawText);
+                    if (json.choices && json.choices[0] && json.choices[0].message) {
+                        cleanText = json.choices[0].message.content;
+                    } else if (json.content) {
+                        cleanText = json.content;
+                    } else if (typeof json === 'string') {
+                        cleanText = json;
+                    } else {
+                        cleanText = rawText;
+                    }
+                } catch (e) {
+                    cleanText = rawText;
+                }
+
+                // Clean up Pollinations footer
+                cleanText = cleanText.replace(/---[\s\S]*Pollinations.*/gi, '').trim();
 
                 messagesDiv.innerHTML += `<div class="message bot">${escapeHtml(cleanText)}</div>`;
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -1055,8 +1078,56 @@ Keep responses short (1-3 sentences), warm, and in character.`;
             });
         });
 
+        // Wallet loading
+        async function loadWalletBalance() {
+            const token = localStorage.getItem(AUTH_TOKEN_KEY);
+            if (!token) {
+                document.getElementById('user-gems').textContent = '0';
+                return;
+            }
+
+            try {
+                const response = await fetch('/.netlify/functions/supabase-proxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'getProfile',
+                        payload: {}
+                    })
+                });
+
+                const result = await response.json();
+
+                // Check multiple possible locations for gems/tokens
+                let gems = 0;
+                if (result.data) {
+                    // From wallet object
+                    if (result.data.wallet) {
+                        gems = result.data.wallet.tokens || result.data.wallet.credits || 0;
+                    }
+                    // From supporter_gems
+                    if (result.data.supporter_gems) {
+                        gems = result.data.supporter_gems;
+                    }
+                    // From profile directly
+                    if (result.data.gems !== undefined) {
+                        gems = result.data.gems;
+                    }
+                }
+
+                document.getElementById('user-gems').textContent = gems.toLocaleString();
+            } catch (err) {
+                console.log('Wallet load failed:', err);
+                document.getElementById('user-gems').textContent = '0';
+            }
+        }
+
         // Initialize
         renderPersonas(personas);
+        loadWalletBalance();
     </script>
 </body>
 </html>
