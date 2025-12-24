@@ -1167,42 +1167,59 @@
             }
         }
     
-        /* Floating Recommendation Bubbles - Mobile App Style */
-        .floating-recs {
+    
+        /* Right Side Recommendations Panel */
+        .right-recs-panel {
             position: fixed;
             right: 20px;
             top: 100px;
+            width: 220px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            z-index: 9999;
+            gap: 15px;
+            z-index: 100;
         }
 
-        .floating-rec-bubble {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
+        .right-recs-header {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.5);
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .right-rec-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid rgba(0, 212, 255, 0.4);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
-        .floating-rec-bubble:hover {
-            transform: scale(1.15);
+        .right-rec-card:hover {
             border-color: #00d4ff;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            transform: translateX(-5px);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
         }
 
-        .floating-rec-bubble img {
+        .right-rec-card .rec-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            overflow: hidden;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .right-rec-card .rec-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .floating-rec-bubble .bubble-initial {
+        .right-rec-card .rec-avatar-letter {
             width: 100%;
             height: 100%;
             display: flex;
@@ -1210,58 +1227,35 @@
             justify-content: center;
             font-size: 20px;
             font-weight: bold;
-            color: white;
             background: linear-gradient(135deg, #00d4ff, #7b2cbf);
         }
 
-        .floating-rec-bubble .bubble-tooltip {
-            position: absolute;
-            right: 65px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.9);
+        .right-rec-card .rec-name {
+            font-size: 14px;
+            font-weight: 600;
             color: #00d4ff;
-            padding: 6px 12px;
-            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .right-rec-card .rec-archetype {
             font-size: 11px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            margin-bottom: 6px;
         }
 
-        .floating-rec-bubble:hover .bubble-tooltip {
-            opacity: 1;
+        .right-rec-card .rec-reason {
+            font-size: 10px;
+            color: #d4af37;
+            text-align: center;
+            padding: 3px 8px;
+            background: rgba(212, 175, 55, 0.15);
+            border-radius: 8px;
         }
 
-        .floating-rec-bubble.host-type {
-            border-color: rgba(212, 175, 55, 0.4);
-        }
-
-        .floating-rec-bubble.host-type:hover {
-            border-color: #d4af37;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-        }
-
-        .floating-rec-bubble.host-type .bubble-initial {
-            background: linear-gradient(135deg, #d4af37, #7b2cbf);
-        }
-
-        .floating-recs-label {
-            display: none;
-        }
-
-        @media (max-width: 900px) {
-            .floating-recs {
-                right: 10px;
-                gap: 8px;
-            }
-            .floating-rec-bubble {
-                width: 46px;
-                height: 46px;
-            }
-            .floating-rec-bubble .bubble-tooltip {
+        @media (max-width: 1200px) {
+            .right-recs-panel {
                 display: none;
             }
         }
@@ -1272,11 +1266,6 @@
     <script src="/js/pollinations.js"></script>
 </head>
 <body>
-    <!-- Floating Recommendation Bubbles -->
-    <div class="floating-recs" id="floating-recs">
-        <!-- Populated by JS -->
-    </div>
-
     <div class="container">
         <!-- Tab Navigation -->
         <nav class="tab-nav">
@@ -1700,29 +1689,52 @@
             renderCollection();
         }
 
-        // Populate floating recommendation bubbles
-        function populateFloatingRecs() {
-            const container = document.getElementById('floating-recs');
-            if (!container || !collection) return;
 
-            const recPersonas = (collection.personas || []).filter(p => p.ownership !== 'locked').slice(0, 4);
-            const recHosts = (collection.hosts || []).slice(0, 3);
+        // Populate right side recommendations based on current selection
+        function updateRightRecs() {
+            const panel = document.getElementById('right-recs-panel');
+            if (!panel || !collection) return;
 
-            let html = '';
+            const activePersona = collection.personas.find(p => p.id === collection.activePersona);
 
-            recPersonas.forEach(p => {
-                html += '<div class="floating-rec-bubble" onclick="selectPersona(\'' + p.id + '\')" title="' + p.name + '">' +
-                    (p.image ? '<img src="' + p.image + '" alt="' + p.name + '">' : '<div class="bubble-initial">' + p.name[0] + '</div>') +
-                    '<div class="bubble-tooltip">' + p.name + ' - ' + p.archetype + '</div></div>';
+            // Get 3 compatible suggestions
+            let suggestions = [];
+
+            if (activePersona) {
+                // Find personas with compatible archetypes
+                const compatMap = {
+                    'Romantic': ['Nurturing', 'Playful'],
+                    'Playful': ['Romantic', 'Dominant'],
+                    'Dominant': ['Submissive', 'Intellectual'],
+                    'Submissive': ['Dominant', 'Nurturing'],
+                    'Intellectual': ['Romantic', 'Dominant'],
+                    'Nurturing': ['Submissive', 'Romantic']
+                };
+                const compatTypes = compatMap[activePersona.archetype] || [];
+
+                suggestions = collection.personas
+                    .filter(p => p.id !== activePersona.id && compatTypes.includes(p.archetype))
+                    .slice(0, 3);
+            }
+
+            if (suggestions.length === 0) {
+                suggestions = collection.personas.filter(p => p.ownership !== 'locked').slice(0, 3);
+            }
+
+            let html = '<div class="right-recs-header">Pairs With ' + (activePersona?.name || 'Selection') + '</div>';
+
+            suggestions.forEach(p => {
+                html += '<div class="right-rec-card" onclick="selectPersona(\'' + p.id + '\')">' +
+                    '<div class="rec-avatar">' +
+                    (p.image ? '<img src="' + p.image + '" alt="' + p.name + '">' : '<div class="rec-avatar-letter">' + p.name[0] + '</div>') +
+                    '</div>' +
+                    '<div class="rec-name">' + p.name + '</div>' +
+                    '<div class="rec-archetype">' + p.archetype + '</div>' +
+                    '<div class="rec-reason">Compatible match</div>' +
+                    '</div>';
             });
 
-            recHosts.forEach(h => {
-                html += '<div class="floating-rec-bubble host-type" onclick="selectHost(\'' + h.id + '\')" title="' + h.name + '">' +
-                    '<div class="bubble-initial">' + h.name[0] + '</div>' +
-                    '<div class="bubble-tooltip">HOST: ' + h.name + '</div></div>';
-            });
-
-            container.innerHTML = html;
+            panel.innerHTML = html;
         }
 
         // Render the collection
@@ -1732,7 +1744,7 @@
             updateCounts();
             updateChatState();
             generateRecommendations();
-            populateFloatingRecs();
+            updateRightRecs();
         }
 
         // Render HOSTs grid with slots
