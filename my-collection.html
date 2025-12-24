@@ -1461,6 +1461,84 @@
             'Solo': ['Intellectual', 'Playful', 'Creative']
         };
 
+        // Reverse compatibility: Persona archetype -> compatible HOST tags
+        const personaToHostMap = {
+            'Romantic': ['Mono', 'Polyamorous', 'ENM', 'Switch'],
+            'Playful': ['Dominant', 'Switch', 'Polyamorous', 'ENM'],
+            'Dominant': ['Submissive', 'Switch'],
+            'Submissive': ['Dominant', 'Switch'],
+            'Intellectual': ['Solo', 'Mono', 'ENM'],
+            'Caring': ['Mono', 'Submissive'],
+            'Adventurous': ['Polyamorous', 'ENM', 'Switch'],
+            'Creative': ['Solo', 'ENM', 'Polyamorous']
+        };
+
+        // All available HOSTs (owned + suggestions)
+        const allHosts = [
+            { id: 'Bi-Poly-Dom-PE', name: 'Bi-Poly-Dom', tags: ['Bisexual', 'Polyamorous', 'Dominant', 'PE'], gender: 'male' },
+            { id: 'Pan-ENM-Sub-Rope', name: 'Pan-ENM-Sub', tags: ['Pansexual', 'ENM', 'Submissive', 'Rope'], gender: 'female' },
+            { id: 'Straight-Mono-Switch', name: 'Straight-Mono', tags: ['Straight', 'Mono', 'Switch'], gender: 'male' },
+            { id: 'Queer-Solo-Brat', name: 'Queer-Solo', tags: ['Queer', 'Solo', 'Brat'], gender: 'neutral' },
+            { id: 'Gay-Dom-Leather', name: 'Gay-Dom-Leather', tags: ['Gay', 'Dominant', 'Leather'], gender: 'male' },
+            { id: 'Lesbian-Poly-Soft', name: 'Lesbian-Poly', tags: ['Lesbian', 'Polyamorous', 'Soft'], gender: 'female' }
+        ];
+
+        // Render compatible HOSTs for a Persona
+        function renderCompatibleHosts(personaId) {
+            const persona = collection.personas.find(p => p.id === personaId) || allPersonas.find(p => p.id === personaId);
+            if (!persona) return;
+
+            const container = document.getElementById('compatible-hosts');
+            const section = document.getElementById('persona-compat-section');
+
+            // Find compatible HOST tags based on persona archetype
+            const compatTags = personaToHostMap[persona.archetype] || [];
+
+            // Filter HOSTs that have matching tags
+            const compatHosts = allHosts.filter(h =>
+                h.tags.some(tag => compatTags.includes(tag))
+            ).slice(0, 3);
+
+            if (compatHosts.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+
+            container.innerHTML = compatHosts.map(h => {
+                const owned = collection.hosts.some(oh => oh.id === h.id);
+                const active = owned && collection.hosts.find(oh => oh.id === h.id)?.gemsRemaining > 0;
+                const genderClass = h.gender === 'female' ? 'female' : h.gender === 'male' ? 'male' : '';
+
+                let status, statusClass, onclick;
+                if (active) {
+                    status = '✓ Ready';
+                    statusClass = 'owned-tag';
+                    onclick = `quickSelectHost('${h.id}')`;
+                } else if (owned) {
+                    status = 'Needs gems';
+                    statusClass = 'unlock-tag';
+                    onclick = `showAddTimeModal('host', '${h.id}', '${h.name}')`;
+                } else {
+                    status = '50 gems';
+                    statusClass = 'unlock-tag';
+                    onclick = `window.location.href='persona_hosts.html'`;
+                }
+
+                return `
+                    <div class="compat-item ${active ? 'owned' : ''}" onclick="${onclick}">
+                        <div class="compat-avatar card-avatar ${genderClass}">${h.name[0]}</div>
+                        <div class="compat-info">
+                            <div class="compat-name">${h.name}</div>
+                            <div class="compat-tag">${h.tags.slice(0,2).join(', ')}</div>
+                        </div>
+                        <span class="compat-status ${statusClass}">${status}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
         // Get all available personas (owned + suggestions)
         const allPersonas = [
             { id: 'luna', name: 'Luna', archetype: 'Romantic', gender: 'female' },
@@ -1646,6 +1724,13 @@
                     </div>
                     <span class="gem-price">60 gems</span>
                 </div>
+            </div>
+
+            <!-- Compatibility Section for Personas (shows compatible HOSTs) -->
+            <div id="persona-compat-section" style="display:none;margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Works great with these HOSTs</div>
+                <div id="compatible-hosts" style="display:flex;flex-direction:column;gap:8px;"></div>
+                <a href="persona_hosts.html" style="display:block;text-align:center;color:#00d4ff;font-size:12px;margin-top:12px;text-decoration:none;">Browse all HOSTs →</a>
             </div>
 
             <!-- HOST options: Buy gem packs -->
