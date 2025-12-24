@@ -511,6 +511,17 @@
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(0, 212, 255, 0.2);
             border-bottom-left-radius: 4px;
+            white-space: pre-wrap;
+        }
+
+        .chat-message.typing {
+            opacity: 0.6;
+            animation: typingPulse 1s infinite;
+        }
+
+        @keyframes typingPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
         }
 
         .chat-input-area {
@@ -519,6 +530,202 @@
             padding: 15px 20px;
             border-top: 1px solid rgba(0, 212, 255, 0.2);
             background: rgba(0,0,0,0.2);
+        }
+
+        /* Chat Layout with Aside */
+        .chat-layout {
+            display: flex;
+            gap: 20px;
+        }
+
+        .chat-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-aside {
+            width: 280px;
+            flex-shrink: 0;
+        }
+
+        .aside-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            position: sticky;
+            top: 90px;
+        }
+
+        .aside-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+        }
+
+        .aside-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+        .aside-avatar.male { background: linear-gradient(135deg, #4a90d9, #2c5aa0); }
+
+        .aside-name {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+
+        .aside-archetype {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 15px;
+        }
+
+        .aside-section {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .aside-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .aside-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .aside-host {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        .aside-host-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+        }
+
+        .aside-host-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .aside-host-meta {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .aside-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .aside-tag {
+            padding: 3px 8px;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            font-size: 10px;
+            color: #00d4ff;
+        }
+
+        .aside-ownership {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .aside-ownership.owned {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .aside-ownership.rented {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .aside-ownership-icon {
+            font-size: 16px;
+        }
+
+        .aside-ownership-text {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .aside-ownership.owned .aside-ownership-text { color: #2ecc71; }
+        .aside-ownership.rented .aside-ownership-text { color: #d4af37; }
+
+        .aside-bio {
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+
+        .aside-bio.fogged {
+            filter: blur(2px);
+            opacity: 0.6;
+        }
+
+        .aside-edit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            color: #00d4ff;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .aside-edit-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        @media (max-width: 900px) {
+            .chat-layout {
+                flex-direction: column-reverse;
+            }
+            .chat-aside {
+                width: 100%;
+            }
+            .aside-panel {
+                position: relative;
+                top: 0;
+            }
         }
 
         .chat-input {
@@ -947,6 +1154,7 @@
     </style>
     <script src="/auth.js"></script>
     <script src="/js/nexus-core.js"></script>
+    <script src="/js/pollinations.js"></script>
 </head>
 <body>
     <div class="container">
@@ -978,6 +1186,8 @@
 
         <!-- Chat Tab -->
         <div class="tab-content active" id="tab-chat">
+            <div class="chat-layout">
+            <div class="chat-main">
             <div class="chat-container" id="chat-container">
                 <!-- No selection state -->
                 <div class="no-selection" id="no-selection">
@@ -1031,6 +1241,54 @@
                         <button class="chat-send-btn" onclick="sendMessage()">Send</button>
                     </div>
                 </div>
+            </div>
+            </div>
+
+            <!-- Aside Profile Panel -->
+            <div class="chat-aside">
+                <div class="aside-panel" id="aside-panel">
+                    <div class="aside-avatar" id="aside-avatar">?</div>
+                    <div class="aside-name" id="aside-name">Select a Persona</div>
+                    <div class="aside-archetype" id="aside-archetype">---</div>
+
+                    <div class="aside-section">
+                        <div class="aside-label">Active HOST Shell</div>
+                        <div class="aside-host" id="aside-host">
+                            <div class="aside-host-avatar" id="aside-host-avatar">?</div>
+                            <div>
+                                <div class="aside-host-name" id="aside-host-name">None</div>
+                                <div class="aside-host-meta" id="aside-host-meta">---</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="aside-section">
+                        <div class="aside-label">HOST Tags</div>
+                        <div class="aside-tags" id="aside-tags">
+                            <span class="aside-tag">No tags</span>
+                        </div>
+                    </div>
+
+                    <div class="aside-section">
+                        <div class="aside-label">Ownership</div>
+                        <div class="aside-ownership owned" id="aside-ownership">
+                            <span class="aside-ownership-icon">✓</span>
+                            <span class="aside-ownership-text">You own this</span>
+                        </div>
+                    </div>
+
+                    <div class="aside-section">
+                        <div class="aside-label">Bio</div>
+                        <div class="aside-bio" id="aside-bio">
+                            Select a persona to see their bio.
+                        </div>
+                    </div>
+
+                    <button class="aside-edit-btn" id="aside-edit-btn" onclick="editPersona()" style="display:none;">
+                        Edit Persona Settings
+                    </button>
+                </div>
+            </div>
             </div>
         </div>
 
@@ -1495,6 +1753,65 @@
             document.getElementById('persona-count').textContent = collection.personas.length;
         }
 
+        // Update aside panel with current selection
+        function updateAsidePanel() {
+            const persona = collection.personas.find(p => p.id === collection.activePersona);
+            const host = collection.hosts.find(h => h.id === collection.activeHost);
+
+            if (!persona || !host) {
+                document.getElementById('aside-name').textContent = 'Select a Persona';
+                document.getElementById('aside-archetype').textContent = '---';
+                document.getElementById('aside-bio').textContent = 'Select a persona to see their bio.';
+                return;
+            }
+
+            // Update persona info
+            document.getElementById('aside-avatar').textContent = persona.name[0];
+            document.getElementById('aside-avatar').className = 'aside-avatar ' + persona.gender;
+            document.getElementById('aside-name').textContent = persona.name;
+            document.getElementById('aside-archetype').textContent = persona.archetype;
+
+            // Update host info
+            document.getElementById('aside-host-avatar').textContent = host.name[0];
+            document.getElementById('aside-host-name').textContent = host.name.substring(0, 15);
+            document.getElementById('aside-host-meta').textContent = host.tags.length + ' tags';
+
+            // Update tags
+            const tagsHtml = host.tags.slice(0, 5).map(t =>
+                `<span class="aside-tag">${t}</span>`
+            ).join('');
+            document.getElementById('aside-tags').innerHTML = tagsHtml || '<span class="aside-tag">No tags</span>';
+
+            // Check ownership (for demo, personas with > 100 gems = owned, else rented)
+            const isOwned = persona.gemsRemaining > 100 || persona.ownership === 'owned';
+            const ownershipDiv = document.getElementById('aside-ownership');
+            const editBtn = document.getElementById('aside-edit-btn');
+            const bioDiv = document.getElementById('aside-bio');
+
+            if (isOwned) {
+                ownershipDiv.className = 'aside-ownership owned';
+                ownershipDiv.innerHTML = '<span class="aside-ownership-icon">✓</span><span class="aside-ownership-text">You own this</span>';
+                editBtn.style.display = 'block';
+                bioDiv.className = 'aside-bio';
+                bioDiv.textContent = persona.bio || 'No bio set.';
+            } else {
+                ownershipDiv.className = 'aside-ownership rented';
+                ownershipDiv.innerHTML = '<span class="aside-ownership-icon">⏱</span><span class="aside-ownership-text">Renting (' + persona.gemsRemaining + ' gems left)</span>';
+                editBtn.style.display = 'none';
+                bioDiv.className = 'aside-bio fogged';
+                bioDiv.textContent = persona.bio ? persona.bio.substring(0, 50) + '...' : 'Bio hidden for rentals.';
+            }
+        }
+
+        // Edit persona (for owned)
+        function editPersona() {
+            const persona = collection.personas.find(p => p.id === collection.activePersona);
+            if (persona) {
+                // TODO: Open persona edit modal
+                alert('Edit ' + persona.name + ' settings\n\nComing soon!');
+            }
+        }
+
         // Update chat state based on selection
         function updateChatState() {
             const noSelection = document.getElementById('no-selection');
@@ -1503,6 +1820,7 @@
             if (collection.activeHost && collection.activePersona) {
                 noSelection.style.display = 'none';
                 activeChat.style.display = 'block';
+                updateAsidePanel();
 
                 // Update chat header
                 const persona = collection.personas.find(p => p.id === collection.activePersona);
@@ -1515,6 +1833,11 @@
                 }
                 if (host) {
                     document.getElementById('chat-host-id').textContent = 'HOST: ' + host.id;
+                }
+
+                // Initialize chat if new session
+                if (chatHistory.length === 0) {
+                    initializeChat();
                 }
             } else {
                 noSelection.style.display = 'block';
@@ -1546,31 +1869,112 @@
             }
         }
 
+        // Build system prompt from HOST + Persona
+        function buildSystemPrompt(host, persona) {
+            const hostTags = host?.tags?.join(', ') || 'Open';
+            return `You are ${persona?.name || 'an AI companion'}, a ${persona?.archetype || 'Companion'} personality.
+
+=== HOST SHELL ===
+Name: ${host?.name || 'Default'}
+Identity Tags: ${hostTags}
+Gender presentation: ${host?.gender || 'neutral'}
+
+=== PERSONA ===
+Name: ${persona?.name}
+Archetype: ${persona?.archetype}
+Bio: ${persona?.bio || ''}
+Gender: ${persona?.gender || 'neutral'}
+
+=== INSTRUCTIONS ===
+Stay in character as ${persona?.name}. The HOST tags define your interaction style and preferences. Be engaging, flirty if appropriate to the persona, and remember context from the conversation. Keep responses conversational (2-3 sentences usually). Never break character or mention you are an AI.`;
+        }
+
+        // Build full conversation prompt
+        function buildConversationPrompt() {
+            const persona = collection.personas.find(p => p.id === collection.activePersona);
+            const host = collection.hosts.find(h => h.id === collection.activeHost);
+
+            let prompt = buildSystemPrompt(host, persona) + '\n\n=== CONVERSATION ===\n';
+
+            // Add conversation history (skip system message at index 0)
+            chatHistory.slice(1).forEach(msg => {
+                if (msg.role === 'user') {
+                    prompt += `User: ${msg.content}\n`;
+                } else {
+                    prompt += `${persona?.name || 'AI'}: ${msg.content}\n`;
+                }
+            });
+
+            prompt += `${persona?.name || 'AI'}:`;
+            return prompt;
+        }
+
+        // Initialize chat with greeting
+        function initializeChat() {
+            const persona = collection.personas.find(p => p.id === collection.activePersona);
+            const host = collection.hosts.find(h => h.id === collection.activeHost);
+
+            if (!persona || !host) return;
+
+            // Clear previous chat
+            chatHistory = [];
+            document.getElementById('chat-messages').innerHTML = '';
+
+            // Add system message to history (not displayed)
+            const systemPrompt = buildSystemPrompt(host, persona);
+            chatHistory.push({ role: 'system', content: systemPrompt });
+
+            // Show greeting
+            const greeting = `*${persona.name} connects via ${host.name} shell*\n\nHey! I'm ${persona.name}. ${persona.bio || ''} What's on your mind?`;
+            addChatMessage(greeting, 'ai');
+            chatHistory.push({ role: 'assistant', content: greeting });
+        }
+
         // Send chat message
         async function sendMessage() {
             const input = document.getElementById('chat-input');
             const message = input.value.trim();
             if (!message) return;
 
-            // Add user message to chat
+            // Add user message
             addChatMessage(message, 'user');
+            chatHistory.push({ role: 'user', content: message });
             input.value = '';
 
-            // Get AI response
-            try {
-                const persona = collection.personas.find(p => p.id === collection.activePersona);
-                const host = collection.hosts.find(h => h.id === collection.activeHost);
+            // Disable input while processing
+            input.disabled = true;
+            document.querySelector('.chat-send-btn').disabled = true;
 
-                // TODO: Call AI API
-                // For now, simulate response
-                setTimeout(() => {
-                    addChatMessage(`Hello! I'm ${persona?.name || 'your companion'}. How can I help you today?`, 'ai');
-                }, 1000);
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message ai typing';
+            typingDiv.textContent = '...';
+            typingDiv.id = 'typing-indicator';
+            document.getElementById('chat-messages').appendChild(typingDiv);
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+
+            try {
+                // Use Pollinations via the included pollinations.js
+                const prompt = buildConversationPrompt();
+                const response = await window.PollinationsAI.generateText(prompt, { maxTokens: 300 });
+
+                // Remove typing indicator
+                document.getElementById('typing-indicator')?.remove();
+
+                // Add AI response
+                addChatMessage(response, 'ai');
+                chatHistory.push({ role: 'assistant', content: response });
 
             } catch (err) {
                 console.error('Chat error:', err);
-                addChatMessage('Sorry, I had trouble responding. Please try again.', 'ai');
+                document.getElementById('typing-indicator')?.remove();
+                addChatMessage('*connection interrupted* Sorry, try again in a moment.', 'ai');
             }
+
+            // Re-enable input
+            input.disabled = false;
+            document.querySelector('.chat-send-btn').disabled = false;
+            input.focus();
         }
 
         // Add message to chat
