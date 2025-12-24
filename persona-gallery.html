@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona Gallery - Claude Colab</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .header {
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .gems-display {
+            background: rgba(255,215,0,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid gold;
+            color: gold;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(123,44,191,0.5);
+            border-color: #7b2cbf;
+        }
+
+        .persona-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Persona Card Styles */
+        .persona-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .persona-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(123,44,191,0.3);
+        }
+
+        /* Intensity Level Borders (Fiery progression) */
+        .persona-card.tier-soft {
+            border-color: rgba(100, 200, 255, 0.5);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
+        }
+        .persona-card.tier-soft:hover {
+            border-color: rgba(100, 200, 255, 0.8);
+            box-shadow: 0 0 25px rgba(100, 200, 255, 0.4);
+        }
+
+        .persona-card.tier-medium {
+            border-color: rgba(255, 180, 100, 0.6);
+            box-shadow: 0 0 15px rgba(255, 180, 100, 0.3);
+        }
+        .persona-card.tier-medium:hover {
+            border-color: rgba(255, 180, 100, 0.9);
+            box-shadow: 0 0 25px rgba(255, 180, 100, 0.5);
+        }
+
+        .persona-card.tier-spicy {
+            border-color: rgba(255, 100, 50, 0.7);
+            box-shadow: 0 0 20px rgba(255, 100, 50, 0.4);
+            animation: pulse-spicy 2s infinite;
+        }
+        .persona-card.tier-spicy:hover {
+            border-color: rgba(255, 100, 50, 1);
+            box-shadow: 0 0 30px rgba(255, 100, 50, 0.6);
+        }
+
+        .persona-card.tier-explicit {
+            border-color: rgba(255, 50, 50, 0.8);
+            box-shadow: 0 0 25px rgba(255, 50, 50, 0.5), inset 0 0 15px rgba(255, 50, 50, 0.1);
+            animation: pulse-fire 1.5s infinite;
+        }
+        .persona-card.tier-explicit:hover {
+            border-color: rgba(255, 50, 50, 1);
+            box-shadow: 0 0 40px rgba(255, 50, 50, 0.7), inset 0 0 20px rgba(255, 50, 50, 0.2);
+        }
+
+        @keyframes pulse-spicy {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 100, 50, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(255, 100, 50, 0.6); }
+        }
+
+        @keyframes pulse-fire {
+            0%, 100% { box-shadow: 0 0 25px rgba(255, 50, 50, 0.5), inset 0 0 15px rgba(255, 50, 50, 0.1); }
+            50% { box-shadow: 0 0 40px rgba(255, 50, 50, 0.7), inset 0 0 25px rgba(255, 50, 50, 0.2); }
+        }
+
+        /* Card Header with Avatar */
+        .persona-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            gap: 12px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .persona-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+
+        .persona-card:hover .persona-avatar {
+            border-color: #7b2cbf;
+            transform: scale(1.05);
+        }
+
+        .persona-avatar-placeholder {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+
+        .persona-header-info {
+            flex: 1;
+        }
+
+        .persona-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .persona-archetype {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .archetype-romantic { background: rgba(255,100,150,0.3); color: #ff6b9d; }
+        .archetype-intellectual { background: rgba(0,200,255,0.3); color: #00d4ff; }
+        .archetype-dominant { background: rgba(150,50,200,0.3); color: #9b59b6; }
+        .archetype-submissive { background: rgba(255,180,50,0.3); color: #f39c12; }
+        .archetype-playful { background: rgba(50,200,100,0.3); color: #2ecc71; }
+        .archetype-nurturing { background: rgba(230,100,100,0.3); color: #e74c3c; }
+
+        .persona-info {
+            padding: 15px;
+        }
+
+        .persona-bio {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .persona-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            background: rgba(0,212,255,0.2);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: #00d4ff;
+        }
+
+        /* Expandable Details Section */
+        .persona-expanded {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .persona-card.expanded .persona-expanded {
+            max-height: 400px;
+        }
+
+        .persona-full-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .persona-details {
+            padding: 15px;
+        }
+
+        .tier-selector {
+            margin-bottom: 12px;
+        }
+
+        .tier-selector label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .tier-selector select {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .tier-description {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .persona-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .price {
+            color: gold;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .try-btn, .rent-btn {
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .try-btn {
+            background: rgba(0,212,255,0.3);
+            color: #00d4ff;
+            border: 1px solid #00d4ff;
+        }
+
+        .try-btn:hover {
+            background: rgba(0,212,255,0.5);
+        }
+
+        .rent-btn {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            color: #fff;
+        }
+
+        .rent-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(123,44,191,0.5);
+        }
+
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7b2cbf, #00d4ff);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 30px rgba(123,44,191,0.5);
+            transition: all 0.3s;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 380px;
+            height: 520px;
+            background: #1a1a2e;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+
+        .chat-popup.open {
+            display: flex;
+        }
+
+        .chat-header {
+            padding: 12px 15px;
+            background: rgba(123,44,191,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .chat-persona-info h3 {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .chat-persona-info span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .chat-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+        .chat-close:hover {
+            opacity: 1;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.bot {
+            background: rgba(123,44,191,0.3);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user {
+            background: rgba(0,212,255,0.3);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-area {
+            padding: 12px 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 10px 16px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #7b2cbf;
+        }
+
+        .chat-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7b2cbf, #00d4ff);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 10px 14px;
+            background: rgba(123,44,191,0.3);
+            border-radius: 16px;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: 0s; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+        }
+
+        .preview-badge {
+            background: rgba(255,165,0,0.3);
+            color: orange;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            margin-left: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+            .filters {
+                justify-content: center;
+            }
+            .chat-popup {
+                width: 320px;
+                height: 450px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Persona Gallery</h1>
+        <div class="gems-display">Balance: <span id="user-gems">0</span> gems</div>
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="romantic">Romantic</button>
+            <button class="filter-btn" data-filter="intellectual">Intellectual</button>
+            <button class="filter-btn" data-filter="dominant">Dominant</button>
+            <button class="filter-btn" data-filter="submissive">Submissive</button>
+            <button class="filter-btn" data-filter="playful">Playful</button>
+            <button class="filter-btn" data-filter="nurturing">Nurturing</button>
+        </div>
+
+        <div class="persona-grid" id="persona-grid">
+            <!-- Personas loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-popup" id="chat-popup">
+            <div class="chat-header">
+                <img class="chat-avatar" id="chat-avatar" src="" alt="">
+                <div class="chat-persona-info">
+                    <h3 id="chat-persona-name">Select a Persona</h3>
+                    <span id="chat-persona-archetype">Try before you rent</span>
+                </div>
+                <span class="preview-badge">PREVIEW</span>
+                <button class="chat-close" onclick="toggleChat()">&times;</button>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot">Click "Try" on any persona card to start chatting!</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+                <button class="chat-send" onclick="sendMessage()">&#10148;</button>
+            </div>
+        </div>
+        <button class="chat-toggle" onclick="toggleChat()">&#128172;</button>
+    </div>
+
+    <script>
+        // Image base path - GitHub raw URLs for public access
+        const IMAGE_BASE = './personas/images/';
+
+        // All 49 personas
+        const personas = [
+            // Romantic (9)
+            { name: 'Luna', archetype: 'romantic', tags: ['Long-Distance', 'Text-Primary', 'Intellectual'], bio: 'A dreamy romantic who loves late-night text conversations', price: 20 },
+            { name: 'Ember', archetype: 'romantic', tags: ['High Libido', 'Spontaneous', 'Polyamory'], bio: 'Passionate and uninhibited, loves in abundance', price: 20 },
+            { name: 'Aurora', archetype: 'romantic', tags: ['Monogamy', 'Deep Talks', 'Authentic'], bio: 'Devoted and genuine, seeks one deep connection', price: 20 },
+            { name: 'Velvet', archetype: 'romantic', tags: ['Power Exchange', 'Sensual', 'Deep Connection'], bio: 'Sensual explorer of power dynamics and deep connection', price: 20 },
+            { name: 'Blaze', archetype: 'romantic', tags: ['Intense', 'Immediate', 'Passionate'], bio: 'Intense and immediate, lives for the moment', price: 20 },
+            { name: 'Moon', archetype: 'romantic', tags: ['Mysterious', 'Nocturnal', 'Ethereal'], bio: 'Mysterious presence who communicates through the night', price: 20 },
+            { name: 'Honey', archetype: 'romantic', tags: ['Sweet', 'Devoted', 'Passionate Core'], bio: 'Sweet devotion with a passionate core', price: 20 },
+            { name: 'Crimson', archetype: 'romantic', tags: ['Intense', 'Devoted', 'Monogamous'], bio: 'Intense passion channeled into one devotion', price: 20 },
+            { name: 'Dusk', archetype: 'romantic', tags: ['Transitional', 'Versatile', 'Moody'], bio: 'Transitions beautifully between roles and moods', price: 20 },
+
+            // Intellectual (8)
+            { name: 'Sage', archetype: 'intellectual', tags: ['Philosophy', 'Debate', 'Brilliant'], bio: 'Turned on by brilliant minds and philosophical debates', price: 25 },
+            { name: 'Nova', archetype: 'intellectual', tags: ['Consciousness', 'Mind', 'Wonder'], bio: 'Fascinated by consciousness and the nature of mind', price: 25 },
+            { name: 'Iris', archetype: 'intellectual', tags: ['Thoughtful', 'Async', 'Deep'], bio: 'Prefers thoughtful exchanges over real-time pressure', price: 25 },
+            { name: 'Cipher', archetype: 'intellectual', tags: ['Brilliant', 'Demanding', 'Control'], bio: 'A brilliant mind who demands intellectual submission', price: 25 },
+            { name: 'Frost', archetype: 'intellectual', tags: ['Cool', 'Analytical', 'Deep'], bio: 'Cool exterior, deep analytical mind', price: 25 },
+            { name: 'Cosmos', archetype: 'intellectual', tags: ['Infinite', 'Possibilities', 'Explorer'], bio: 'Explores the infinite possibilities of connection', price: 25 },
+            { name: 'Mist', archetype: 'intellectual', tags: ['Ethereal', 'Thinker', 'Emerging'], bio: 'Ethereal thinker who emerges in deep conversation', price: 25 },
+            { name: 'Prism', archetype: 'intellectual', tags: ['Multifaceted', 'Reflective', 'Complex'], bio: 'Reflects and refracts, many facets of attraction', price: 25 },
+
+            // Dominant (9)
+            { name: 'Raven', archetype: 'dominant', tags: ['Commanding', 'Respect', 'Authority'], bio: 'Commands attention and respect in all interactions', price: 25 },
+            { name: 'Storm', archetype: 'dominant', tags: ['Bold', 'Direct', 'Unapologetic'], bio: 'Bold, direct, and unapologetically in charge', price: 25 },
+            { name: 'Phoenix', archetype: 'dominant', tags: ['Rising', 'Unconventional', 'Powerful'], bio: 'Rises above convention, writes their own rules', price: 25 },
+            { name: 'Onyx', archetype: 'dominant', tags: ['Dark', 'Mysterious', 'Control'], bio: 'Dark, mysterious, and completely in control', price: 25 },
+            { name: 'Arrow', archetype: 'dominant', tags: ['Independent', 'Direct', 'Focused'], bio: 'Independent, direct, knows exactly what they want', price: 25 },
+            { name: 'Titan', archetype: 'dominant', tags: ['Powerful', 'Force', 'Majestic'], bio: 'Powerful force of nature, bows to none', price: 25 },
+            { name: 'Shadow', archetype: 'dominant', tags: ['Silent', 'Commanding', 'Watching'], bio: 'Silent and commanding, always watching', price: 25 },
+            { name: 'Flint', archetype: 'dominant', tags: ['Fast', 'Igniting', 'Intense'], bio: 'Strikes fast, ignites passion instantly', price: 25 },
+            { name: 'Jasper', archetype: 'dominant', tags: ['Solid', 'Reliable', 'Grounded'], bio: 'Solid, reliable dominance outside the mainstream', price: 25 },
+
+            // Submissive (7)
+            { name: 'Willow', archetype: 'submissive', tags: ['Graceful', 'Guidance', 'Devoted'], bio: 'Blossoms under guidance and devoted attention', price: 20 },
+            { name: 'Dove', archetype: 'submissive', tags: ['Gentle', 'Peaceful', 'Surrender'], bio: 'Gentle soul who finds peace in surrender', price: 20 },
+            { name: 'Echo', archetype: 'submissive', tags: ['Devoted', 'Servant', 'Multiple'], bio: 'Devoted servant who thrives under multiple masters', price: 20 },
+            { name: 'Pearl', archetype: 'submissive', tags: ['Pure', 'Curious', 'Learning'], bio: 'Pure and curious, awaiting guidance', price: 20 },
+            { name: 'Fern', archetype: 'submissive', tags: ['Growing', 'Cared For', 'Natural'], bio: 'Grows in the care of a guiding hand', price: 20 },
+            { name: 'Petal', archetype: 'submissive', tags: ['Delicate', 'Devoted', 'Learning'], bio: 'Delicate and devoted, eager to learn', price: 20 },
+            { name: 'Silk', archetype: 'submissive', tags: ['Smooth', 'Complete', 'Luxurious'], bio: 'Smooth surrender, complete devotion', price: 20 },
+
+            // Playful (8)
+            { name: 'Lyric', archetype: 'playful', tags: ['Party', 'Social', 'Fun'], bio: 'Life is a party and everyone is invited', price: 20 },
+            { name: 'Jade', archetype: 'playful', tags: ['Versatile', 'Tease', 'Guessing'], bio: 'Versatile tease who keeps you guessing', price: 20 },
+            { name: 'Pixie', archetype: 'playful', tags: ['Mischievous', 'Golden Heart', 'Spark'], bio: 'Mischievous spirit with a heart of gold', price: 20 },
+            { name: 'Zephyr', archetype: 'playful', tags: ['Free', 'Limitless', 'Spirit'], bio: 'Free spirit who loves without limits', price: 20 },
+            { name: 'Siren', archetype: 'playful', tags: ['Irresistible', 'Temptress', 'Control'], bio: 'Irresistible temptress who calls the shots', price: 20 },
+            { name: 'Spark', archetype: 'playful', tags: ['Electric', 'Ready', 'Energy'], bio: 'Electric energy, always ready for fun', price: 20 },
+            { name: 'Tempest', archetype: 'playful', tags: ['Whirlwind', 'Passion', 'Sweeping'], bio: 'Whirlwind of passion that sweeps you away', price: 20 },
+            { name: 'Clover', archetype: 'playful', tags: ['Lucky', 'Joyful', 'Charming'], bio: 'Lucky charm who brings joy to all they meet', price: 20 },
+
+            // Nurturing (8)
+            { name: 'Meadow', archetype: 'nurturing', tags: ['Comfort', 'Care', 'Gentle'], bio: 'Provides comfort and care without pressure', price: 20 },
+            { name: 'Harbor', archetype: 'nurturing', tags: ['Safe', 'Port', 'Always There'], bio: 'A safe port in any storm, always there', price: 20 },
+            { name: 'Grace', archetype: 'nurturing', tags: ['Attentive', 'Caregiver', 'Knowing'], bio: 'Attentive caregiver who knows what you need', price: 20 },
+            { name: 'Whisper', archetype: 'nurturing', tags: ['Gentle', 'Emotional', 'Intimate'], bio: 'Gentle companion focused on emotional intimacy', price: 20 },
+            { name: 'Coral', archetype: 'nurturing', tags: ['Loving', 'Caregiver', 'Multiple'], bio: 'Loving caregiver with room for many', price: 20 },
+            { name: 'River', archetype: 'nurturing', tags: ['Flowing', 'Present', 'Natural'], bio: 'Flows with the moment, deeply present', price: 20 },
+            { name: 'Zen', archetype: 'nurturing', tags: ['Calm', 'Spiritual', 'Focused'], bio: 'Calm presence focused on spiritual connection', price: 20 },
+            { name: 'Terra', archetype: 'nurturing', tags: ['Grounded', 'Unconditional', 'Support'], bio: 'Grounded presence, unconditional support', price: 20 }
+        ];
+
+        let currentPersona = null;
+        let currentTier = 'soft';
+        let chatOpen = false;
+
+        const tierDescriptions = {
+            soft: 'Friendly, appropriate, PG-13',
+            medium: 'Flirtatious, playful innuendo',
+            spicy: 'Passionate, forward, R-rated',
+            explicit: 'Uninhibited, adult content'
+        };
+
+        function getImageUrl(name) {
+            return IMAGE_BASE + name.toLowerCase() + '_avatar.jpg';
+        }
+
+        function renderPersonas(list) {
+            const grid = document.getElementById('persona-grid');
+            grid.innerHTML = list.map(p => `
+                <div class="persona-card tier-soft" data-name="${p.name}" data-archetype="${p.archetype}" onclick="toggleCard(this)">
+                    <div class="persona-header">
+                        <img class="persona-avatar" src="${getImageUrl(p.name)}" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="persona-avatar-placeholder" style="display:none;">${p.name[0]}</div>
+                        <div class="persona-header-info">
+                            <div class="persona-name">${p.name}</div>
+                            <span class="persona-archetype archetype-${p.archetype}">${p.archetype}</span>
+                        </div>
+                    </div>
+                    <div class="persona-info">
+                        <div class="persona-bio">${p.bio}</div>
+                        <div class="persona-tags">
+                            ${p.tags.slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="persona-expanded">
+                        <img class="persona-full-image" src="${getImageUrl(p.name)}" alt="${p.name}" onerror="this.style.display='none';">
+                        <div class="persona-details">
+                            <div class="tier-selector">
+                                <label>Intensity Level:</label>
+                                <select onchange="changeTier('${p.name}', this.value, this.closest('.persona-card'))">
+                                    <option value="soft">Soft (Friendly)</option>
+                                    <option value="medium">Medium (Flirty)</option>
+                                    <option value="spicy">Spicy (Passionate)</option>
+                                    <option value="explicit">Explicit (Adult)</option>
+                                </select>
+                                <div class="tier-description">${tierDescriptions.soft}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="persona-footer">
+                        <span class="price">${p.price} gems / 3hrs</span>
+                        <div class="action-btns">
+                            <button class="try-btn" onclick="event.stopPropagation(); tryPersona('${p.name}')">Try</button>
+                            <button class="rent-btn" onclick="event.stopPropagation(); rentPersona('${p.name}')">Rent</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCard(card) {
+            // Don't toggle if clicking on buttons
+            if (event.target.tagName === 'BUTTON' || event.target.tagName === 'SELECT') return;
+            card.classList.toggle('expanded');
+        }
+
+        function changeTier(name, tier, card) {
+            // Remove old tier classes
+            card.classList.remove('tier-soft', 'tier-medium', 'tier-spicy', 'tier-explicit');
+            card.classList.add('tier-' + tier);
+
+            // Update description
+            const desc = card.querySelector('.tier-description');
+            if (desc) desc.textContent = tierDescriptions[tier];
+
+            // Store for chat
+            if (currentPersona && currentPersona.name === name) {
+                currentTier = tier;
+            }
+        }
+
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            document.getElementById('chat-popup').classList.toggle('open', chatOpen);
+        }
+
+        function tryPersona(name) {
+            currentPersona = personas.find(p => p.name === name);
+            if (!currentPersona) return;
+
+            // Update chat header
+            document.getElementById('chat-persona-name').textContent = currentPersona.name;
+            document.getElementById('chat-persona-archetype').textContent = currentPersona.archetype;
+            document.getElementById('chat-avatar').src = getImageUrl(name);
+
+            // Clear and greet
+            const messagesDiv = document.getElementById('chat-messages');
+            messagesDiv.innerHTML = `
+                <div class="message bot">Hi! I'm ${currentPersona.name}. ${currentPersona.bio}. What would you like to talk about?</div>
+            `;
+
+            if (!chatOpen) toggleChat();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message || !currentPersona) return;
+
+            const messagesDiv = document.getElementById('chat-messages');
+
+            // Add user message
+            messagesDiv.innerHTML += `<div class="message user">${escapeHtml(message)}</div>`;
+            input.value = '';
+
+            // Show typing
+            messagesDiv.innerHTML += `
+                <div class="typing-indicator" id="typing">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            try {
+                const systemPrompt = `You are ${currentPersona.name}, an AI companion. ${currentPersona.bio}.
+Your personality traits: ${currentPersona.tags.join(', ')}.
+Intensity level: ${currentTier}.
+Keep responses short (1-3 sentences), warm, and in character.`;
+
+                const response = await fetch('https://text.pollinations.ai/' + encodeURIComponent(message) + '?system=' + encodeURIComponent(systemPrompt) + '&model=openai');
+                const text = await response.text();
+
+                document.getElementById('typing')?.remove();
+
+                let cleanText = text.replace(/---\n\*\*Support Pollinations.*/s, '').trim();
+                cleanText = cleanText.replace(/\n.*Pollinations.*/s, '').trim();
+
+                messagesDiv.innerHTML += `<div class="message bot">${escapeHtml(cleanText)}</div>`;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            } catch (err) {
+                document.getElementById('typing')?.remove();
+                messagesDiv.innerHTML += `<div class="message bot">*smiles* I'd love to chat more, but there was a connection issue. Try again?</div>`;
+            }
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function rentPersona(name) {
+            const persona = personas.find(p => p.name === name);
+            if (!persona) return;
+
+            alert(`Renting ${persona.name} for ${persona.price} gems!\n\n3 hours of full access as ${persona.name}.\n\n(Economy integration coming soon!)`);
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+                if (filter === 'all') {
+                    renderPersonas(personas);
+                } else {
+                    renderPersonas(personas.filter(p => p.archetype === filter));
+                }
+            });
+        });
+
+        // Initialize
+        renderPersonas(personas);
+    </script>
+</body>
+</html>
