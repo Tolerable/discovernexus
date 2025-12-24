@@ -93,6 +93,14 @@
             transition: all 0.2s ease;
           ">Personas</a>
 
+          <a href="/persona_hosts.html" class="nav-link" data-page="hosts" style="
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary, #e8e8f0);
+            text-decoration: none;
+            transition: all 0.2s ease;
+          ">HOSTs</a>
+
           <a href="/store.html" class="nav-link" data-page="store" style="
             font-size: 0.95rem;
             font-weight: 500;
@@ -172,7 +180,8 @@
         (page === 'explore' && path.includes('/explore.html')) ||
         (page === 'discover' && path.includes('/discover.html')) ||
         (page === 'personas' && path.includes('/persona_gallery.html')) ||
-        (page === 'store' && path.includes('/store.html'))
+        (page === 'store' && path.includes('/store.html')) ||
+        (page === 'hosts' && path.includes('/persona_hosts.html'))
       ) {
         link.classList.add('active');
         link.style.color = 'var(--accent-color, #00d4ff)';
