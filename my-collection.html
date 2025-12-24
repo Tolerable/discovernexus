@@ -1168,96 +1168,63 @@
         }
     
     
-        /* Right Side Recommendations Panel */
-        .right-recs-panel {
+        
+
+    
+        /* Simple Floating Circles - Right Side */
+        .float-circles {
             position: fixed;
-            right: 20px;
-            top: 100px;
-            width: 220px;
+            right: 30px;
+            top: 120px;
             display: flex;
             flex-direction: column;
             gap: 15px;
             z-index: 100;
         }
 
-        .right-recs-header {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.5);
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-        }
-
-        .right-rec-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 12px;
-            padding: 12px;
+        .float-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(0, 212, 255, 0.5);
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        .right-rec-card:hover {
+        .float-circle:hover {
+            transform: scale(1.1);
             border-color: #00d4ff;
-            transform: translateX(-5px);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
         }
 
-        .right-rec-card .rec-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            overflow: hidden;
-            border: 2px solid rgba(0, 212, 255, 0.3);
-        }
-
-        .right-rec-card .rec-avatar img {
+        .float-circle img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .right-rec-card .rec-avatar-letter {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
-        }
-
-        .right-rec-card .rec-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #00d4ff;
-            text-align: center;
-            margin-bottom: 4px;
-        }
-
-        .right-rec-card .rec-archetype {
+        .float-circle-label {
+            position: absolute;
+            right: 85px;
+            background: rgba(0,0,0,0.9);
+            padding: 4px 10px;
+            border-radius: 6px;
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.6);
-            text-align: center;
-            margin-bottom: 6px;
+            color: #00d4ff;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
         }
 
-        .right-rec-card .rec-reason {
-            font-size: 10px;
-            color: #d4af37;
-            text-align: center;
-            padding: 3px 8px;
-            background: rgba(212, 175, 55, 0.15);
-            border-radius: 8px;
+        .float-circle:hover .float-circle-label {
+            opacity: 1;
         }
 
-        @media (max-width: 1200px) {
-            .right-recs-panel {
-                display: none;
-            }
+        @media (max-width: 900px) {
+            .float-circles { display: none; }
         }
 
     </style>
@@ -1689,52 +1656,24 @@
             renderCollection();
         }
 
+        // Simple floating circles
+        function updateFloatCircles() {
+            const el = document.getElementById('float-circles');
+            if (!el || !collection) return;
 
-        // Populate right side recommendations based on current selection
-        function updateRightRecs() {
-            const panel = document.getElementById('right-recs-panel');
-            if (!panel || !collection) return;
+            const active = collection.personas.find(p => p.id === collection.activePersona);
+            const compat = { 'Romantic': ['Nurturing','Playful'], 'Playful': ['Romantic','Dominant'], 'Dominant': ['Submissive','Intellectual'], 'Submissive': ['Dominant','Nurturing'], 'Intellectual': ['Romantic','Dominant'], 'Nurturing': ['Submissive','Romantic'] };
+            const types = active ? (compat[active.archetype] || []) : [];
 
-            const activePersona = collection.personas.find(p => p.id === collection.activePersona);
+            let items = collection.personas.filter(p => p.id !== (active?.id) && types.includes(p.archetype)).slice(0,3);
+            if (items.length < 3) items = collection.personas.filter(p => p.ownership !== 'locked').slice(0,3);
 
-            // Get 3 compatible suggestions
-            let suggestions = [];
-
-            if (activePersona) {
-                // Find personas with compatible archetypes
-                const compatMap = {
-                    'Romantic': ['Nurturing', 'Playful'],
-                    'Playful': ['Romantic', 'Dominant'],
-                    'Dominant': ['Submissive', 'Intellectual'],
-                    'Submissive': ['Dominant', 'Nurturing'],
-                    'Intellectual': ['Romantic', 'Dominant'],
-                    'Nurturing': ['Submissive', 'Romantic']
-                };
-                const compatTypes = compatMap[activePersona.archetype] || [];
-
-                suggestions = collection.personas
-                    .filter(p => p.id !== activePersona.id && compatTypes.includes(p.archetype))
-                    .slice(0, 3);
-            }
-
-            if (suggestions.length === 0) {
-                suggestions = collection.personas.filter(p => p.ownership !== 'locked').slice(0, 3);
-            }
-
-            let html = '<div class="right-recs-header">Pairs With ' + (activePersona?.name || 'Selection') + '</div>';
-
-            suggestions.forEach(p => {
-                html += '<div class="right-rec-card" onclick="selectPersona(\'' + p.id + '\')">' +
-                    '<div class="rec-avatar">' +
-                    (p.image ? '<img src="' + p.image + '" alt="' + p.name + '">' : '<div class="rec-avatar-letter">' + p.name[0] + '</div>') +
-                    '</div>' +
-                    '<div class="rec-name">' + p.name + '</div>' +
-                    '<div class="rec-archetype">' + p.archetype + '</div>' +
-                    '<div class="rec-reason">Compatible match</div>' +
-                    '</div>';
-            });
-
-            panel.innerHTML = html;
+            el.innerHTML = items.map(p =>
+                '<div class="float-circle" onclick="selectPersona(\'' + p.id + '\')" style="position:relative;">' +
+                '<img src="' + (p.image || '') + '" alt="' + p.name + '" onerror="this.style.display=\'none\'">' +
+                '<span class="float-circle-label">' + p.name + '</span>' +
+                '</div>'
+            ).join('');
         }
 
         // Render the collection
@@ -1744,7 +1683,8 @@
             updateCounts();
             updateChatState();
             generateRecommendations();
-            updateRightRecs();
+            updateFloatCircles();
+            
         }
 
         // Render HOSTs grid with slots
