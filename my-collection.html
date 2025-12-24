@@ -731,75 +731,7 @@
         }
 
 
-        /* Right Column - Recommendations */
-        .chat-aside-right {
-            width: 200px;
-            flex-shrink: 0;
-        }
-
-        .right-panel {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 16px;
-            padding: 12px;
-            position: sticky;
-            top: 90px;
-        }
-
-        .right-panel-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .right-rec-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .right-rec-item:hover {
-            background: rgba(0,212,255,0.1);
-        }
-
-        .right-rec-avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid rgba(0,212,255,0.3);
-            margin-bottom: 8px;
-        }
-
-        .right-rec-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .right-rec-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #00d4ff;
-        }
-
-        .right-rec-type {
-            font-size: 10px;
-            color: rgba(255,255,255,0.5);
-        }
-
-        @media (max-width: 1100px) {
-            .chat-aside-right { display: none; }
-        }
+        
 
         @media (max-width: 900px) {
             .chat-layout {
@@ -1356,12 +1288,75 @@
         }
 
 
+    
+        /* Big Round Recommendation Cards */
+        .round-recs {
+            position: fixed;
+            right: 25px;
+            top: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .round-rec {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border: 3px solid rgba(0, 212, 255, 0.5);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .round-rec:hover {
+            transform: scale(1.08);
+            border-color: #00d4ff;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .round-rec img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .round-rec-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 30px 10px 10px;
+            text-align: center;
+        }
+
+        .round-rec-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .round-rec-type {
+            font-size: 11px;
+            color: #00d4ff;
+        }
+
+        @media (max-width: 1000px) {
+            .round-recs { display: none; }
+        }
+
+
     </style>
     <script src="/auth.js"></script>
     <script src="/js/nexus-core.js"></script>
     <script src="/js/pollinations.js"></script>
 </head>
 <body>
+    <div class="round-recs" id="round-recs"></div>
     <div class="container">
         <!-- Tab Navigation -->
         <nav class="tab-nav">
@@ -1484,11 +1479,7 @@
             </div>
             </div>
             </div>
-            <!-- Right Column -->
-            <div class="chat-aside-right">
-                <div class="right-panel" id="right-recs">
-                    <div class="right-panel-title">Suggested</div>
-                </div>
+            
             </div>
             </div>
         </div>
@@ -1793,7 +1784,7 @@
 
         // Simple floating circles
         function updateFloatCircles() {
-            const el = document.getElementById('right-recs');
+            const el = document.getElementById('round-recs');
             if (!el || !collection) return;
 
             const active = collection.personas.find(p => p.id === collection.activePersona);
@@ -1803,15 +1794,14 @@
             let items = collection.personas.filter(p => p.id !== (active?.id) && types.includes(p.archetype)).slice(0,3);
             if (items.length < 3) items = collection.personas.filter(p => p.ownership !== 'locked').slice(0,3);
 
-            let html = '<div class="right-panel-title">Suggested</div>';
-            html += items.map(p =>
-                '<div class="right-rec-item" onclick="selectPersona(\'' + p.id + '\')">' +
-                '<div class="right-rec-avatar"><img src="' + (p.image || '') + '" alt="' + p.name + '"></div>' +
-                '<div class="right-rec-name">' + p.name + '</div>' +
-                '<div class="right-rec-type">' + p.archetype + '</div>' +
-                '</div>'
+            el.innerHTML = items.map(p =>
+                '<div class="round-rec" onclick="selectPersona(\'' + p.id + '\')">' +
+                '<img src="' + (p.image || '') + '" alt="' + p.name + '">' +
+                '<div class="round-rec-info">' +
+                '<div class="round-rec-name">' + p.name + '</div>' +
+                '<div class="round-rec-type">' + p.archetype + '</div>' +
+                '</div></div>'
             ).join('');
-            el.innerHTML = html;
         }
 
 
