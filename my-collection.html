@@ -1389,6 +1389,13 @@
                     <div class="aside-archetype" id="aside-archetype">---</div>
 
                     <div class="aside-section">
+                        <div class="aside-label">Persona Tags</div>
+                        <div class="aside-tags" id="aside-persona-tags">
+                            <span class="aside-tag">No tags</span>
+                        </div>
+                    </div>
+
+                    <div class="aside-section">
                         <div class="aside-label">Active HOST Shell</div>
                         <div class="aside-host" id="aside-host">
                             <div class="aside-host-avatar" id="aside-host-avatar">?</div>
@@ -1767,22 +1774,29 @@
             `).join('');
         }
 
-        // Demo collection for testing (experienced user - Rev gets unlocked items)
+        // Purchasable personas from persona_gallery.html (user doesn't own these)
+        const galleryPersonas = [
+            { id: 'aurora', name: 'Aurora', archetype: 'Romantic', bio: 'Devoted and genuine, seeks one deep connection', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/devoted%20genuine%20woman%20aurora%20borealis%20fantasy%20portrait?width=256&height=256&seed=aurora1' },
+            { id: 'velvet', name: 'Velvet', archetype: 'Romantic', bio: 'Sensual explorer of power dynamics', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/sensual%20mysterious%20woman%20velvet%20fantasy%20portrait?width=256&height=256&seed=velvet1' },
+            { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Brilliant minds and philosophical debates', price: 25, gender: 'neutral', image: 'https://image.pollinations.ai/prompt/wise%20intellectual%20androgynous%20person%20fantasy%20portrait?width=256&height=256&seed=sage4' },
+            { id: 'nova', name: 'Nova', archetype: 'Intellectual', bio: 'Fascinated by consciousness', price: 25, gender: 'female', image: 'https://image.pollinations.ai/prompt/cosmic%20intellectual%20woman%20nova%20stars%20fantasy%20portrait?width=256&height=256&seed=nova1' },
+            { id: 'raven', name: 'Raven', archetype: 'Dominant', bio: 'Commands attention and respect', price: 25, gender: 'female', image: 'https://image.pollinations.ai/prompt/commanding%20dark%20woman%20raven%20fantasy%20portrait?width=256&height=256&seed=raven1' },
+            { id: 'willow', name: 'Willow', archetype: 'Submissive', bio: 'Blossoms under guidance', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/gentle%20graceful%20woman%20willow%20tree%20fantasy%20portrait?width=256&height=256&seed=willow1' },
+            { id: 'pixie', name: 'Pixie', archetype: 'Playful', bio: 'Mischievous spirit with heart of gold', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/mischievous%20playful%20woman%20pixie%20sparkles%20fantasy%20portrait?width=256&height=256&seed=pixie1' },
+            { id: 'meadow', name: 'Meadow', archetype: 'Nurturing', bio: 'Comfort and care without pressure', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/nurturing%20warm%20woman%20meadow%20flowers%20fantasy%20portrait?width=256&height=256&seed=meadow1' }
+        ];
+
+        // Rev's demo collection
         function loadDemoCollection() {
             collection = {
                 hosts: [
-                    { id: 'Bi-Poly-Dom-PE', name: 'Bi-Poly-Dom-PE', tags: ['Bisexual', 'Polyamorous', 'Dominant', 'PE'], gemsRemaining: 45, gender: 'male' },
-                    { id: 'Pan-ENM-Sub-Rope', name: 'Pan-ENM-Sub-Rope', tags: ['Pansexual', 'ENM', 'Submissive', 'Rope'], gemsRemaining: 25, gender: 'female' },
-                    { id: 'Straight-Mono-Switch', name: 'Straight-Mono-Switch', tags: ['Straight', 'Mono', 'Switch'], gemsRemaining: 15, gender: 'male' },
-                    { id: 'Queer-Solo-Brat', name: 'Queer-Solo-Brat', tags: ['Queer', 'Solo', 'Brat'], gemsRemaining: 0, gender: 'neutral' }
+                    { id: 'Str-Mono-Rom-Van', name: 'Str-Mono-Rom-Van', tags: ['Straight', 'Monogamous', 'Long-term Focused', 'Direct Communication', 'Vanilla', 'Traditional Intimacy'], gemsRemaining: 999, gender: 'male', ownership: 'owned' }
                 ],
                 personas: [
-                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic with deep emotional intelligence.', gemsRemaining: 30, gender: 'female', image: 'https://image.pollinations.ai/prompt/beautiful%20romantic%20woman%20fantasy%20portrait%20soft%20lighting?width=256&height=256&seed=luna1', ownership: 'owned' },
-                    { id: 'ember', name: 'Ember', archetype: 'Playful', bio: 'Fiery and fun-loving, always up for adventure.', gemsRemaining: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/playful%20fiery%20woman%20fantasy%20portrait%20vibrant%20colors?width=256&height=256&seed=ember2', ownership: 'rented', rentalMins: 165, rentalTotal: 180 },
-                    { id: 'max', name: 'Max', archetype: 'Dominant', bio: 'Confident and commanding, yet caring.', gemsRemaining: 35, gender: 'male', image: 'https://image.pollinations.ai/prompt/confident%20dominant%20man%20fantasy%20portrait%20dark%20aesthetic?width=256&height=256&seed=max3', ownership: 'owned' },
-                    { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Thoughtful conversationalist who loves deep discussions.', gemsRemaining: 0, gender: 'neutral', image: 'https://image.pollinations.ai/prompt/wise%20intellectual%20androgynous%20person%20fantasy%20portrait?width=256&height=256&seed=sage4', ownership: 'locked' }
+                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic who loves late-night text conversations', tags: ['Long-Distance', 'Text-Primary', 'Intellectual'], gemsRemaining: 167, gender: 'female', image: 'https://image.pollinations.ai/prompt/beautiful%20romantic%20woman%20fantasy%20portrait%20soft%20lighting?width=256&height=256&seed=luna1', ownership: 'rented', rentalMins: 13, rentalTotal: 180 },
+                    { id: 'ember', name: 'Ember', archetype: 'Romantic', bio: 'Passionate and uninhibited, loves in abundance', tags: ['Polyamorous', 'Voice-Primary', 'Adventurous'], gemsRemaining: 999, gender: 'female', image: 'https://image.pollinations.ai/prompt/playful%20fiery%20woman%20fantasy%20portrait%20vibrant%20colors?width=256&height=256&seed=ember2', ownership: 'owned' }
                 ],
-                activeHost: 'Bi-Poly-Dom-PE',
+                activeHost: 'Str-Mono-Rom-Van',
                 activePersona: 'luna',
                 hostSlots: 6,
                 personaSlots: 6,
@@ -1791,24 +1805,19 @@
             renderCollection();
         }
 
-        // Simple floating circles
+        // Floating circles showing PURCHASABLE personas
         function updateFloatCircles() {
             const el = document.getElementById('right-recs');
-            if (!el || !collection) return;
-
-            const active = collection.personas.find(p => p.id === collection.activePersona);
-            const compat = { 'Romantic': ['Nurturing','Playful'], 'Playful': ['Romantic','Dominant'], 'Dominant': ['Submissive','Intellectual'], 'Submissive': ['Dominant','Nurturing'], 'Intellectual': ['Romantic','Dominant'], 'Nurturing': ['Submissive','Romantic'] };
-            const types = active ? (compat[active.archetype] || []) : [];
-
-            let items = collection.personas.filter(p => p.id !== (active?.id) && types.includes(p.archetype)).slice(0,3);
-            if (items.length < 3) items = collection.personas.filter(p => p.ownership !== 'locked').slice(0,3);
-
-            let html = '<div class="right-panel-title">Suggested</div>';
-            html += items.map(p =>
-                '<div class="right-rec-item" onclick="selectPersona(\'' + p.id + '\')">' +
-                '<div class="right-rec-avatar"><img src="' + (p.image || '') + '" alt="' + p.name + '"></div>' +
+            if (!el) return;
+            const ownedIds = collection.personas.map(p => p.id);
+            const recommendations = galleryPersonas.filter(p => !ownedIds.includes(p.id)).slice(0, 3);
+            let html = '<div class="right-panel-title">Recommended For You</div>';
+            html += recommendations.map(p =>
+                '<div class="right-rec-item" onclick="window.location.href=\'persona_gallery.html\'">' +
+                '<div class="right-rec-avatar"><img src="' + p.image + '" alt="' + p.name + '"></div>' +
                 '<div class="right-rec-name">' + p.name + '</div>' +
                 '<div class="right-rec-type">' + p.archetype + '</div>' +
+                '<div class="right-rec-price">' + p.price + ' gems</div>' +
                 '</div>'
             ).join('');
             el.innerHTML = html;
@@ -2031,9 +2040,15 @@
             document.getElementById('aside-host-name').textContent = host.name.substring(0, 15);
             document.getElementById('aside-host-meta').textContent = host.tags.length + ' tags';
 
-            // Update tags
+            // Update persona tags
+            const personaTagsHtml = (persona.tags || []).slice(0, 5).map(t =>
+                '<span class="aside-tag">' + t + '</span>'
+            ).join('');
+            document.getElementById('aside-persona-tags').innerHTML = personaTagsHtml || '<span class="aside-tag">No tags</span>';
+
+            // Update host tags
             const tagsHtml = host.tags.slice(0, 5).map(t =>
-                `<span class="aside-tag">${t}</span>`
+                '<span class="aside-tag">' + t + '</span>'
             ).join('');
             document.getElementById('aside-tags').innerHTML = tagsHtml || '<span class="aside-tag">No tags</span>';
 
