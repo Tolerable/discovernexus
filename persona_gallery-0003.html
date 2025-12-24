@@ -1013,105 +1013,6 @@
             opacity: 0.8;
         }
 
-        /* Frame Add-on Section */
-        .modal-addon-section {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 12px;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-        }
-
-        .addon-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .addon-checkbox {
-            width: 20px;
-            height: 20px;
-            accent-color: #d4af37;
-            cursor: pointer;
-        }
-
-        .addon-label {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .addon-frame-preview {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            overflow: visible;
-            position: relative;
-        }
-
-        .addon-frame-preview img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .addon-frame-preview .frame-icon {
-            position: absolute;
-            top: -3px;
-            right: -3px;
-            font-size: 12px;
-        }
-
-        /* Frame effects on addon preview */
-        .addon-frame-preview.frame-ruby { border: 2px solid #e74c3c; box-shadow: 0 0 8px rgba(231, 76, 60, 0.5); }
-        .addon-frame-preview.frame-diamond { border: 2px solid #ecf0f1; box-shadow: 0 0 8px rgba(255,255,255,0.5); }
-        .addon-frame-preview.frame-emerald { border: 2px solid #2ecc71; box-shadow: 0 0 8px rgba(46, 204, 113, 0.5); }
-        .addon-frame-preview.frame-sapphire { border: 2px solid #3498db; box-shadow: 0 0 8px rgba(52, 152, 219, 0.5); }
-        .addon-frame-preview.frame-cosmic { border: 2px solid #9b59b6; box-shadow: 0 0 10px rgba(155, 89, 182, 0.6); }
-        .addon-frame-preview.frame-mythic {
-            border: 2px solid transparent;
-            background: linear-gradient(#1a1a2e, #1a1a2e) padding-box,
-                        linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db) border-box;
-        }
-
-        .addon-name {
-            font-size: 13px;
-            color: #d4af37;
-            font-weight: 600;
-        }
-
-        .addon-price {
-            font-size: 12px;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .addon-discount {
-            font-size: 10px;
-            color: #2ecc71;
-            margin-left: auto;
-        }
-
-        .addon-store-link {
-            font-size: 10px;
-            color: #00d4ff;
-            text-decoration: none;
-            margin-left: 8px;
-        }
-
-        .addon-store-link:hover {
-            text-decoration: underline;
-        }
-
-        .addon-none-msg {
-            font-size: 12px;
-            color: rgba(255,255,255,0.5);
-            font-style: italic;
-        }
-
         /* Chat Widget */
         .chat-widget {
             position: fixed;
@@ -1542,25 +1443,6 @@
                     </select>
                 </div>
 
-                <!-- Frame Add-on -->
-                <div class="modal-addon-section" id="modal-addon-section">
-                    <div class="addon-header">
-                        <input type="checkbox" class="addon-checkbox" id="addon-frame-checkbox" checked onchange="updateAddonPrices()">
-                        <label class="addon-label" for="addon-frame-checkbox">
-                            <div class="addon-frame-preview frame-none" id="addon-frame-preview">
-                                <img id="addon-frame-img" src="" alt="">
-                                <span class="frame-icon" id="addon-frame-icon"></span>
-                            </div>
-                            <div>
-                                <span class="addon-name" id="addon-frame-name">No Frame</span>
-                                <span class="addon-price" id="addon-frame-price"></span>
-                            </div>
-                        </label>
-                        <span class="addon-discount" id="addon-discount">10% bundle discount!</span>
-                        <a href="store.html" class="addon-store-link">More frames →</a>
-                    </div>
-                </div>
-
                 <div class="modal-actions">
                     <div class="modal-action-group">
                         <div class="modal-action-title">Rent Time</div>
@@ -1940,19 +1822,12 @@
             openPersonaModal(name);
         }
 
-        // Track selected frame for modal add-on
-        let modalSelectedFrame = null;
-
         function openPersonaModal(name) {
             const persona = personas.find(p => p.name === name);
             if (!persona) return;
 
             currentModalPersona = persona;
             selectedRentHours = 3;
-
-            // Get the frame selected on this persona's card
-            const cardFrameIdx = cardFrameIndexes[name] || 0;
-            modalSelectedFrame = frames[cardFrameIdx];
 
             // Populate modal
             const imageUrl = getImageUrl(persona.name);
@@ -1968,43 +1843,24 @@
                 `<span class="modal-tag">${t}</span>`
             ).join('');
 
-            // Set up frame add-on section
-            const addonSection = document.getElementById('modal-addon-section');
-            const addonPreview = document.getElementById('addon-frame-preview');
-            const addonImg = document.getElementById('addon-frame-img');
-            const addonIcon = document.getElementById('addon-frame-icon');
-            const addonName = document.getElementById('addon-frame-name');
-            const addonPrice = document.getElementById('addon-frame-price');
-            const addonDiscount = document.getElementById('addon-discount');
-            const addonCheckbox = document.getElementById('addon-frame-checkbox');
+            // Calculate prices (base price is per 3hrs)
+            const basePrice = persona.price;
+            const price1hr = Math.round(basePrice * 0.5);
+            const price3hr = basePrice;
+            const price6hr = Math.round(basePrice * 1.75);
+            const foreverPrice = Math.round(basePrice * 20);
 
-            // Update addon preview
-            addonImg.src = imageUrl;
-            frames.forEach(f => addonPreview.classList.remove(f.class));
-            addonPreview.classList.add(modalSelectedFrame.class);
-            addonIcon.textContent = modalSelectedFrame.icon || '';
-            addonName.textContent = modalSelectedFrame.name + ' Frame';
-
-            if (modalSelectedFrame.price === 0) {
-                // No frame selected - hide addon section or show "no frame"
-                addonPrice.textContent = '';
-                addonDiscount.style.display = 'none';
-                addonCheckbox.checked = false;
-                addonCheckbox.disabled = true;
-                addonName.textContent = 'No frame selected';
-            } else {
-                addonPrice.textContent = '+' + modalSelectedFrame.price + ' gems';
-                addonDiscount.style.display = 'inline';
-                addonCheckbox.checked = true;
-                addonCheckbox.disabled = false;
-            }
-
-            // Calculate and display prices
-            updateAddonPrices();
+            document.getElementById('price-1hr').textContent = price1hr + ' gems';
+            document.getElementById('price-3hr').textContent = price3hr + ' gems';
+            document.getElementById('price-6hr').textContent = price6hr + ' gems';
+            document.getElementById('forever-price').textContent = '(' + foreverPrice + ' gems)';
 
             // Reset rent button selection
             document.querySelectorAll('.rent-time-btn').forEach(btn => btn.classList.remove('selected'));
             document.querySelector('.rent-time-btn[data-hours="3"]').classList.add('selected');
+
+            // Update confirm button
+            updateRentButton();
 
             // Show modal
             document.getElementById('persona-modal-overlay').classList.add('open');
@@ -2028,202 +1884,73 @@
             selectedRentHours = hours;
             document.querySelectorAll('.rent-time-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
-            updateAddonPrices();
-        }
-
-        // Calculate prices with frame add-on
-        function getFrameAddonPrice() {
-            const checkbox = document.getElementById('addon-frame-checkbox');
-            if (checkbox && checkbox.checked && modalSelectedFrame && modalSelectedFrame.price > 0) {
-                return modalSelectedFrame.price;
-            }
-            return 0;
-        }
-
-        function updateAddonPrices() {
-            if (!currentModalPersona) return;
-
-            const basePrice = currentModalPersona.price;
-            const framePrice = getFrameAddonPrice();
-            const includeFrame = framePrice > 0;
-
-            // Calculate persona prices
-            const price1hr = Math.round(basePrice * 0.5);
-            const price3hr = basePrice;
-            const price6hr = Math.round(basePrice * 1.75);
-            const foreverPrice = Math.round(basePrice * 20);
-
-            // Calculate bundle prices (10% discount when including frame)
-            let total1hr, total3hr, total6hr, totalForever;
-
-            if (includeFrame) {
-                // Apply 10% bundle discount
-                total1hr = Math.round((price1hr + framePrice) * 0.9);
-                total3hr = Math.round((price3hr + framePrice) * 0.9);
-                total6hr = Math.round((price6hr + framePrice) * 0.9);
-                totalForever = Math.round((foreverPrice + framePrice) * 0.9);
-            } else {
-                total1hr = price1hr;
-                total3hr = price3hr;
-                total6hr = price6hr;
-                totalForever = foreverPrice;
-            }
-
-            // Update price displays
-            document.getElementById('price-1hr').textContent = total1hr + ' gems';
-            document.getElementById('price-3hr').textContent = total3hr + ' gems';
-            document.getElementById('price-6hr').textContent = total6hr + ' gems';
-            document.getElementById('forever-price').textContent = '(' + totalForever + ' gems)';
-
-            // Update confirm button
             updateRentButton();
         }
 
         function updateRentButton() {
             if (!currentModalPersona) return;
             const basePrice = currentModalPersona.price;
-            const framePrice = getFrameAddonPrice();
-            const includeFrame = framePrice > 0;
-
-            let personaPrice;
+            let price;
             switch(selectedRentHours) {
-                case 1: personaPrice = Math.round(basePrice * 0.5); break;
-                case 6: personaPrice = Math.round(basePrice * 1.75); break;
-                default: personaPrice = basePrice;
+                case 1: price = Math.round(basePrice * 0.5); break;
+                case 6: price = Math.round(basePrice * 1.75); break;
+                default: price = basePrice;
             }
-
-            let totalPrice;
-            if (includeFrame) {
-                totalPrice = Math.round((personaPrice + framePrice) * 0.9);
-            } else {
-                totalPrice = personaPrice;
-            }
-
-            const frameText = includeFrame ? ` + ${modalSelectedFrame.name}` : '';
             document.getElementById('confirm-rent-btn').textContent =
-                `Rent${frameText} for ${selectedRentHours}hr (${totalPrice} gems)`;
+                `Rent for ${selectedRentHours} hr${selectedRentHours > 1 ? 's' : ''} (${price} gems)`;
         }
 
         function confirmRent() {
             if (!currentModalPersona) return;
             const basePrice = currentModalPersona.price;
-            const framePrice = getFrameAddonPrice();
-            const includeFrame = framePrice > 0;
-
-            let personaPrice;
+            let price;
             switch(selectedRentHours) {
-                case 1: personaPrice = Math.round(basePrice * 0.5); break;
-                case 6: personaPrice = Math.round(basePrice * 1.75); break;
-                default: personaPrice = basePrice;
+                case 1: price = Math.round(basePrice * 0.5); break;
+                case 6: price = Math.round(basePrice * 1.75); break;
+                default: price = basePrice;
             }
 
-            let totalPrice, message;
-            if (includeFrame) {
-                totalPrice = Math.round((personaPrice + framePrice) * 0.9);
-                message = `Renting ${currentModalPersona.name} + ${modalSelectedFrame.name} Frame for ${selectedRentHours} hour${selectedRentHours > 1 ? 's' : ''}!\n\n` +
-                    `Persona: ${personaPrice} gems\n` +
-                    `Frame: ${framePrice} gems\n` +
-                    `Bundle discount: -10%\n` +
-                    `─────────────\n` +
-                    `Total: ${totalPrice} gems\n\n` +
-                    `(Economy integration coming soon!)`;
-            } else {
-                totalPrice = personaPrice;
-                message = `Renting ${currentModalPersona.name} for ${selectedRentHours} hour${selectedRentHours > 1 ? 's' : ''}!\n\nCost: ${totalPrice} gems\n\n(Economy integration coming soon!)`;
-            }
-
-            alert(message);
+            alert(`Renting ${currentModalPersona.name} for ${selectedRentHours} hour${selectedRentHours > 1 ? 's' : ''}!\n\nCost: ${price} gems\n\n(Economy integration coming soon!)`);
             closePersonaModal();
+
+            // Redirect to my-collection after "purchase"
+            // window.location.href = 'my-collection.html';
         }
 
         function buyPersona() {
             if (!currentModalPersona) return;
-            const basePrice = currentModalPersona.price;
-            const foreverPrice = Math.round(basePrice * 20);
-            const framePrice = getFrameAddonPrice();
-            const includeFrame = framePrice > 0;
+            const foreverPrice = Math.round(currentModalPersona.price * 20);
 
-            let totalPrice, message;
-            if (includeFrame) {
-                totalPrice = Math.round((foreverPrice + framePrice) * 0.9);
-                message = `Own ${currentModalPersona.name} + ${modalSelectedFrame.name} Frame forever?\n\n` +
-                    `Persona: ${foreverPrice} gems\n` +
-                    `Frame: ${framePrice} gems\n` +
-                    `Bundle discount: -10%\n` +
-                    `─────────────\n` +
-                    `Total: ${totalPrice} gems`;
-            } else {
-                totalPrice = foreverPrice;
-                message = `Own ${currentModalPersona.name} forever for ${totalPrice} gems?\n\nThis gives you unlimited access!`;
-            }
-
-            if (confirm(message)) {
-                const receipt = includeFrame ?
-                    `You now own ${currentModalPersona.name} with ${modalSelectedFrame.name} Frame!` :
-                    `You now own ${currentModalPersona.name}!`;
-                alert(`${receipt}\n\n(Economy integration coming soon!)`);
+            if (confirm(`Own ${currentModalPersona.name} forever for ${foreverPrice} gems?\n\nThis gives you unlimited access!`)) {
+                alert(`You now own ${currentModalPersona.name}!\n\n(Economy integration coming soon!)`);
                 closePersonaModal();
+                // window.location.href = 'my-collection.html';
             }
         }
 
-        // Quick buy - offers Own or Gift with frame bundle option
+        // Quick buy - offers Own or Gift
         function quickBuy(name) {
             const persona = personas.find(p => p.name === name);
             if (!persona) return;
 
-            // Get selected frame from card
-            const cardFrameIdx = cardFrameIndexes[name] || 0;
-            const selectedFrame = frames[cardFrameIdx];
-            const hasFrame = selectedFrame && selectedFrame.price > 0;
-
             const foreverPrice = Math.round(persona.price * 20);
-            const framePrice = hasFrame ? selectedFrame.price : 0;
-            const bundlePrice = hasFrame ? Math.round((foreverPrice + framePrice) * 0.9) : foreverPrice;
 
-            let promptMsg;
-            if (hasFrame) {
-                promptMsg = `${persona.name} + ${selectedFrame.name} Frame\n\n` +
-                    `Persona: ${foreverPrice} gems\n` +
-                    `Frame: ${framePrice} gems\n` +
-                    `Bundle: ${bundlePrice} gems (10% off!)\n\n` +
-                    `1 = OWN bundle\n` +
-                    `2 = OWN persona only (${foreverPrice} gems)\n` +
-                    `3 = GIFT bundle\n\n` +
-                    `Enter 1, 2, or 3:`;
-            } else {
-                promptMsg = `${persona.name} - ${foreverPrice} gems\n\n` +
-                    `1 = OWN (for yourself)\n` +
-                    `2 = GIFT (to someone)\n\n` +
-                    `Enter 1 or 2:`;
-            }
+            const choice = prompt(
+                `${persona.name} - ${foreverPrice} gems\n\n` +
+                `1 = OWN (for yourself)\n` +
+                `2 = GIFT (to someone)\n\n` +
+                `Enter 1 or 2:`
+            );
 
-            const choice = prompt(promptMsg);
-
-            if (hasFrame) {
-                if (choice === '1') {
-                    if (confirm(`Own ${persona.name} + ${selectedFrame.name} Frame?\n\n💎 ${bundlePrice} gems (10% bundle discount!)`)) {
-                        alert(`🎉 You now own ${persona.name} with ${selectedFrame.name} Frame!\n\nGo to My Collection to start chatting.\n\n(Economy integration coming soon!)`);
-                    }
-                } else if (choice === '2') {
-                    if (confirm(`Own ${persona.name} (no frame)?\n\n💎 ${foreverPrice} gems`)) {
-                        alert(`🎉 You now own ${persona.name}!\n\nGo to My Collection to start chatting.\n\n(Economy integration coming soon!)`);
-                    }
-                } else if (choice === '3') {
-                    const recipient = prompt(`🎁 Gift ${persona.name} + ${selectedFrame.name} Frame\n💎 ${bundlePrice} gems\n\nEnter username:`);
-                    if (recipient && recipient.trim()) {
-                        alert(`🎁 Gift sent!\n\n${persona.name} + ${selectedFrame.name} Frame → ${recipient.trim()}\n\n(Gift system integration coming soon!)`);
-                    }
+            if (choice === '1') {
+                if (confirm(`Own ${persona.name} forever?\n\n💎 ${foreverPrice} gems`)) {
+                    alert(`🎉 You now own ${persona.name}!\n\nGo to My Collection to start chatting.\n\n(Economy integration coming soon!)`);
+                    // window.location.href = 'my-collection.html';
                 }
-            } else {
-                if (choice === '1') {
-                    if (confirm(`Own ${persona.name} forever?\n\n💎 ${foreverPrice} gems`)) {
-                        alert(`🎉 You now own ${persona.name}!\n\nGo to My Collection to start chatting.\n\n(Economy integration coming soon!)`);
-                    }
-                } else if (choice === '2') {
-                    const recipient = prompt(`🎁 Gift ${persona.name}\n💎 ${foreverPrice} gems\n\nEnter username:`);
-                    if (recipient && recipient.trim()) {
-                        alert(`🎁 Gift sent!\n\n${persona.name} → ${recipient.trim()}\n\n(Gift system integration coming soon!)`);
-                    }
+            } else if (choice === '2') {
+                const recipient = prompt(`🎁 Gift ${persona.name}\n💎 ${foreverPrice} gems\n\nEnter username:`);
+                if (recipient && recipient.trim()) {
+                    alert(`🎁 Gift sent!\n\n${persona.name} → ${recipient.trim()}\n\n(Gift system integration coming soon!)`);
                 }
             }
         }
