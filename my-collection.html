@@ -1296,8 +1296,12 @@
 
         // Add gems to a HOST or Persona
         function addGems(type, id) {
-            // TODO: Open gems purchase modal
-            alert(`Add gems to ${type}: ${id}\n\nGems purchase coming soon!`);
+            const item = type === 'host'
+                ? collection.hosts.find(h => h.id === id)
+                : collection.personas.find(p => p.id === id);
+            if (item) {
+                showAddTimeModal(type, id, item.name);
+            }
         }
 
         // Send chat message
@@ -1360,7 +1364,7 @@
                 document.getElementById('persona-options').style.display = 'flex';
                 document.getElementById('host-options').style.display = 'none';
             } else {
-                document.getElementById('modal-subtitle').textContent = 'Choose your access level';
+                document.getElementById('modal-subtitle').textContent = 'Get gems to unlock!';
                 document.getElementById('persona-options').style.display = 'none';
                 document.getElementById('host-options').style.display = 'flex';
             }
@@ -1459,26 +1463,27 @@
                 </div>
             </div>
 
-            <!-- HOST options: Free use or premium -->
+            <!-- HOST options: Buy gem packs -->
             <div id="host-options" class="modal-options" style="display:none;">
-                <div class="gem-option free" onclick="useHostFree()">
+                <a href="https://ko-fi.com/s/55b3f86153" target="_blank" class="gem-option" style="text-decoration:none;">
                     <div>
-                        <span class="gem-amount">Basic Use</span>
-                        <span class="option-desc">Limited features</span>
+                        <span class="gem-amount">Small Gem Pack</span>
+                        <span class="option-desc">100 gems (125 for supporters)</span>
                     </div>
-                    <span class="gem-price free-price">Free</span>
-                </div>
-                <div class="gem-option premium" onclick="upgradeHost()">
+                    <span class="gem-price">$3</span>
+                </a>
+                <a href="https://ko-fi.com/s/228ec753a9" target="_blank" class="gem-option popular" style="text-decoration:none;">
+                    <span class="gem-badge">Best Value</span>
                     <div>
-                        <span class="gem-amount">Premium</span>
-                        <span class="option-desc">Full features + priority</span>
+                        <span class="gem-amount">Large Gem Pack</span>
+                        <span class="option-desc">200 gems (300 for supporters)</span>
                     </div>
-                    <span class="gem-price">25 gems/mo</span>
-                </div>
+                    <span class="gem-price">$5</span>
+                </a>
             </div>
 
-            <a href="https://ko-fi.com/tolerable" target="_blank" class="kofi-link">
-                Get more gems on Ko-fi ☕
+            <a href="https://ko-fi.com/D1D8JS946/shop" target="_blank" class="kofi-link">
+                View all gem packs on Ko-fi ☕
             </a>
         </div>
     </div>
