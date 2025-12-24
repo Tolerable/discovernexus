@@ -990,7 +990,7 @@
                     `;
                 } else {
                     return `
-                        <div class="selection-item locked" onclick="window.open('https://ko-fi.com/tolerable', '_blank')">
+                        <div class="selection-item locked" onclick="showAddTimeModal('persona', '${p.id}', '${p.name}')">
                             <div class="selection-avatar ${p.gender}" style="opacity:0.5">${p.name[0]}</div>
                             <div class="selection-info">
                                 <div class="selection-name" style="opacity:0.5">${p.name}</div>
@@ -1019,7 +1019,7 @@
                     `;
                 } else {
                     return `
-                        <div class="selection-item locked" onclick="window.open('https://ko-fi.com/tolerable', '_blank')">
+                        <div class="selection-item locked" onclick="showAddTimeModal('host', '${h.id}', '${h.name}')">
                             <div class="selection-avatar ${h.gender}" style="opacity:0.5">${h.name[0]}</div>
                             <div class="selection-info">
                                 <div class="selection-name" style="opacity:0.5">${h.name.substring(0,12)}${h.name.length > 12 ? '..' : ''}</div>
