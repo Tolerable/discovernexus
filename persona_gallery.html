@@ -233,6 +233,95 @@
             }
         }
 
+
+        /* Frame styles for avatar */
+        .frame-none .chat-avatar { border: 2px dashed rgba(255,255,255,0.3); }
+        .frame-ruby .chat-avatar { border: 3px solid #e74c3c; box-shadow: 0 0 15px rgba(231, 76, 60, 0.6); }
+        .frame-diamond .chat-avatar { border: 3px solid #ecf0f1; box-shadow: 0 0 15px rgba(255,255,255,0.6); }
+        .frame-emerald .chat-avatar { border: 3px solid #2ecc71; box-shadow: 0 0 15px rgba(46, 204, 113, 0.6); }
+        .frame-sapphire .chat-avatar { border: 3px solid #3498db; box-shadow: 0 0 15px rgba(52, 152, 219, 0.6); }
+        .frame-cosmic .chat-avatar { border: 3px solid #9b59b6; box-shadow: 0 0 20px rgba(155, 89, 182, 0.7), 0 0 30px rgba(0, 212, 255, 0.3); }
+        .frame-mythic .chat-avatar {
+            border: 3px solid transparent;
+            background: linear-gradient(#1a1a2e, #1a1a2e) padding-box,
+                        linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db) border-box;
+            animation: mythicGlow 3s ease infinite;
+        }
+
+        @keyframes mythicGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.6); }
+            33% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.6); }
+            66% { box-shadow: 0 0 20px rgba(155, 89, 182, 0.6); }
+        }
+
+        /* Frame selector bar in chat header */
+        .frame-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .frame-bar-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+        }
+
+        .frame-bar-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .frame-bar-nav button {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #d4af37;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .frame-bar-nav button:hover {
+            background: rgba(212, 175, 55, 0.4);
+        }
+
+        .frame-bar-name {
+            font-size: 12px;
+            color: #d4af37;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .frame-bar-price {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .frame-bar-buy {
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            border: none;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .frame-bar-buy:hover {
+            transform: scale(1.05);
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -369,6 +458,44 @@
 
         .persona-header-info {
             flex: 1;
+        }
+
+        /* Frame preview in card header */
+        .card-frame-preview {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card-frame-preview:hover {
+            transform: scale(1.15);
+        }
+
+        .card-frame-none { background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3); }
+        .card-frame-ruby { background: linear-gradient(135deg, #e74c3c, #c0392b); box-shadow: 0 0 12px rgba(231, 76, 60, 0.5); }
+        .card-frame-diamond { background: linear-gradient(135deg, #ecf0f1, #bdc3c7); box-shadow: 0 0 12px rgba(255,255,255,0.5); }
+        .card-frame-emerald { background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 0 12px rgba(46, 204, 113, 0.5); }
+        .card-frame-sapphire { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 0 12px rgba(52, 152, 219, 0.5); }
+        .card-frame-cosmic { background: linear-gradient(135deg, #9b59b6, #1a1a2e, #00d4ff); box-shadow: 0 0 15px rgba(155, 89, 182, 0.6); }
+        .card-frame-mythic {
+            background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db);
+            background-size: 300% 300%;
+            animation: cardMythicShift 3s ease infinite;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.5);
+        }
+
+        @keyframes cardMythicShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .persona-name {
@@ -801,7 +928,7 @@
     <!-- Chat Widget -->
     <div class="chat-widget">
         <div class="chat-popup" id="chat-popup">
-            <div class="chat-header">
+            <div class="chat-header" id="chat-header-main">
                 <img class="chat-avatar" id="chat-avatar" src="" alt="">
                 <div class="chat-persona-info">
                     <h3 id="chat-persona-name">Select a Persona</h3>
@@ -809,6 +936,16 @@
                 </div>
                 <span class="preview-badge">PREVIEW</span>
                 <button class="chat-close" onclick="toggleChat()">&times;</button>
+            </div>
+            <div class="frame-bar">
+                <span class="frame-bar-label">Frame:</span>
+                <div class="frame-bar-nav">
+                    <button onclick="prevFrame()">◀</button>
+                    <span class="frame-bar-name" id="frame-name">None</span>
+                    <button onclick="nextFrame()">▶</button>
+                </div>
+                <span class="frame-bar-price" id="frame-price"></span>
+                <button class="frame-bar-buy" onclick="buyFrame()">+ Add</button>
             </div>
             <div class="chat-tags" id="chat-tags"></div>
             <div class="chat-messages" id="chat-messages">
@@ -892,6 +1029,18 @@
 
         let currentPersona = null;
         let currentTier = 'soft';
+
+        // Frame data
+        const frames = [
+            { name: 'None', class: 'frame-none', price: 0 },
+            { name: 'Ruby', class: 'frame-ruby', price: 15 },
+            { name: 'Diamond', class: 'frame-diamond', price: 25 },
+            { name: 'Emerald', class: 'frame-emerald', price: 20 },
+            { name: 'Sapphire', class: 'frame-sapphire', price: 20 },
+            { name: 'Cosmic', class: 'frame-cosmic', price: 50 },
+            { name: 'Mythic', class: 'frame-mythic', price: 100 }
+        ];
+        let currentFrameIndex = 0;
         let chatOpen = false;
 
         const tierDescriptions = {
@@ -953,13 +1102,78 @@
         }
 
 
+        // Frame functions
+        function updateFrameDisplay() {
+            const frame = frames[currentFrameIndex];
+            const header = document.getElementById('chat-header-main');
+            const nameEl = document.getElementById('frame-name');
+            const priceEl = document.getElementById('frame-price');
+
+            if (!header) return;
+
+            // Remove old frame classes
+            frames.forEach(f => header.classList.remove(f.class));
+            // Add current frame class
+            header.classList.add(frame.class);
+
+            if (nameEl) nameEl.textContent = frame.name;
+            if (priceEl) priceEl.textContent = frame.price === 0 ? '' : frame.price + ' gems';
+        }
+
+        function prevFrame() {
+            currentFrameIndex = (currentFrameIndex - 1 + frames.length) % frames.length;
+            updateFrameDisplay();
+        }
+
+        function nextFrame() {
+            currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+            updateFrameDisplay();
+        }
+
+        function buyFrame() {
+            const frame = frames[currentFrameIndex];
+            if (frame.price === 0) {
+                alert('Select a frame first!');
+                return;
+            }
+
+            if (currentPersona) {
+                const bundlePrice = Math.floor((currentPersona.price + frame.price) * 0.9);
+                alert('Bundle Deal!\n\n' + currentPersona.name + ' + ' + frame.name + ' Frame\n\nRegular: ' + (currentPersona.price + frame.price) + ' gems\nBundle: ' + bundlePrice + ' gems (10% off!)');
+            } else {
+                alert(frame.name + ' Frame: ' + frame.price + ' gems');
+            }
+        }
+
+        // Card frame helpers
+        function getCardFrameClass(index) {
+            const frameClasses = ['ruby', 'emerald', 'sapphire', 'diamond', 'cosmic', 'mythic'];
+            return frameClasses[index % frameClasses.length];
+        }
+
+        function getCardFrameInfo(index) {
+            const frameClass = getCardFrameClass(index);
+            const frame = frames.find(f => f.class === 'frame-' + frameClass);
+            return frame ? { name: frame.name, price: frame.price } : { name: 'None', price: 0 };
+        }
+
+        function previewCardFrame(personaName, frameClass) {
+            // Find frame index
+            const idx = frames.findIndex(f => f.class === 'frame-' + frameClass);
+            if (idx >= 0) currentFrameIndex = idx;
+            tryPersona(personaName);
+        }
+
         function getImageUrl(name) {
             return IMAGE_BASE + name.toLowerCase() + '_avatar.jpg';
         }
 
         function renderPersonas(list) {
             const grid = document.getElementById('persona-grid');
-            grid.innerHTML = list.map(p => `
+            grid.innerHTML = list.map((p, idx) => {
+            const frameClass = getCardFrameClass(idx);
+            const frameInfo = getCardFrameInfo(idx);
+            return `
                 <div class="persona-card tier-soft" data-name="${p.name}" data-archetype="${p.archetype}" onclick="toggleCard(this)">
                     <div class="persona-header">
                         <img class="persona-avatar" src="${getImageUrl(p.name)}" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -967,6 +1181,9 @@
                         <div class="persona-header-info">
                             <div class="persona-name">${p.name}</div>
                             <span class="persona-archetype archetype-${p.archetype}">${p.archetype}</span>
+                        </div>
+                        <div class="card-frame-preview card-frame-${frameClass}" onclick="event.stopPropagation(); previewCardFrame('${p.name}', '${frameClass}')" title="${frameInfo.name} Frame • ${frameInfo.price > 0 ? frameInfo.price + ' gems' : 'Free'}">
+                            ✨
                         </div>
                     </div>
                     <div class="persona-info">
@@ -998,7 +1215,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function toggleCard(card) {
@@ -1306,6 +1523,7 @@ Be genuine, be YOU, but help users find their perfect match!`;
             // Then render and load wallet
             renderPersonas(personas);
             loadWalletBalance();
+            updateFrameDisplay();
 
             // Initialize auth if available
             if (window.auth && window.auth.init) {
