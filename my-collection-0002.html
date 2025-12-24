@@ -757,27 +757,27 @@
 
         .right-rec-item {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .right-rec-item:hover .right-rec-avatar {
-            transform: scale(1.08);
-            border-color: #00d4ff;
+        .right-rec-item:hover {
+            background: rgba(0,212,255,0.1);
         }
 
         .right-rec-avatar {
-            width: 100%;
-            aspect-ratio: 1;
-            max-width: 150px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             overflow: hidden;
-            border: 3px solid rgba(0,212,255,0.4);
-            position: relative;
-            transition: all 0.2s;
+            border: 2px solid rgba(0,212,255,0.3);
+            margin-bottom: 8px;
         }
 
         .right-rec-avatar img {
@@ -786,26 +786,15 @@
             object-fit: cover;
         }
 
-        .right-rec-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.85));
-            padding: 8px 5px 10px;
-            text-align: center;
-        }
-
         .right-rec-name {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
-            color: #fff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            color: #00d4ff;
         }
 
         .right-rec-type {
-            font-size: 9px;
-            color: rgba(255,255,255,0.7);
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
         }
 
         @media (max-width: 1100px) {
@@ -1501,6 +1490,7 @@
                 </div>
             </div>
             </div>
+            </div>
             <!-- Right Column -->
             <div class="chat-aside-right">
                 <div class="right-panel" id="right-recs">
@@ -1786,14 +1776,14 @@
 
         // Purchasable personas from persona_gallery.html (user doesn't own these)
         const galleryPersonas = [
-            { id: 'aurora', name: 'Aurora', archetype: 'Romantic', bio: 'Devoted and genuine, seeks one deep connection', price: 20, gender: 'female', image: 'personas/images/aurora_avatar.jpg' },
-            { id: 'velvet', name: 'Velvet', archetype: 'Romantic', bio: 'Sensual explorer of power dynamics', price: 20, gender: 'female', image: 'personas/images/velvet_avatar.jpg' },
-            { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Brilliant minds and philosophical debates', price: 25, gender: 'neutral', image: 'personas/images/sage_avatar.jpg' },
-            { id: 'nova', name: 'Nova', archetype: 'Intellectual', bio: 'Fascinated by consciousness', price: 25, gender: 'female', image: 'personas/images/nova_avatar.jpg' },
-            { id: 'raven', name: 'Raven', archetype: 'Dominant', bio: 'Commands attention and respect', price: 25, gender: 'female', image: 'personas/images/raven_avatar.jpg' },
-            { id: 'willow', name: 'Willow', archetype: 'Submissive', bio: 'Blossoms under guidance', price: 20, gender: 'female', image: 'personas/images/willow_avatar.jpg' },
-            { id: 'pixie', name: 'Pixie', archetype: 'Playful', bio: 'Mischievous spirit with heart of gold', price: 20, gender: 'female', image: 'personas/images/pixie_avatar.jpg' },
-            { id: 'meadow', name: 'Meadow', archetype: 'Nurturing', bio: 'Comfort and care without pressure', price: 20, gender: 'female', image: 'personas/images/meadow_avatar.jpg' }
+            { id: 'aurora', name: 'Aurora', archetype: 'Romantic', bio: 'Devoted and genuine, seeks one deep connection', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/devoted%20genuine%20woman%20aurora%20borealis%20fantasy%20portrait?width=256&height=256&seed=aurora1' },
+            { id: 'velvet', name: 'Velvet', archetype: 'Romantic', bio: 'Sensual explorer of power dynamics', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/sensual%20mysterious%20woman%20velvet%20fantasy%20portrait?width=256&height=256&seed=velvet1' },
+            { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Brilliant minds and philosophical debates', price: 25, gender: 'neutral', image: 'https://image.pollinations.ai/prompt/wise%20intellectual%20androgynous%20person%20fantasy%20portrait?width=256&height=256&seed=sage4' },
+            { id: 'nova', name: 'Nova', archetype: 'Intellectual', bio: 'Fascinated by consciousness', price: 25, gender: 'female', image: 'https://image.pollinations.ai/prompt/cosmic%20intellectual%20woman%20nova%20stars%20fantasy%20portrait?width=256&height=256&seed=nova1' },
+            { id: 'raven', name: 'Raven', archetype: 'Dominant', bio: 'Commands attention and respect', price: 25, gender: 'female', image: 'https://image.pollinations.ai/prompt/commanding%20dark%20woman%20raven%20fantasy%20portrait?width=256&height=256&seed=raven1' },
+            { id: 'willow', name: 'Willow', archetype: 'Submissive', bio: 'Blossoms under guidance', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/gentle%20graceful%20woman%20willow%20tree%20fantasy%20portrait?width=256&height=256&seed=willow1' },
+            { id: 'pixie', name: 'Pixie', archetype: 'Playful', bio: 'Mischievous spirit with heart of gold', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/mischievous%20playful%20woman%20pixie%20sparkles%20fantasy%20portrait?width=256&height=256&seed=pixie1' },
+            { id: 'meadow', name: 'Meadow', archetype: 'Nurturing', bio: 'Comfort and care without pressure', price: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/nurturing%20warm%20woman%20meadow%20flowers%20fantasy%20portrait?width=256&height=256&seed=meadow1' }
         ];
 
         // Rev's demo collection
@@ -1803,8 +1793,8 @@
                     { id: 'Str-Mono-Rom-Van', name: 'Str-Mono-Rom-Van', tags: ['Straight', 'Monogamous', 'Long-term Focused', 'Direct Communication', 'Vanilla', 'Traditional Intimacy'], gemsRemaining: 999, gender: 'male', ownership: 'owned' }
                 ],
                 personas: [
-                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic who loves late-night text conversations', tags: ['Long-Distance', 'Text-Primary', 'Intellectual'], gemsRemaining: 167, gender: 'female', image: 'personas/images/luna_avatar.jpg', ownership: 'rented', rentalMins: 13, rentalTotal: 180 },
-                    { id: 'ember', name: 'Ember', archetype: 'Romantic', bio: 'Passionate and uninhibited, loves in abundance', tags: ['Polyamorous', 'Voice-Primary', 'Adventurous'], gemsRemaining: 999, gender: 'female', image: 'personas/images/ember_avatar.jpg', ownership: 'owned' }
+                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic who loves late-night text conversations', tags: ['Long-Distance', 'Text-Primary', 'Intellectual'], gemsRemaining: 167, gender: 'female', image: 'https://image.pollinations.ai/prompt/beautiful%20romantic%20woman%20fantasy%20portrait%20soft%20lighting?width=256&height=256&seed=luna1', ownership: 'rented', rentalMins: 13, rentalTotal: 180 },
+                    { id: 'ember', name: 'Ember', archetype: 'Romantic', bio: 'Passionate and uninhibited, loves in abundance', tags: ['Polyamorous', 'Voice-Primary', 'Adventurous'], gemsRemaining: 999, gender: 'female', image: 'https://image.pollinations.ai/prompt/playful%20fiery%20woman%20fantasy%20portrait%20vibrant%20colors?width=256&height=256&seed=ember2', ownership: 'owned' }
                 ],
                 activeHost: 'Str-Mono-Rom-Van',
                 activePersona: 'luna',
@@ -1823,13 +1813,12 @@
             const recommendations = galleryPersonas.filter(p => !ownedIds.includes(p.id)).slice(0, 3);
             let html = '<div class="right-panel-title">Recommended For You</div>';
             html += recommendations.map(p =>
-                '<div class="right-rec-item" onclick="window.location.href=\'persona_gallery.html#' + p.id + '\'">' +
-                '<div class="right-rec-avatar">' +
-                '<img src="' + p.image + '" alt="' + p.name + '">' +
-                '<div class="right-rec-overlay">' +
+                '<div class="right-rec-item" onclick="window.location.href=\'persona_gallery.html\'">' +
+                '<div class="right-rec-avatar"><img src="' + p.image + '" alt="' + p.name + '"></div>' +
                 '<div class="right-rec-name">' + p.name + '</div>' +
                 '<div class="right-rec-type">' + p.archetype + '</div>' +
-                '</div></div></div>'
+                '<div class="right-rec-price">' + p.price + ' gems</div>' +
+                '</div>'
             ).join('');
             el.innerHTML = html;
         }
