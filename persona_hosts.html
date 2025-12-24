@@ -286,6 +286,146 @@
         .pairs-well-item .mini-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
         .pairs-well-item .mini-avatar.male { background: linear-gradient(135deg, #4a90d9, #2c5aa0); }
 
+        /* Bundle Deals Section */
+        .bundle-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0, 212, 255, 0.05));
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        .bundle-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .bundle-header h2 {
+            font-size: 20px;
+            color: #d4af37;
+            margin: 0;
+        }
+
+        .bundle-badge {
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            color: #1a1a2e;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .bundle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .bundle-card {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .bundle-card:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .bundle-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .bundle-items {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .bundle-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .bundle-item .b-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .bundle-item .b-avatar.host { background: linear-gradient(135deg, #00d4ff, #7b2cbf); }
+        .bundle-item .b-avatar.persona { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+
+        .bundle-pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .bundle-prices {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bundle-original {
+            color: rgba(255,255,255,0.4);
+            text-decoration: line-through;
+            font-size: 14px;
+        }
+
+        .bundle-sale {
+            color: #d4af37;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .bundle-save {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .bundle-btn {
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            color: #1a1a2e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bundle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
         .price {
             color: #d4af37;
             font-weight: 600;
