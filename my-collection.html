@@ -1441,10 +1441,14 @@
                 document.getElementById('modal-subtitle').textContent = 'Unlock access';
                 document.getElementById('persona-options').style.display = 'flex';
                 document.getElementById('host-options').style.display = 'none';
+                document.getElementById('compatibility-section').style.display = 'none';
+                renderCompatibleHosts(id);
             } else {
                 document.getElementById('modal-subtitle').textContent = 'Unlock access';
                 document.getElementById('persona-options').style.display = 'none';
                 document.getElementById('host-options').style.display = 'flex';
+                document.getElementById('persona-compat-section').style.display = 'none';
+                renderCompatiblePersonas(id);
             }
 
             document.getElementById('add-time-modal').style.display = 'flex';
