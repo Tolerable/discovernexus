@@ -659,6 +659,17 @@
             box-shadow: 0 5px 20px rgba(123,44,191,0.5);
         }
 
+        .buy-btn {
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.5);
+        }
+
         /* Persona Modal Overlay */
         .persona-modal-overlay {
             position: fixed;
@@ -1581,7 +1592,8 @@
                         <span class="price">${p.price} gems / 3hrs</span>
                         <div class="action-btns">
                             <button class="try-btn" onclick="event.stopPropagation(); tryPersona('${p.name}')">Try</button>
-                            <button class="rent-btn" onclick="event.stopPropagation(); rentPersona('${p.name}')">Rent</button>
+                            <button class="rent-btn" onclick="event.stopPropagation(); openPersonaModal('${p.name}')">Rent</button>
+                            <button class="buy-btn" onclick="event.stopPropagation(); quickBuy('${p.name}')">Buy</button>
                         </div>
                     </div>
                 </div>
@@ -1704,6 +1716,33 @@
                 alert(`You now own ${currentModalPersona.name}!\n\n(Economy integration coming soon!)`);
                 closePersonaModal();
                 // window.location.href = 'my-collection.html';
+            }
+        }
+
+        // Quick buy - offers Own or Gift
+        function quickBuy(name) {
+            const persona = personas.find(p => p.name === name);
+            if (!persona) return;
+
+            const foreverPrice = Math.round(persona.price * 20);
+
+            const choice = prompt(
+                `${persona.name} - ${foreverPrice} gems\n\n` +
+                `1 = OWN (for yourself)\n` +
+                `2 = GIFT (to someone)\n\n` +
+                `Enter 1 or 2:`
+            );
+
+            if (choice === '1') {
+                if (confirm(`Own ${persona.name} forever?\n\n💎 ${foreverPrice} gems`)) {
+                    alert(`🎉 You now own ${persona.name}!\n\nGo to My Collection to start chatting.\n\n(Economy integration coming soon!)`);
+                    // window.location.href = 'my-collection.html';
+                }
+            } else if (choice === '2') {
+                const recipient = prompt(`🎁 Gift ${persona.name}\n💎 ${foreverPrice} gems\n\nEnter username:`);
+                if (recipient && recipient.trim()) {
+                    alert(`🎁 Gift sent!\n\n${persona.name} → ${recipient.trim()}\n\n(Gift system integration coming soon!)`);
+                }
             }
         }
 
