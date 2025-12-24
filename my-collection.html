@@ -1700,6 +1700,31 @@
             renderCollection();
         }
 
+        // Populate floating recommendation bubbles
+        function populateFloatingRecs() {
+            const container = document.getElementById('floating-recs');
+            if (!container || !collection) return;
+
+            const recPersonas = (collection.personas || []).filter(p => p.ownership !== 'locked').slice(0, 4);
+            const recHosts = (collection.hosts || []).slice(0, 3);
+
+            let html = '';
+
+            recPersonas.forEach(p => {
+                html += '<div class="floating-rec-bubble" onclick="selectPersona(\'' + p.id + '\')" title="' + p.name + '">' +
+                    (p.image ? '<img src="' + p.image + '" alt="' + p.name + '">' : '<div class="bubble-initial">' + p.name[0] + '</div>') +
+                    '<div class="bubble-tooltip">' + p.name + ' - ' + p.archetype + '</div></div>';
+            });
+
+            recHosts.forEach(h => {
+                html += '<div class="floating-rec-bubble host-type" onclick="selectHost(\'' + h.id + '\')" title="' + h.name + '">' +
+                    '<div class="bubble-initial">' + h.name[0] + '</div>' +
+                    '<div class="bubble-tooltip">HOST: ' + h.name + '</div></div>';
+            });
+
+            container.innerHTML = html;
+        }
+
         // Render the collection
         function renderCollection() {
             renderHosts();
@@ -2505,47 +2530,6 @@ Stay in character as ${persona?.name}. The HOST tags define your interaction sty
 
     <script src="/js/navbar.js">
         // Populate floating recommendation bubbles
-        function populateFloatingRecs() {
-            const container = document.getElementById('floating-recs');
-            if (!container || !collection) return;
-
-            // Get recommended personas and hosts
-            const recPersonas = (collection.personas || []).filter(p => p.ownership !== 'locked').slice(0, 4);
-            const recHosts = (collection.hosts || []).slice(0, 3);
-
-            let html = '';
-
-            // Add persona bubbles
-            recPersonas.forEach(p => {
-                html += `
-                    <div class="floating-rec-bubble" onclick="selectPersona('${p.id}')" title="${p.name}">
-                        ${p.image
-                            ? `<img src="${p.image}" alt="${p.name}">`
-                            : `<div class="bubble-initial">${p.name[0]}</div>`
-                        }
-                        <div class="bubble-tooltip">${p.name} - ${p.archetype}</div>
-                    </div>
-                `;
-            });
-
-            // Add host bubbles
-            recHosts.forEach(h => {
-                html += `
-                    <div class="floating-rec-bubble host-type" onclick="selectHost('${h.id}')" title="${h.name}">
-                        <div class="bubble-initial">${h.name[0]}</div>
-                        <div class="bubble-tooltip">HOST: ${h.name}</div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-        }
-
-        // Call on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(populateFloatingRecs, 500);
-        });
-
     </script>
 </body>
 </html>
