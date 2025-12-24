@@ -558,8 +558,8 @@
         }
 
         .aside-avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             margin: 0 auto 15px;
             display: flex;
@@ -568,6 +568,14 @@
             font-size: 40px;
             font-weight: bold;
             background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            overflow: hidden;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .aside-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .aside-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
@@ -717,7 +725,7 @@
 
         @media (max-width: 900px) {
             .chat-layout {
-                flex-direction: column-reverse;
+                flex-direction: column;
             }
             .chat-aside {
                 width: 100%;
@@ -1187,6 +1195,52 @@
         <!-- Chat Tab -->
         <div class="tab-content active" id="tab-chat">
             <div class="chat-layout">
+            <!-- Aside Panel (Left) -->
+            <div class="chat-aside">
+                <div class="aside-panel" id="aside-panel">
+                    <div class="aside-avatar" id="aside-avatar">?</div>
+                    <div class="aside-name" id="aside-name">Select a Persona</div>
+                    <div class="aside-archetype" id="aside-archetype">---</div>
+
+                    <div class="aside-section">
+                        <div class="aside-label">Active HOST Shell</div>
+                        <div class="aside-host" id="aside-host">
+                            <div class="aside-host-avatar" id="aside-host-avatar">?</div>
+                            <div>
+                                <div class="aside-host-name" id="aside-host-name">None</div>
+                                <div class="aside-host-meta" id="aside-host-meta">---</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="aside-section">
+                        <div class="aside-label">HOST Tags</div>
+                        <div class="aside-tags" id="aside-tags">
+                            <span class="aside-tag">No tags</span>
+                        </div>
+                    </div>
+
+                    <div class="aside-section">
+                        <div class="aside-label">Ownership</div>
+                        <div class="aside-ownership owned" id="aside-ownership">
+                            <span class="aside-ownership-icon">✓</span>
+                            <span class="aside-ownership-text">You own this</span>
+                        </div>
+                    </div>
+
+                    <div class="aside-section">
+                        <div class="aside-label">Bio</div>
+                        <div class="aside-bio" id="aside-bio">
+                            Select a persona to see their bio.
+                        </div>
+                    </div>
+
+                    <button class="aside-edit-btn" id="aside-edit-btn" onclick="editPersona()" style="display:none;">
+                        Edit Persona Settings
+                    </button>
+                </div>
+            </div>
+            <!-- Chat Main -->
             <div class="chat-main">
             <div class="chat-container" id="chat-container">
                 <!-- No selection state -->
@@ -1243,51 +1297,6 @@
                 </div>
             </div>
             </div>
-
-            <!-- Aside Profile Panel -->
-            <div class="chat-aside">
-                <div class="aside-panel" id="aside-panel">
-                    <div class="aside-avatar" id="aside-avatar">?</div>
-                    <div class="aside-name" id="aside-name">Select a Persona</div>
-                    <div class="aside-archetype" id="aside-archetype">---</div>
-
-                    <div class="aside-section">
-                        <div class="aside-label">Active HOST Shell</div>
-                        <div class="aside-host" id="aside-host">
-                            <div class="aside-host-avatar" id="aside-host-avatar">?</div>
-                            <div>
-                                <div class="aside-host-name" id="aside-host-name">None</div>
-                                <div class="aside-host-meta" id="aside-host-meta">---</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="aside-section">
-                        <div class="aside-label">HOST Tags</div>
-                        <div class="aside-tags" id="aside-tags">
-                            <span class="aside-tag">No tags</span>
-                        </div>
-                    </div>
-
-                    <div class="aside-section">
-                        <div class="aside-label">Ownership</div>
-                        <div class="aside-ownership owned" id="aside-ownership">
-                            <span class="aside-ownership-icon">✓</span>
-                            <span class="aside-ownership-text">You own this</span>
-                        </div>
-                    </div>
-
-                    <div class="aside-section">
-                        <div class="aside-label">Bio</div>
-                        <div class="aside-bio" id="aside-bio">
-                            Select a persona to see their bio.
-                        </div>
-                    </div>
-
-                    <button class="aside-edit-btn" id="aside-edit-btn" onclick="editPersona()" style="display:none;">
-                        Edit Persona Settings
-                    </button>
-                </div>
             </div>
             </div>
         </div>
@@ -1576,10 +1585,10 @@
                     { id: 'Queer-Solo-Brat', name: 'Queer-Solo-Brat', tags: ['Queer', 'Solo', 'Brat'], gemsRemaining: 0, gender: 'neutral' }
                 ],
                 personas: [
-                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic with deep emotional intelligence.', gemsRemaining: 30, gender: 'female' },
-                    { id: 'ember', name: 'Ember', archetype: 'Playful', bio: 'Fiery and fun-loving, always up for adventure.', gemsRemaining: 20, gender: 'female' },
-                    { id: 'max', name: 'Max', archetype: 'Dominant', bio: 'Confident and commanding, yet caring.', gemsRemaining: 35, gender: 'male' },
-                    { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Thoughtful conversationalist who loves deep discussions.', gemsRemaining: 0, gender: 'neutral' }
+                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic with deep emotional intelligence.', gemsRemaining: 30, gender: 'female', image: 'https://image.pollinations.ai/prompt/beautiful%20romantic%20woman%20fantasy%20portrait%20soft%20lighting?width=256&height=256&seed=luna1' },
+                    { id: 'ember', name: 'Ember', archetype: 'Playful', bio: 'Fiery and fun-loving, always up for adventure.', gemsRemaining: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/playful%20fiery%20woman%20fantasy%20portrait%20vibrant%20colors?width=256&height=256&seed=ember2' },
+                    { id: 'max', name: 'Max', archetype: 'Dominant', bio: 'Confident and commanding, yet caring.', gemsRemaining: 35, gender: 'male', image: 'https://image.pollinations.ai/prompt/confident%20dominant%20man%20fantasy%20portrait%20dark%20aesthetic?width=256&height=256&seed=max3' },
+                    { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Thoughtful conversationalist who loves deep discussions.', gemsRemaining: 0, gender: 'neutral', image: 'https://image.pollinations.ai/prompt/wise%20intellectual%20androgynous%20person%20fantasy%20portrait?width=256&height=256&seed=sage4' }
                 ],
                 activeHost: 'Bi-Poly-Dom-PE',
                 activePersona: 'luna',
@@ -1765,9 +1774,15 @@
                 return;
             }
 
-            // Update persona info
-            document.getElementById('aside-avatar').textContent = persona.name[0];
-            document.getElementById('aside-avatar').className = 'aside-avatar ' + persona.gender;
+            // Update persona info - use image if available
+            const avatarDiv = document.getElementById('aside-avatar');
+            if (persona.image) {
+                avatarDiv.innerHTML = '<img src="' + persona.image + '" alt="' + persona.name + '">';
+                avatarDiv.className = 'aside-avatar';
+            } else {
+                avatarDiv.textContent = persona.name[0];
+                avatarDiv.className = 'aside-avatar ' + persona.gender;
+            }
             document.getElementById('aside-name').textContent = persona.name;
             document.getElementById('aside-archetype').textContent = persona.archetype;
 
@@ -1827,8 +1842,13 @@
                 const host = collection.hosts.find(h => h.id === collection.activeHost);
 
                 if (persona) {
-                    document.getElementById('chat-avatar').textContent = persona.name[0];
-                    document.getElementById('chat-avatar').className = 'card-avatar ' + persona.gender;
+                    const chatAvatarDiv = document.getElementById('chat-avatar');
+                    if (persona.image) {
+                        chatAvatarDiv.innerHTML = '<img src="' + persona.image + '" alt="' + persona.name + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+                    } else {
+                        chatAvatarDiv.textContent = persona.name[0];
+                    }
+                    chatAvatarDiv.className = 'card-avatar ' + persona.gender;
                     document.getElementById('chat-persona-name').textContent = persona.name;
                 }
                 if (host) {
