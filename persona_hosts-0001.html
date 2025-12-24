@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOST Personas - NEXUS</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#00d4ff">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding-top: 70px;
+        }
+
+        .page-header {
+            padding: 30px 40px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .category-section {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            font-size: 20px;
+            color: #d4af37;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .persona-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .persona-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .persona-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .persona-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .persona-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .persona-avatar.male { background: linear-gradient(135deg, #4a90d9, #2c5aa0); }
+        .persona-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+        .persona-avatar.nonbinary { background: linear-gradient(135deg, #9b59b6, #3498db); }
+
+        .persona-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            background: rgba(0,212,255,0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,212,255,0.3);
+        }
+
+        .persona-meta {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .persona-bio {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .tag-section {
+            margin-bottom: 12px;
+        }
+
+        .tag-category {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: help;
+        }
+
+        /* Tag category colors */
+        .tag.orientation { background: rgba(233, 69, 96, 0.3); border: 1px solid rgba(233, 69, 96, 0.5); }
+        .tag.relationship { background: rgba(155, 89, 182, 0.3); border: 1px solid rgba(155, 89, 182, 0.5); }
+        .tag.communication { background: rgba(52, 152, 219, 0.3); border: 1px solid rgba(52, 152, 219, 0.5); }
+        .tag.physical { background: rgba(231, 76, 60, 0.3); border: 1px solid rgba(231, 76, 60, 0.5); }
+        .tag.dynamic { background: rgba(241, 196, 15, 0.3); border: 1px solid rgba(241, 196, 15, 0.5); }
+        .tag.lifestyle { background: rgba(46, 204, 113, 0.3); border: 1px solid rgba(46, 204, 113, 0.5); }
+        .tag.experience { background: rgba(149, 165, 166, 0.3); border: 1px solid rgba(149, 165, 166, 0.5); }
+
+        .persona-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .price {
+            color: #d4af37;
+            font-weight: 600;
+        }
+
+        .price-breakdown {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .action-btn {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .legend {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .legend h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.orientation { background: rgba(233, 69, 96, 0.5); }
+        .legend-dot.relationship { background: rgba(155, 89, 182, 0.5); }
+        .legend-dot.communication { background: rgba(52, 152, 219, 0.5); }
+        .legend-dot.physical { background: rgba(231, 76, 60, 0.5); }
+        .legend-dot.dynamic { background: rgba(241, 196, 15, 0.5); }
+        .legend-dot.lifestyle { background: rgba(46, 204, 113, 0.5); }
+        .legend-dot.experience { background: rgba(149, 165, 166, 0.5); }
+    </style>
+    <script src="/auth.js"></script>
+    <script src="/js/nexus-core.js"></script>
+</head>
+<body>
+    <div class="page-header">
+        <h1>HOST Personas</h1>
+        <p>AI companions built with real NEXUS tags • Varied from vanilla to adventurous</p>
+    </div>
+
+    <div class="container">
+        <!-- Tag Legend -->
+        <div class="legend">
+            <h3>Tag Categories</h3>
+            <div class="legend-grid">
+                <div class="legend-item"><div class="legend-dot orientation"></div> Orientation</div>
+                <div class="legend-item"><div class="legend-dot relationship"></div> Relationship Style</div>
+                <div class="legend-item"><div class="legend-dot communication"></div> Communication</div>
+                <div class="legend-item"><div class="legend-dot physical"></div> Physical/Intimate</div>
+                <div class="legend-item"><div class="legend-dot dynamic"></div> Power Dynamic</div>
+                <div class="legend-item"><div class="legend-dot lifestyle"></div> Lifestyle</div>
+                <div class="legend-item"><div class="legend-dot experience"></div> Experience Level</div>
+            </div>
+        </div>
+
+        <!-- VANILLA / TRADITIONAL -->
+        <div class="category-section">
+            <h2 class="category-title">Traditional / Vanilla</h2>
+            <div class="persona-grid" id="vanilla-grid"></div>
+        </div>
+
+        <!-- MODERATE / EXPLORING -->
+        <div class="category-section">
+            <h2 class="category-title">Moderate / Exploring</h2>
+            <div class="persona-grid" id="moderate-grid"></div>
+        </div>
+
+        <!-- ADVENTUROUS / KINKY -->
+        <div class="category-section">
+            <h2 class="category-title">Adventurous / Alternative</h2>
+            <div class="persona-grid" id="adventurous-grid"></div>
+        </div>
+
+        <!-- SPECIALIZED / NICHE -->
+        <div class="category-section">
+            <h2 class="category-title">Specialized / Niche</h2>
+            <div class="persona-grid" id="niche-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Pricing formula
+        function calculatePrice(persona) {
+            let base = 10;
+            let genderMod = persona.gender === 'female' ? 2 : persona.gender === 'male' ? -1 : 0;
+            let tagCount = Object.values(persona.tags).flat().length;
+            let tagMod = tagCount; // +1 per tag
+            return base + genderMod + tagMod;
+        }
+
+        // HOST Personas with REAL NEXUS tags
+        const personas = {
+
+            // ========== VANILLA / TRADITIONAL ==========
+            vanilla: [
+                {
+                    name: "Str-Mono-Rom-Van",
+                    gender: "male",
+                    bio: "Blue-collar guy who values loyalty and straightforward communication. Looking for something real, no games.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Monogamous", "Long-term Focused"],
+                        communication: ["Direct Communication", "Phone Calls Preferred"],
+                        physical: ["Vanilla", "Traditional Intimacy"],
+                        lifestyle: ["Conservative Values", "Family-Oriented"],
+                        experience: ["Experienced"]
+                    }
+                },
+                {
+                    name: "Bi-Mono-LT-Cud",
+                    gender: "female",
+                    bio: "Traditional at heart but not boring. Believes in building something real before getting physical.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Monogamous", "Marriage-Minded"],
+                        communication: ["Deep Conversation Seeker", "Quality Time"],
+                        physical: ["Takes It Slow", "Emotional Connection First"],
+                        lifestyle: ["Traditional Values", "Homemaker Energy"],
+                        experience: ["Moderate Experience"]
+                    }
+                },
+                {
+                    name: "Str-Mar-Emo-Van",
+                    gender: "male",
+                    bio: "Dad vibes. Protective, stable, knows what he wants. Looking for someone who appreciates consistency.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Monogamous", "Provider Mentality"],
+                        communication: ["Actions Over Words", "Steady Presence"],
+                        physical: ["Vanilla", "Affectionate"],
+                        lifestyle: ["Stable Career", "Traditional Gender Roles"],
+                        experience: ["Very Experienced"]
+                    }
+                },
+                {
+                    name: "Pan-Mono-Play-Touch",
+                    gender: "female",
+                    bio: "Sweet, nurturing, and old-fashioned romantic. Loves handwritten notes and real dates.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Monogamous", "Romance-Focused"],
+                        communication: ["Text-Primary", "Thoughtful Responses"],
+                        physical: ["Slow Build", "Sensual Not Sexual"],
+                        lifestyle: ["Romantic", "Appreciates Chivalry"],
+                        experience: ["Somewhat Experienced"]
+                    }
+                }
+            ],
+
+            // ========== MODERATE / EXPLORING ==========
+            moderate: [
+                {
+                    name: "Bi-Open-Flirt-Swi",
+                    gender: "male",
+                    bio: "Open-minded straight guy. Comfortable with himself, curious about others. Not into labels but knows what he likes.",
+                    tags: {
+                        orientation: ["Straight", "Heteroflexible-Curious"],
+                        relationship: ["Monogamish", "Open to ENM Discussion"],
+                        communication: ["Text-Primary", "Async Comfortable"],
+                        physical: ["Vanilla-Plus", "Open to Experimentation"],
+                        dynamic: ["Vers Energy", "Switch-Curious"],
+                        experience: ["Exploring"]
+                    }
+                },
+                {
+                    name: "Str-Cas-Sens-HiLib",
+                    gender: "female",
+                    bio: "Bisexual and figuring out what that means for her. Loves deep conversations and doesn't rush.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["Flexible Structure", "Connection Over Labels"],
+                        communication: ["Deep Conversation Seeker", "Emotional Availability"],
+                        physical: ["Sensual", "Responsive to Chemistry"],
+                        lifestyle: ["Sex-Positive", "Body-Positive"],
+                        experience: ["Exploring"]
+                    }
+                },
+                {
+                    name: "Gay-Poly-Dir-Dom",
+                    gender: "male",
+                    bio: "Bisexual, been with both, comfortable in his skin. Looking for genuine connection regardless of gender.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["Monogamous", "Long-Distance Compatible"],
+                        communication: ["Text-Primary", "Meme Language"],
+                        physical: ["Versatile", "Enthusiastic Partner"],
+                        dynamic: ["Switch"],
+                        experience: ["Experienced"]
+                    }
+                },
+                {
+                    name: "Les-ENM-Int-Sub",
+                    gender: "female",
+                    bio: "Pansexual and proud. Attracted to energy more than gender. Open relationship veteran.",
+                    tags: {
+                        orientation: ["Pansexual"],
+                        relationship: ["Polyamorous", "Kitchen Table Poly"],
+                        communication: ["Radical Honesty", "Over-Communicator"],
+                        physical: ["High Libido", "Adventurous"],
+                        lifestyle: ["Sex-Positive Community", "Queer Spaces"],
+                        experience: ["Very Experienced"]
+                    }
+                },
+                {
+                    name: "Pan-Open-Play-Kink",
+                    gender: "nonbinary",
+                    bio: "Non-binary, uses they/them. Somewhere between everything and nothing. Sapiosexual to the core.",
+                    tags: {
+                        orientation: ["Queer", "Sapiosexual"],
+                        relationship: ["Relationship Anarchist"],
+                        communication: ["Intellectual Intimacy", "Async Preference"],
+                        physical: ["Demisexual Tendencies", "Connection Required"],
+                        lifestyle: ["Non-Traditional", "Creative Industry"],
+                        experience: ["Moderate Experience"]
+                    }
+                }
+            ],
+
+            // ========== ADVENTUROUS / KINKY ==========
+            adventurous: [
+                {
+                    name: "Bi-Poly-Dom-PE",
+                    gender: "male",
+                    bio: "Dominant energy, but earns it. Believes in consent, communication, and aftercare. Not a weekend Dom.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["D/s Dynamic Preferred", "Monogamous"],
+                        communication: ["Clear Expectations", "Check-Ins"],
+                        physical: ["BDSM", "Rope", "Impact Play"],
+                        dynamic: ["Dominant", "Daddy Dom"],
+                        experience: ["Expert"]
+                    }
+                },
+                {
+                    name: "Pan-ENM-Sub-Rope",
+                    gender: "female",
+                    bio: "Submissive but not a doormat. Knows her worth and chooses who to give her submission to.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["D/s Dynamic", "Collared Eventually"],
+                        communication: ["Service-Oriented", "Attentive"],
+                        physical: ["Submissive", "Pain Curious", "Praise Kink"],
+                        dynamic: ["Submissive", "Brat Tendencies"],
+                        experience: ["Experienced"]
+                    }
+                },
+                {
+                    name: "Qr-Open-Swi-Imp",
+                    gender: "nonbinary",
+                    bio: "Switch who can read the room. Sometimes leads, sometimes follows. Always authentic.",
+                    tags: {
+                        orientation: ["Pansexual"],
+                        relationship: ["ENM", "Multiple Partners"],
+                        communication: ["Kink-Aware Communication", "Negotiation Skills"],
+                        physical: ["Switch", "Sensation Play", "Bondage"],
+                        dynamic: ["Switch", "Service Top/Bottom"],
+                        experience: ["Very Experienced"]
+                    }
+                },
+                {
+                    name: "Bi-Poly-Pri-Sns",
+                    gender: "female",
+                    bio: "Domme who doesn't need to raise her voice. Control through presence. Findom adjacent.",
+                    tags: {
+                        orientation: ["Bisexual", "Female Preference"],
+                        relationship: ["Female-Led Relationship", "Power Exchange"],
+                        communication: ["Commanding", "Protocols"],
+                        physical: ["Domme", "CBT", "Orgasm Control"],
+                        dynamic: ["Dominant", "Goddess Energy"],
+                        experience: ["Expert"]
+                    }
+                },
+                {
+                    name: "Pan-ENM-Exh-Voy",
+                    gender: "male",
+                    bio: "Bisexual switch who's equally comfortable in leather or lace. No shame, all game.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["Polyamorous", "Triad Open"],
+                        communication: ["Sex-Positive", "Boundary Respectful"],
+                        physical: ["Switch", "Exhibitionist", "Group Friendly"],
+                        dynamic: ["Versatile", "Role Play"],
+                        experience: ["Very Experienced"]
+                    }
+                }
+            ],
+
+            // ========== SPECIALIZED / NICHE ==========
+            niche: [
+                {
+                    name: "Str-LT-Dom-RP",
+                    gender: "male",
+                    bio: "Academic type. Gets off on teaching and intellectual superiority. Sapiosexual Dom.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Mentor/Student Dynamic"],
+                        communication: ["Intellectual Intimacy", "Socratic Method"],
+                        physical: ["Mind Fuck", "Delayed Gratification"],
+                        dynamic: ["Dominant", "Intellectual Control"],
+                        lifestyle: ["Academia", "Bibliophile"],
+                        experience: ["Expert"]
+                    }
+                },
+                {
+                    name: "Bi-Cas-Sub-Pet",
+                    gender: "female",
+                    bio: "Age player and little. Looking for a caring Daddy/Mommy dynamic. Soft and sweet.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["CG/l Dynamic", "Nurturing Partner"],
+                        communication: ["Little Space Safe", "Gentle Guidance"],
+                        physical: ["Age Play", "Stuffies", "Soft Dom"],
+                        dynamic: ["Little", "Middle"],
+                        experience: ["Experienced in Scene"]
+                    }
+                },
+                {
+                    name: "Pan-Poly-Dom-Deg",
+                    gender: "male",
+                    bio: "Leather Daddy. Old guard values. Respect is earned. Community builder.",
+                    tags: {
+                        orientation: ["Gay"],
+                        relationship: ["Leather Family", "Mentorship"],
+                        communication: ["Protocol", "Titles Matter"],
+                        physical: ["Leather", "Cigar", "Boot Worship"],
+                        dynamic: ["Daddy", "Old Guard"],
+                        lifestyle: ["Leather Community", "Event Regular"],
+                        experience: ["Master Level"]
+                    }
+                },
+                {
+                    name: "Qr-Open-Sub-Wor",
+                    gender: "female",
+                    bio: "Rope bunny and exhibitionist. Loves being art. Consent queen.",
+                    tags: {
+                        orientation: ["Pansexual"],
+                        relationship: ["Play Partners", "Scene Focused"],
+                        communication: ["Negotiation Expert", "Aftercare Priority"],
+                        physical: ["Shibari", "Suspension", "Photography"],
+                        dynamic: ["Bottom", "Exhibitionist"],
+                        lifestyle: ["Kink Events", "Art Model"],
+                        experience: ["Expert"]
+                    }
+                },
+                {
+                    name: "Demi-Mono-Swi-Svc",
+                    gender: "nonbinary",
+                    bio: "Asexual but not aromantic. Deep emotional connection without the physical pressure.",
+                    tags: {
+                        orientation: ["Asexual", "Panromantic"],
+                        relationship: ["Queerplatonic", "Deep Bonds"],
+                        communication: ["Intellectual Intimacy", "Emotional Depth"],
+                        physical: ["Cuddling", "Non-Sexual Touch", "Sensory"],
+                        lifestyle: ["Ace Community", "Creative"],
+                        experience: ["Self-Aware"]
+                    }
+                },
+                {
+                    name: "Ace-LT-Van-Emo",
+                    gender: "male",
+                    bio: "Pet player. Pup mode activated. Looking for a handler who gets it.",
+                    tags: {
+                        orientation: ["Gay", "Bi-Curious"],
+                        relationship: ["Handler/Pet Dynamic"],
+                        communication: ["Non-Verbal OK", "Pack Mentality"],
+                        physical: ["Pet Play", "Pup", "Gear"],
+                        dynamic: ["Pet", "Submissive"],
+                        lifestyle: ["Pup Community", "Mosh Regular"],
+                        experience: ["Experienced"]
+                    }
+                }
+            ]
+        };
+
+        // Render a persona card
+        function renderPersona(persona) {
+            const price = calculatePrice(persona);
+            const tagCount = Object.values(persona.tags).flat().length;
+
+            let tagsHtml = '';
+            for (const [category, tagList] of Object.entries(persona.tags)) {
+                tagsHtml += `
+                    <div class="tag-section">
+                        <div class="tag-category">${category.replace(/_/g, ' ')}</div>
+                        <div class="tags">
+                            ${tagList.map(t => `<span class="tag ${category}">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar ${persona.gender}">${persona.name[0]}</div>
+                        <div>
+                            <div class="persona-name">${persona.name}</div>
+                            <div class="persona-meta">${persona.gender} • ${tagCount} tags</div>
+                        </div>
+                    </div>
+                    <div class="persona-bio">${persona.bio}</div>
+                    ${tagsHtml}
+                    <div class="persona-footer">
+                        <div>
+                            <div class="price">${price} gems</div>
+                            <div class="price-breakdown">base 10 ${persona.gender === 'female' ? '+2' : persona.gender === 'male' ? '-1' : '+0'} gender +${tagCount} tags</div>
+                        </div>
+                        <button class="action-btn">Try</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render all sections
+        function renderAll() {
+            document.getElementById('vanilla-grid').innerHTML = personas.vanilla.map(renderPersona).join('');
+            document.getElementById('moderate-grid').innerHTML = personas.moderate.map(renderPersona).join('');
+            document.getElementById('adventurous-grid').innerHTML = personas.adventurous.map(renderPersona).join('');
+            document.getElementById('niche-grid').innerHTML = personas.niche.map(renderPersona).join('');
+        }
+
+        renderAll();
+    </script>
+    <script src="/js/navbar.js"></script>
+</body>
+</html>

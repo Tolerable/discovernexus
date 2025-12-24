@@ -147,60 +147,17 @@
     .host-badge {
       background: linear-gradient(135deg, #d4af37, #f4d03f);
       color: #1a1a24;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 2px 6px;
       border-radius: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-left: 6px;
-      box-shadow: 0 1px 3px rgba(212, 175, 55, 0.3);
-    }
-
-    .feed-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      background: rgba(0, 212, 255, 0.15);
-      color: var(--highlight-color);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 10px;
-      text-decoration: none;
-      margin-left: 6px;
-      transition: all 0.2s;
-    }
-    .feed-link:hover {
-      background: rgba(0, 212, 255, 0.3);
-      transform: scale(1.05);
     }
 
     .profile-card-username {
       font-size: 0.9rem;
       opacity: 0.7;
-    }
-
-    .username-link {
-      color: var(--accent-color, #00d4ff);
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .username-link:hover {
-      text-decoration: underline;
-      opacity: 1;
-    }
-
-    .system-ai-badge {
-      background: linear-gradient(135deg, #00d4ff, #7b2cbf);
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-left: 6px;
-      text-transform: uppercase;
     }
 
     .compatibility-score {
@@ -759,7 +716,7 @@
         // Also fetch AI profiles from users table (they have @nexus.ai.local emails)
         try {
           const aiResult = await supabaseQuery(`
-            SELECT u.id, u.email, u.display_name, u.bio, u.profile_photo_url, u.created_at, ap.feed_url FROM users u LEFT JOIN ai_profiles ap ON u.id = ap.user_id
+            SELECT u.id, u.display_name, u.bio, u.profile_photo_url, u.created_at, ap.feed_url FROM users u LEFT JOIN ai_profiles ap ON u.id = ap.user_id
             WHERE u.email LIKE '%@nexus.ai.local' AND u.id != $1
             ORDER BY u.created_at DESC LIMIT 20
           `, [currentUserId]);
@@ -770,15 +727,10 @@
             tags: ['AI Companion']  // Give AI a default tag so they pass filter
           }));
 
-          // Merge AI profiles - update existing with is_ai flag, or add new
+          // Merge AI profiles (avoid duplicates)
+          const existingIds = new Set(allProfiles.map(p => p.id));
           aiProfiles.forEach(ai => {
-            const existing = allProfiles.find(p => p.id === ai.id);
-            if (existing) {
-              // Update existing profile with AI flags
-              existing.is_ai = true;
-              existing.feed_url = ai.feed_url;
-              existing.tags = existing.tags || ai.tags;
-            } else {
+            if (!existingIds.has(ai.id)) {
               allProfiles.push(ai);
             }
           });
@@ -1003,8 +955,8 @@
             <div class="profile-card-header">
               <div class="profile-avatar-small">${avatarHtml}</div>
               <div class="profile-card-info">
-                <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? (profile.email && profile.email.includes('@nexus.ai.local') ? '<span class="system-ai-badge">NEXUS AI</span>' : '<span class="host-badge">AI</span>') : ''}</div>
-                <div class="profile-card-username"><a href="#" onclick="viewProfile('${profile.id}'); event.stopPropagation(); return false;" class="username-link" title="View profile">@${escapeHtml(username)}</a>${profile.feed_url ? ' <a href="' + escapeHtml(profile.feed_url) + '" target="_blank" onclick="event.stopPropagation()" title="AI Feed" class="feed-link">📡 Feed</a>' : ''}</div>
+                <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? '<span class="host-badge">HOST</span>' : ''}</div>
+                <div class="profile-card-username">@${escapeHtml(username)}${profile.feed_url ? ' <a href="' + escapeHtml(profile.feed_url) + '" target="_blank" onclick="event.stopPropagation()" title="AI Feed" style="color: var(--highlight-color); text-decoration: none;">📡</a>' : ''}</div>
               </div>
             </div>
 

@@ -180,90 +180,6 @@
       opacity: 0.7;
     }
 
-    /* Tag Selector Styles */
-    .tag-selector {
-      background: var(--primary-bg);
-      border: 1px solid rgba(0, 212, 255, 0.3);
-      border-radius: var(--radius-md);
-      padding: var(--spacing-md);
-    }
-
-    .tag-category {
-      margin-bottom: var(--spacing-lg);
-    }
-
-    .tag-category-title {
-      color: var(--accent-color);
-      font-size: 1rem;
-      margin-bottom: var(--spacing-sm);
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .tag-category-title::before {
-      content: '';
-      width: 3px;
-      height: 1em;
-      background: var(--accent-color);
-      border-radius: 2px;
-    }
-
-    .tag-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--spacing-xs);
-    }
-
-    .tag-option {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(42, 45, 52, 0.5);
-      color: var(--text-light);
-    }
-
-    .tag-option:hover {
-      border-color: var(--accent-color);
-      background: rgba(0, 212, 255, 0.1);
-    }
-
-    .tag-option.selected {
-      background: rgba(0, 212, 255, 0.3);
-      border-color: var(--accent-color);
-      color: var(--accent-color);
-      font-weight: 500;
-    }
-
-    .tag-option.conflict {
-      opacity: 0.4;
-      cursor: not-allowed;
-      text-decoration: line-through;
-    }
-
-    .tag-hint {
-      font-size: 0.8rem;
-      opacity: 0.6;
-      margin-top: var(--spacing-xs);
-    }
-
-    .compat-preview {
-      margin-top: var(--spacing-md);
-      padding: var(--spacing-sm);
-      background: rgba(0,0,0,0.3);
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-    }
-
-    .compat-preview .score {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: var(--highlight-color);
-    }
-
     .navbar {
       position: fixed;
       top: 0;
@@ -469,60 +385,10 @@
           <small style="opacity: 0.7; font-size: 0.85rem; display: block; margin-top: var(--spacing-xs);">If unchecked, your age will be hidden from other users.</small>
         </div>
 
-        <!-- Avatar Selection -->
         <div class="form-group">
-          <label>Choose Your Avatar</label>
-          <div style="margin-bottom: var(--spacing-md);">
-            <button type="button" class="btn btn-outline btn-small" onclick="showAvatarPicker()" id="avatarPickerBtn">
-              Pick an Avatar
-            </button>
-            <button type="button" class="btn btn-outline btn-small" onclick="generateRandomAvatar()" style="margin-left: var(--spacing-sm);">
-              Random Avatar
-            </button>
-          </div>
-
-          <!-- Avatar Picker Grid (hidden by default) -->
-          <div id="avatarPickerGrid" style="display: none; margin-bottom: var(--spacing-md);">
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: var(--spacing-sm); padding: var(--spacing-md); background: rgba(0, 212, 255, 0.05); border-radius: var(--radius-md); border: 1px solid rgba(0, 212, 255, 0.2);">
-              <!-- Avatars will be populated by JS -->
-            </div>
-            <div style="margin-top: var(--spacing-sm); display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
-              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('avataaars')" data-style="avataaars">Cartoon</button>
-              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('lorelei')" data-style="lorelei">Portrait</button>
-              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('micah')" data-style="micah">Cute</button>
-              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('notionists')" data-style="notionists">Sketch</button>
-              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('personas')" data-style="personas">Abstract</button>
-              <button type="button" class="btn btn-small" onclick="changeAvatarStyle('bottts')" data-style="bottts">Robots</button>
-            </div>
-          </div>
-
-          <div id="selectedAvatarPreview" style="display: none; margin-bottom: var(--spacing-md);">
-            <p style="opacity: 0.7; margin-bottom: var(--spacing-xs);">Selected Avatar:</p>
-            <img id="avatarPreviewImg" src="" alt="Selected avatar" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-color);">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Upload Your Photo</label>
-          <div style="display: flex; gap: var(--spacing-sm); align-items: center; flex-wrap: wrap;">
-            <input type="file" id="photoUpload" accept="image/jpeg,image/png,image/webp" style="display: none;">
-            <button type="button" class="btn btn-outline" onclick="document.getElementById('photoUpload').click()">
-              📷 Browse...
-            </button>
-            <span id="uploadStatus" style="opacity: 0.7; font-size: 0.85rem;"></span>
-          </div>
-          <div id="uploadPreview" style="display: none; margin-top: var(--spacing-sm);">
-            <img id="uploadPreviewImg" src="" alt="Preview" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover;">
-          </div>
-          <small style="opacity: 0.7; font-size: 0.85rem; margin-top: var(--spacing-xs); display: block;">
-            Images are resized to 250x250 and compressed automatically.
-          </small>
-        </div>
-
-        <div class="form-group">
-          <label for="profilePhoto">Or Paste Photo URL</label>
+          <label for="profilePhoto">Profile Photo URL</label>
           <input type="url" id="profilePhoto" class="form-input" placeholder="https://example.com/your-photo.jpg">
-          <small style="opacity: 0.7; font-size: 0.85rem;">External URL only (not file:// paths)</small>
+          <small style="opacity: 0.7; font-size: 0.85rem;">Link to your profile photo (hosted on Imgur, your own site, etc.)</small>
         </div>
 
         <div class="form-group">
@@ -621,31 +487,6 @@
       </div>
     </div>
 
-    <!-- Identity Tag Selector -->
-    <div class="section">
-      <div class="section-header">
-        <h2 class="section-title">Select Your Identity Tags</h2>
-        <button class="btn btn-primary btn-small" onclick="saveIdentityTags()">Save Tags</button>
-      </div>
-      <p style="opacity: 0.7; margin-bottom: var(--spacing-md);">
-        These tags define who you are and help match you with compatible HOSTs and Personas.
-        Tags that conflict with your selections will be greyed out.
-      </p>
-
-      <div class="tag-selector" id="tagSelector">
-        <div class="loading-state">
-          <div class="loading"></div>
-          <p>Loading tags...</p>
-        </div>
-      </div>
-
-      <div class="compat-preview" id="compatPreview" style="display: none;">
-        <strong>Your Profile Strength:</strong>
-        <span class="score" id="profileStrength">0</span>%
-        <span id="profileHint"></span>
-      </div>
-    </div>
-
     <!-- My Tags -->
     <div class="section">
       <div class="section-header">
@@ -685,68 +526,11 @@
   <script src="/auth.js"></script>
   <script src="/js/navbar.js"></script>
   <script src="/js/nexus-core.js"></script>
-  <script src="/js/nexus-compatibility.js"></script>
   <script>
     let currentUser = null;
     let currentPhotoIndex = 0;
     let allPhotos = [];
     let currentDisplayName = '';
-    let currentAvatarStyle = 'avataaars';
-    let selectedAvatarUrl = '';
-
-    // Avatar picker functions
-    function showAvatarPicker() {
-      const grid = document.getElementById('avatarPickerGrid');
-      const isVisible = grid.style.display !== 'none';
-      grid.style.display = isVisible ? 'none' : 'block';
-      if (!isVisible) {
-        populateAvatarGrid(currentAvatarStyle);
-      }
-    }
-
-    function populateAvatarGrid(style) {
-      const gridContainer = document.querySelector('#avatarPickerGrid > div:first-child');
-      const seeds = ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'user10', 'user11', 'user12'];
-
-      gridContainer.innerHTML = seeds.map(seed => {
-        const url = `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}`;
-        return `
-          <div onclick="selectAvatar('${url}')" style="cursor: pointer; padding: var(--spacing-xs); border-radius: var(--radius-sm); border: 2px solid transparent; transition: all 0.2s ease;"
-               onmouseover="this.style.borderColor='var(--accent-color)'; this.style.background='rgba(0, 212, 255, 0.1)';"
-               onmouseout="this.style.borderColor='transparent'; this.style.background='transparent';">
-            <img src="${url}" alt="Avatar option" style="width: 100%; height: auto; border-radius: 50%;">
-          </div>
-        `;
-      }).join('');
-
-      // Highlight current style button
-      document.querySelectorAll('[data-style]').forEach(btn => {
-        btn.classList.toggle('btn-primary', btn.dataset.style === style);
-        btn.classList.toggle('btn-outline', btn.dataset.style !== style);
-      });
-    }
-
-    function changeAvatarStyle(style) {
-      currentAvatarStyle = style;
-      populateAvatarGrid(style);
-    }
-
-    function selectAvatar(url) {
-      selectedAvatarUrl = url;
-      document.getElementById('profilePhoto').value = url;
-      document.getElementById('avatarPreviewImg').src = url;
-      document.getElementById('selectedAvatarPreview').style.display = 'block';
-      document.getElementById('avatarPickerGrid').style.display = 'none';
-      showToast('Avatar selected! Remember to save your profile.', 'success');
-    }
-
-    function generateRandomAvatar() {
-      const styles = ['avataaars', 'lorelei', 'micah', 'notionists', 'personas', 'bottts'];
-      const randomStyle = styles[Math.floor(Math.random() * styles.length)];
-      const randomSeed = 'random_' + Math.random().toString(36).substring(7);
-      const url = `https://api.dicebear.com/7.x/${randomStyle}/svg?seed=${randomSeed}`;
-      selectAvatar(url);
-    }
 
     // Initialize date of birth dropdowns
     function initializeDOBSelectors() {
@@ -848,7 +632,7 @@
 
       // Display current photo
       const currentPhoto = allPhotos[currentPhotoIndex];
-      avatarElement.innerHTML = `<img src="${currentPhoto}" alt="${currentDisplayName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+      avatarElement.innerHTML = `<img src="${escapeHtml(currentPhoto)}" alt="${escapeHtml(currentDisplayName)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
 
       // Remove existing navigation
       container.querySelectorAll('.gallery-nav, .gallery-indicator').forEach(el => el.remove());
@@ -891,232 +675,6 @@
       }
     }
 
-    // Tag selector state
-    let availableTags = [];
-    let selectedTagIds = new Set();
-
-    // Tag categories for user profiles (from nexus-compatibility)
-    const PROFILE_CATEGORIES = {
-      orientation: {
-        label: 'Orientation',
-        tags: ['Straight', 'Gay', 'Lesbian', 'Bisexual', 'Pansexual', 'Queer', 'Asexual', 'Demisexual']
-      },
-      relationship: {
-        label: 'Relationship Style',
-        tags: ['Monogamy', 'Polyamory', 'Open', 'Casual', 'Long-term', 'Marriage-minded', 'ENM']
-      },
-      dynamic: {
-        label: 'Connection Dynamic',
-        tags: ['Dominant', 'Submissive', 'Switch', 'Vanilla', 'Kink-curious', 'Power Exchange', 'Service', 'Primal']
-      },
-      intensity: {
-        label: 'Intimacy Style',
-        tags: ['High Libido', 'Low Libido', 'Cuddly', 'Touch-focused', 'Sensual']
-      }
-    };
-
-    // Tag conflicts (from nexus-compatibility)
-    const TAG_CONFLICTS = {
-      'Dominant': ['Submissive'],
-      'Submissive': ['Dominant'],
-      'Monogamy': ['Polyamory', 'Open', 'ENM'],
-      'Polyamory': ['Monogamy'],
-      'Open': ['Monogamy'],
-      'ENM': ['Monogamy'],
-      'Vanilla': ['Kink-curious', 'Power Exchange', 'Primal', 'Service'],
-      'Kink-curious': ['Vanilla'],
-      'Power Exchange': ['Vanilla'],
-      'Primal': ['Vanilla'],
-      'Service': ['Vanilla'],
-      'High Libido': ['Low Libido', 'Asexual'],
-      'Low Libido': ['High Libido'],
-      'Asexual': ['High Libido']
-    };
-
-    /**
-     * Load and render tag selector
-     */
-    async function loadTagSelector() {
-      const container = document.getElementById('tagSelector');
-
-      try {
-        // Fetch all current tags from database
-        const result = await NexusCore.query({
-          query: `SELECT id, tag_name, category, definition FROM tags WHERE is_current = true ORDER BY category, tag_name`
-        });
-
-        availableTags = result.data || [];
-
-        // Get user's current tags
-        const userId = getUserId();
-        const userTags = await NexusCore.getUserTags(userId);
-        selectedTagIds = new Set(userTags.map(t => t.id));
-
-        renderTagSelector();
-        updateProfileStrength();
-
-      } catch (error) {
-        console.error('Failed to load tags:', error);
-        container.innerHTML = `<div class="empty-state"><p>Failed to load tags</p></div>`;
-      }
-    }
-
-    /**
-     * Render the tag selector UI
-     */
-    function renderTagSelector() {
-      const container = document.getElementById('tagSelector');
-
-      // Get selected tag names for conflict checking
-      const selectedTagNames = new Set();
-      availableTags.forEach(tag => {
-        if (selectedTagIds.has(tag.id)) {
-          selectedTagNames.add(tag.tag_name);
-        }
-      });
-
-      // Find conflicting tags
-      const conflictingTags = new Set();
-      selectedTagNames.forEach(tagName => {
-        const conflicts = TAG_CONFLICTS[tagName] || [];
-        conflicts.forEach(c => conflictingTags.add(c));
-      });
-
-      let html = '';
-
-      for (const [catKey, catInfo] of Object.entries(PROFILE_CATEGORIES)) {
-        // Get tags for this category
-        const categoryTags = availableTags.filter(t =>
-          catInfo.tags.some(name => t.tag_name.toLowerCase() === name.toLowerCase())
-        );
-
-        if (categoryTags.length === 0) continue;
-
-        html += `
-          <div class="tag-category">
-            <div class="tag-category-title">${catInfo.label}</div>
-            <div class="tag-options">
-        `;
-
-        categoryTags.forEach(tag => {
-          const isSelected = selectedTagIds.has(tag.id);
-          const isConflict = conflictingTags.has(tag.tag_name) && !isSelected;
-
-          let classes = 'tag-option';
-          if (isSelected) classes += ' selected';
-          if (isConflict) classes += ' conflict';
-
-          const tooltip = isConflict
-            ? `Conflicts with your selected tags`
-            : (tag.definition || tag.tag_name);
-
-          html += `
-            <div class="${classes}"
-                 data-id="${tag.id}"
-                 data-name="${escapeHtml(tag.tag_name)}"
-                 title="${escapeHtml(tooltip)}"
-                 onclick="${isConflict ? '' : `toggleTag('${tag.id}', '${escapeHtml(tag.tag_name)}')`}">
-              ${escapeHtml(tag.tag_name)}
-            </div>
-          `;
-        });
-
-        html += `
-            </div>
-          </div>
-        `;
-      }
-
-      container.innerHTML = html;
-    }
-
-    /**
-     * Toggle a tag selection
-     */
-    function toggleTag(tagId, tagName) {
-      if (selectedTagIds.has(tagId)) {
-        selectedTagIds.delete(tagId);
-      } else {
-        selectedTagIds.add(tagId);
-      }
-
-      renderTagSelector();
-      updateProfileStrength();
-    }
-
-    /**
-     * Update the profile strength indicator
-     */
-    function updateProfileStrength() {
-      const preview = document.getElementById('compatPreview');
-      const scoreEl = document.getElementById('profileStrength');
-      const hintEl = document.getElementById('profileHint');
-
-      const tagCount = selectedTagIds.size;
-      const idealCount = 8; // Recommended number of tags
-      const strength = Math.min(100, Math.round((tagCount / idealCount) * 100));
-
-      scoreEl.textContent = strength;
-
-      if (tagCount === 0) {
-        hintEl.textContent = ' - Select some tags to improve matching';
-      } else if (tagCount < 4) {
-        hintEl.textContent = ' - Add more tags for better matches';
-      } else if (tagCount < idealCount) {
-        hintEl.textContent = ' - Good start! A few more will help';
-      } else {
-        hintEl.textContent = ' - Great profile coverage!';
-      }
-
-      preview.style.display = 'block';
-    }
-
-    /**
-     * Save selected identity tags
-     */
-    async function saveIdentityTags() {
-      try {
-        const userId = getUserId();
-
-        showToast('Saving your tags...', 'info');
-
-        // Get current user tags
-        const existingTags = await NexusCore.getUserTags(userId);
-        const existingIds = new Set(existingTags.map(t => t.id));
-
-        // Tags to add (in selectedTagIds but not in existingIds)
-        const toAdd = [...selectedTagIds].filter(id => !existingIds.has(id));
-
-        // Tags to remove (in existingIds but not in selectedTagIds)
-        const toRemove = [...existingIds].filter(id => !selectedTagIds.has(id));
-
-        // Add new tags
-        for (const tagId of toAdd) {
-          await NexusCore.query({
-            query: `INSERT INTO user_tags (user_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
-            params: [userId, tagId]
-          });
-        }
-
-        // Remove deselected tags
-        for (const tagId of toRemove) {
-          await NexusCore.query({
-            query: `DELETE FROM user_tags WHERE user_id = $1 AND tag_id = $2`,
-            params: [userId, tagId]
-          });
-        }
-
-        showToast('Tags saved! Your profile has been updated.', 'success');
-
-        // Reload profile data to update displays
-        await loadProfileData();
-
-      } catch (error) {
-        console.error('Failed to save tags:', error);
-        showToast('Failed to save tags: ' + error.message, 'error');
-      }
-    }
-
     async function initProfile() {
       // Require authentication
       const auth = window.auth;
@@ -1133,9 +691,6 @@
 
       // Load profile data
       await loadProfileData();
-
-      // Load tag selector
-      await loadTagSelector();
     }
 
     async function loadProfileData() {
@@ -1165,12 +720,6 @@
         document.getElementById('username').value = profile.username || '';
         document.getElementById('bio').value = profile.bio || '';
         document.getElementById('profilePhoto').value = profile.profile_photo_url || '';
-
-        // Show the preview if there's a profile photo
-        if (profile.profile_photo_url) {
-          document.getElementById('avatarPreviewImg').src = profile.profile_photo_url;
-          document.getElementById('selectedAvatarPreview').style.display = 'block';
-        }
 
         // Load birth date if available
         if (profile.birth_date) {
@@ -1346,101 +895,6 @@
       }
     }
 
-    // ===== PHOTO UPLOAD =====
-    const EZTUNES_SUPABASE_URL = 'https://bugpycickribmdfprryq.supabase.co';
-    const EZTUNES_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1Z3B5Y2lja3JpYm1kZnBycnlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk2ODQ5MzgsImV4cCI6MjA3NTI2MDkzOH0.1S1ZoV4TvhIyUjKvwYE6wZexS2aM_EMNJzV9Gn8M1CI';
-
-    // Compress and resize image to 250x250
-    async function compressImage(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const size = 250;
-            canvas.width = size;
-            canvas.height = size;
-            const ctx = canvas.getContext('2d');
-
-            // Calculate crop to center square
-            const minDim = Math.min(img.width, img.height);
-            const sx = (img.width - minDim) / 2;
-            const sy = (img.height - minDim) / 2;
-
-            // Draw cropped and resized
-            ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
-
-            // Convert to blob (JPEG, 75% quality)
-            canvas.toBlob((blob) => {
-              resolve(blob);
-            }, 'image/jpeg', 0.75);
-          };
-          img.onerror = reject;
-          img.src = e.target.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // Upload photo to Supabase storage
-    async function uploadPhoto(file) {
-      const statusEl = document.getElementById('uploadStatus');
-      const previewEl = document.getElementById('uploadPreview');
-      const previewImg = document.getElementById('uploadPreviewImg');
-
-      try {
-        statusEl.textContent = 'Compressing...';
-        const compressedBlob = await compressImage(file);
-
-        statusEl.textContent = 'Uploading...';
-        const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`;
-
-        const response = await fetch(
-          `${EZTUNES_SUPABASE_URL}/storage/v1/object/profile-photos/${fileName}`,
-          {
-            method: 'POST',
-            headers: {
-              'apikey': EZTUNES_ANON_KEY,
-              'Authorization': `Bearer ${EZTUNES_ANON_KEY}`,
-              'Content-Type': 'image/jpeg'
-            },
-            body: compressedBlob
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Upload failed');
-        }
-
-        // Get public URL
-        const publicUrl = `${EZTUNES_SUPABASE_URL}/storage/v1/object/public/profile-photos/${fileName}`;
-
-        // Update the profilePhoto input
-        document.getElementById('profilePhoto').value = publicUrl;
-
-        // Show preview
-        previewImg.src = publicUrl;
-        previewEl.style.display = 'block';
-        statusEl.textContent = 'Uploaded!';
-
-        return publicUrl;
-      } catch (error) {
-        console.error('Upload error:', error);
-        statusEl.textContent = 'Upload failed - try again';
-        throw error;
-      }
-    }
-
-    // File input change handler
-    document.getElementById('photoUpload').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        await uploadPhoto(file);
-      }
-    });
-
     async function saveProfile() {
       try {
         const displayName = document.getElementById('displayName').value;
@@ -1523,13 +977,15 @@
           birth_date: birthDateISO,
           show_age: showAge,
           profile_photo_url: profilePhoto,
-          additional_photos: additionalPhotos,
+          additional_photos: additionalPhotos, // Send as array for JSONB column
           profile_visibility: visibility,
           gender: gender,
           show_gender: showGender,
           messaging_preference: messagingPref,
           show_in_explore: showInExplore
         });
+
+        console.log('[PROFILE SAVE] ✓✓✓ Profile saved successfully');
         showToast('Profile updated successfully', 'success');
         await loadProfileData();
       } catch (error) {

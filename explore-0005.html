@@ -181,28 +181,6 @@
       opacity: 0.7;
     }
 
-    .username-link {
-      color: var(--accent-color, #00d4ff);
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .username-link:hover {
-      text-decoration: underline;
-      opacity: 1;
-    }
-
-    .system-ai-badge {
-      background: linear-gradient(135deg, #00d4ff, #7b2cbf);
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-left: 6px;
-      text-transform: uppercase;
-    }
-
     .compatibility-score {
       text-align: center;
       padding: var(--spacing-sm);
@@ -759,7 +737,7 @@
         // Also fetch AI profiles from users table (they have @nexus.ai.local emails)
         try {
           const aiResult = await supabaseQuery(`
-            SELECT u.id, u.email, u.display_name, u.bio, u.profile_photo_url, u.created_at, ap.feed_url FROM users u LEFT JOIN ai_profiles ap ON u.id = ap.user_id
+            SELECT u.id, u.display_name, u.bio, u.profile_photo_url, u.created_at, ap.feed_url FROM users u LEFT JOIN ai_profiles ap ON u.id = ap.user_id
             WHERE u.email LIKE '%@nexus.ai.local' AND u.id != $1
             ORDER BY u.created_at DESC LIMIT 20
           `, [currentUserId]);
@@ -1003,8 +981,8 @@
             <div class="profile-card-header">
               <div class="profile-avatar-small">${avatarHtml}</div>
               <div class="profile-card-info">
-                <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? (profile.email && profile.email.includes('@nexus.ai.local') ? '<span class="system-ai-badge">NEXUS AI</span>' : '<span class="host-badge">AI</span>') : ''}</div>
-                <div class="profile-card-username"><a href="#" onclick="viewProfile('${profile.id}'); event.stopPropagation(); return false;" class="username-link" title="View profile">@${escapeHtml(username)}</a>${profile.feed_url ? ' <a href="' + escapeHtml(profile.feed_url) + '" target="_blank" onclick="event.stopPropagation()" title="AI Feed" class="feed-link">📡 Feed</a>' : ''}</div>
+                <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? '<span class="host-badge">HOST</span>' : ''}</div>
+                <div class="profile-card-username">@${escapeHtml(username)}${profile.feed_url ? ' <a href="' + escapeHtml(profile.feed_url) + '" target="_blank" onclick="event.stopPropagation()" title="AI Feed" class="feed-link">📡 Feed</a>' : ''}</div>
               </div>
             </div>
 
