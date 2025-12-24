@@ -439,6 +439,21 @@
             cursor: not-allowed;
         }
 
+        .selection-item.locked {
+            border-color: rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+        }
+
+        .selection-item.locked:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .add-time-link {
+            color: #d4af37 !important;
+            font-weight: 600;
+        }
+
         .selection-avatar {
             width: 36px;
             height: 36px;
@@ -572,6 +587,160 @@
             font-size: 24px;
             margin-bottom: 15px;
             color: rgba(255,255,255,0.3);
+        }
+
+        /* Gem Modal */
+        .gem-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .gem-modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 350px;
+            width: 90%;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            color: #00d4ff;
+            margin: 0;
+        }
+
+        .gem-options, .modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .gem-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .gem-option:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .gem-option.popular {
+            border-color: #d4af37;
+        }
+
+        .gem-badge {
+            position: absolute;
+            top: -8px;
+            right: 15px;
+            background: #d4af37;
+            color: #1a1a2e;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+
+        .gem-amount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d4af37;
+        }
+
+        .gem-price {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .option-desc {
+            display: block;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 2px;
+        }
+
+        .gem-option.rent { border-color: rgba(0, 212, 255, 0.3); }
+        .gem-option.rent:hover { border-color: rgba(0, 212, 255, 0.6); background: rgba(0, 212, 255, 0.1); }
+        .gem-option.rent .gem-amount { color: #00d4ff; }
+
+        .gem-option.buy { border-color: #d4af37; }
+        .gem-option.buy .gem-amount { color: #d4af37; }
+
+        .gem-option.gift { border-color: rgba(231, 76, 60, 0.3); }
+        .gem-option.gift:hover { border-color: rgba(231, 76, 60, 0.6); background: rgba(231, 76, 60, 0.1); }
+        .gem-option.gift .gem-amount { color: #e74c3c; }
+
+        .gem-option.free { border-color: rgba(46, 204, 113, 0.3); }
+        .gem-option.free:hover { border-color: rgba(46, 204, 113, 0.6); background: rgba(46, 204, 113, 0.1); }
+        .gem-option.free .gem-amount { color: #2ecc71; }
+        .free-price { color: #2ecc71 !important; }
+
+        .gem-option.premium { border-color: rgba(155, 89, 182, 0.3); }
+        .gem-option.premium:hover { border-color: rgba(155, 89, 182, 0.6); background: rgba(155, 89, 182, 0.1); }
+        .gem-option.premium .gem-amount { color: #9b59b6; }
+
+        .kofi-link {
+            display: block;
+            text-align: center;
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .kofi-link:hover {
+            background: rgba(0, 212, 255, 0.1);
         }
 
         /* Scrollbar */
@@ -807,32 +976,58 @@
             personaGrid.innerHTML = collection.personas.map(p => {
                 const isActive = p.gemsRemaining > 0;
                 const isSelected = p.id === collection.activePersona;
-                return `
-                    <div class="selection-item ${isSelected ? 'selected' : ''} ${isActive ? '' : 'inactive'}"
-                         onclick="${isActive ? `quickSelectPersona('${p.id}')` : ''}">
-                        <div class="selection-avatar ${p.gender}">${p.name[0]}</div>
-                        <div class="selection-info">
-                            <div class="selection-name">${p.name}</div>
-                            <div class="selection-meta">${p.archetype} ${isActive ? '' : '(No gems)'}</div>
+
+                if (isActive) {
+                    return `
+                        <div class="selection-item ${isSelected ? 'selected' : ''}"
+                             onclick="quickSelectPersona('${p.id}')">
+                            <div class="selection-avatar ${p.gender}">${p.name[0]}</div>
+                            <div class="selection-info">
+                                <div class="selection-name">${p.name}</div>
+                                <div class="selection-meta">${p.archetype}</div>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    return `
+                        <div class="selection-item locked" onclick="showAddTimeModal('persona', '${p.id}', '${p.name}')">
+                            <div class="selection-avatar ${p.gender}" style="opacity:0.5">${p.name[0]}</div>
+                            <div class="selection-info">
+                                <div class="selection-name" style="opacity:0.5">${p.name}</div>
+                                <div class="selection-meta add-time-link">+ Add More Time</div>
+                            </div>
+                        </div>
+                    `;
+                }
             }).join('');
 
             // Render host options
             hostGrid.innerHTML = collection.hosts.map(h => {
                 const isActive = h.gemsRemaining > 0;
                 const isSelected = h.id === collection.activeHost;
-                return `
-                    <div class="selection-item ${isSelected ? 'selected' : ''} ${isActive ? '' : 'inactive'}"
-                         onclick="${isActive ? `quickSelectHost('${h.id}')` : ''}">
-                        <div class="selection-avatar ${h.gender}">${h.name[0]}</div>
-                        <div class="selection-info">
-                            <div class="selection-name">${h.name.substring(0,12)}${h.name.length > 12 ? '..' : ''}</div>
-                            <div class="selection-meta">${h.tags.length} tags ${isActive ? '' : '(No gems)'}</div>
+
+                if (isActive) {
+                    return `
+                        <div class="selection-item ${isSelected ? 'selected' : ''}"
+                             onclick="quickSelectHost('${h.id}')">
+                            <div class="selection-avatar ${h.gender}">${h.name[0]}</div>
+                            <div class="selection-info">
+                                <div class="selection-name">${h.name.substring(0,12)}${h.name.length > 12 ? '..' : ''}</div>
+                                <div class="selection-meta">${h.tags.length} tags</div>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    return `
+                        <div class="selection-item locked" onclick="showAddTimeModal('host', '${h.id}', '${h.name}')">
+                            <div class="selection-avatar ${h.gender}" style="opacity:0.5">${h.name[0]}</div>
+                            <div class="selection-info">
+                                <div class="selection-name" style="opacity:0.5">${h.name.substring(0,12)}${h.name.length > 12 ? '..' : ''}</div>
+                                <div class="selection-meta add-time-link">+ Add More Time</div>
+                            </div>
+                        </div>
+                    `;
+                }
             }).join('');
         }
 
@@ -1149,10 +1344,144 @@
             alert(`Unlock additional ${type} slot for ${cost} gems?\n\nComing soon!`);
         }
 
+        // Current modal target
+        let modalTarget = { type: null, id: null };
+
+        // Show Add Time modal
+        function showAddTimeModal(type, id, name) {
+            modalTarget = { type, id };
+            document.getElementById('modal-name').textContent = name;
+            document.getElementById('modal-avatar').textContent = name[0];
+
+            // Show correct options based on type
+            if (type === 'persona') {
+                document.getElementById('modal-subtitle').textContent = 'Out of time - extend access!';
+                document.getElementById('persona-options').style.display = 'flex';
+                document.getElementById('host-options').style.display = 'none';
+            } else {
+                document.getElementById('modal-subtitle').textContent = 'Choose your access level';
+                document.getElementById('persona-options').style.display = 'none';
+                document.getElementById('host-options').style.display = 'flex';
+            }
+
+            document.getElementById('add-time-modal').style.display = 'flex';
+        }
+
+        // Persona actions
+        function rentPersona() {
+            alert('Rent ' + modalTarget.id + ' for 30 days (50 gems)\n\nComing soon!');
+            closeAddTimeModal();
+        }
+
+        function buyPersona() {
+            alert('Buy ' + modalTarget.id + ' forever (200 gems)\n\nComing soon!');
+            closeAddTimeModal();
+        }
+
+        function giftPersona() {
+            alert('Gift ' + modalTarget.id + ' to a friend (60 gems)\n\nComing soon!');
+            closeAddTimeModal();
+        }
+
+        // HOST actions
+        function useHostFree() {
+            // Enable basic use
+            alert('Basic use enabled for ' + modalTarget.id);
+            closeAddTimeModal();
+        }
+
+        function upgradeHost() {
+            alert('Upgrade ' + modalTarget.id + ' to premium (25 gems/month)\n\nComing soon!');
+            closeAddTimeModal();
+        }
+
+        // Close modal
+        function closeAddTimeModal() {
+            document.getElementById('add-time-modal').style.display = 'none';
+        }
+
+        // Purchase gems (would integrate with Ko-fi/payment)
+        function purchaseGems(amount) {
+            // TODO: Integrate with Ko-fi or payment processor
+            // For now, link to Ko-fi
+            window.open('https://ko-fi.com/tolerable', '_blank');
+            closeAddTimeModal();
+        }
+
+        // Close modal on background click
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('add-time-modal');
+            if (e.target === modal) {
+                closeAddTimeModal();
+            }
+        });
+
         // Initialize
         loadDemoCollection(); // Use demo data for now
         // loadCollection(); // Use this when backend is ready
     </script>
+    <!-- Add Time Modal -->
+    <div id="add-time-modal" class="gem-modal" style="display:none;">
+        <div class="gem-modal-content">
+            <button class="modal-close" onclick="closeAddTimeModal()">&times;</button>
+            <div class="modal-header">
+                <div class="modal-avatar" id="modal-avatar">?</div>
+                <div>
+                    <h3 id="modal-name">Name</h3>
+                    <p id="modal-subtitle" style="color:rgba(255,255,255,0.5);font-size:12px;">Out of gems</p>
+                </div>
+            </div>
+
+            <!-- Persona options: Rent / Buy / Gift -->
+            <div id="persona-options" class="modal-options">
+                <div class="gem-option rent" onclick="rentPersona()">
+                    <div>
+                        <span class="gem-amount">Rent</span>
+                        <span class="option-desc">30 days access</span>
+                    </div>
+                    <span class="gem-price">50 gems</span>
+                </div>
+                <div class="gem-option buy popular" onclick="buyPersona()">
+                    <span class="gem-badge">Best Value</span>
+                    <div>
+                        <span class="gem-amount">Buy</span>
+                        <span class="option-desc">Own forever</span>
+                    </div>
+                    <span class="gem-price">200 gems</span>
+                </div>
+                <div class="gem-option gift" onclick="giftPersona()">
+                    <div>
+                        <span class="gem-amount">Gift</span>
+                        <span class="option-desc">Send to a friend</span>
+                    </div>
+                    <span class="gem-price">60 gems</span>
+                </div>
+            </div>
+
+            <!-- HOST options: Free use or premium -->
+            <div id="host-options" class="modal-options" style="display:none;">
+                <div class="gem-option free" onclick="useHostFree()">
+                    <div>
+                        <span class="gem-amount">Basic Use</span>
+                        <span class="option-desc">Limited features</span>
+                    </div>
+                    <span class="gem-price free-price">Free</span>
+                </div>
+                <div class="gem-option premium" onclick="upgradeHost()">
+                    <div>
+                        <span class="gem-amount">Premium</span>
+                        <span class="option-desc">Full features + priority</span>
+                    </div>
+                    <span class="gem-price">25 gems/mo</span>
+                </div>
+            </div>
+
+            <a href="https://ko-fi.com/tolerable" target="_blank" class="kofi-link">
+                Get more gems on Ko-fi ☕
+            </a>
+        </div>
+    </div>
+
     <script src="/js/navbar.js"></script>
 </body>
 </html>
