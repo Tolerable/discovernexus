@@ -1289,80 +1289,64 @@
 
 
     
-        
-
-
-    
-        /* Right Side Floating Recommendation Circles */
+        /* Big Round Recommendation Cards */
         .round-recs {
-            position: fixed !important;
-            right: 15px !important;
-            top: 85px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 10px !important;
-            z-index: 1000 !important;
-            width: 220px !important;
+            position: fixed;
+            right: 25px;
+            top: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100;
         }
 
         .round-rec {
-            width: 220px;
-            height: 220px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             overflow: hidden;
             cursor: pointer;
             position: relative;
-            border: 3px solid rgba(0, 212, 255, 0.6);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            border: 3px solid rgba(0, 212, 255, 0.5);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
-            background: #1a1a2e;
         }
 
         .round-rec:hover {
-            transform: scale(1.1);
+            transform: scale(1.08);
             border-color: #00d4ff;
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
         }
 
         .round-rec img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
         }
 
-        .round-rec-overlay {
+        .round-rec-info {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent 0%, rgba(0,0,0,0.95) 100%);
-            padding: 40px 8px 12px 8px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 30px 10px 10px;
             text-align: center;
-            pointer-events: none;
         }
 
         .round-rec-name {
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 600;
             color: #fff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .round-rec-type {
-            font-size: 12px;
+            font-size: 11px;
             color: #00d4ff;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        @media (max-width: 1100px) {
-            .round-recs { display: none !important; }
+        @media (max-width: 1000px) {
+            .round-recs { display: none; }
         }
 
 
@@ -1799,6 +1783,26 @@
         }
 
         // Simple floating circles
+        function updateFloatCircles() {
+            const el = document.getElementById('round-recs');
+            if (!el || !collection) return;
+
+            const active = collection.personas.find(p => p.id === collection.activePersona);
+            const compat = { 'Romantic': ['Nurturing','Playful'], 'Playful': ['Romantic','Dominant'], 'Dominant': ['Submissive','Intellectual'], 'Submissive': ['Dominant','Nurturing'], 'Intellectual': ['Romantic','Dominant'], 'Nurturing': ['Submissive','Romantic'] };
+            const types = active ? (compat[active.archetype] || []) : [];
+
+            let items = collection.personas.filter(p => p.id !== (active?.id) && types.includes(p.archetype)).slice(0,3);
+            if (items.length < 3) items = collection.personas.filter(p => p.ownership !== 'locked').slice(0,3);
+
+            el.innerHTML = items.map(p =>
+                '<div class="round-rec" onclick="selectPersona(\'' + p.id + '\')">' +
+                '<img src="' + (p.image || '') + '" alt="' + p.name + '">' +
+                '<div class="round-rec-info">' +
+                '<div class="round-rec-name">' + p.name + '</div>' +
+                '<div class="round-rec-type">' + p.archetype + '</div>' +
+                '</div></div>'
+            ).join('');
+        }
 
 
         // Show persona info popup
@@ -1821,66 +1825,6 @@
         function closePersonaPopup() {
             document.getElementById('persona-popup-overlay').classList.remove('show');
             document.getElementById('persona-popup').classList.remove('show');
-        }
-
-
-        // Floating recommendation circles on right side
-        function updateFloatCircles() {
-            const el = document.getElementById('round-recs');
-            if (!el || !collection) return;
-
-            // Get active persona for compatibility matching
-            const active = collection.personas.find(p => p.id === collection.activePersona);
-
-            // Compatibility mapping
-            const compat = {
-                'Romantic': ['Nurturing', 'Playful'],
-                'Playful': ['Romantic', 'Dominant'],
-                'Dominant': ['Submissive', 'Intellectual'],
-                'Submissive': ['Dominant', 'Nurturing'],
-                'Intellectual': ['Romantic', 'Dominant'],
-                'Nurturing': ['Submissive', 'Romantic']
-            };
-
-            const compatTypes = active ? (compat[active.archetype] || []) : [];
-
-            // Get compatible personas (exclude active one)
-            let recs = collection.personas.filter(p =>
-                p.id !== (active?.id) && compatTypes.includes(p.archetype)
-            ).slice(0, 3);
-
-            // Fallback if not enough compatible
-            if (recs.length < 3) {
-                const needed = 3 - recs.length;
-                const others = collection.personas.filter(p =>
-                    p.id !== (active?.id) && !recs.includes(p) && p.ownership !== 'locked'
-                ).slice(0, needed);
-                recs = [...recs, ...others];
-            }
-
-            // Build HTML - each circle is clickable, shows image + name/type overlay
-            el.innerHTML = recs.map(p => {
-                const imgSrc = p.image || '';
-                return '<div class="round-rec" onclick="showCirclePersona(\'' + p.id + '\')">' +
-                    '<img src="' + imgSrc + '" alt="' + p.name + '" onerror="this.style.display=\'none\'">' +
-                    '<div class="round-rec-overlay">' +
-                    '<div class="round-rec-name">' + p.name + '</div>' +
-                    '<div class="round-rec-type">' + p.archetype + '</div>' +
-                    '</div></div>';
-            }).join('');
-        }
-
-        // Show persona modal when clicking a recommendation circle
-        function showCirclePersona(personaId) {
-            // Select the persona first
-            selectPersona(personaId);
-
-            // Then show its popup/modal
-            setTimeout(() => {
-                if (typeof showPersonaPopup === 'function') {
-                    showPersonaPopup();
-                }
-            }, 100);
         }
 
         // Render the collection
