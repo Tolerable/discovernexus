@@ -233,6 +233,59 @@
             border-top: 1px solid rgba(255,255,255,0.1);
         }
 
+        .pairs-well {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+        }
+
+        .pairs-well-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .pairs-well-items {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .pairs-well-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            font-size: 11px;
+            color: #00d4ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pairs-well-item:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+
+        .pairs-well-item .mini-avatar {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        .pairs-well-item .mini-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+        .pairs-well-item .mini-avatar.male { background: linear-gradient(135deg, #4a90d9, #2c5aa0); }
+
         .price {
             color: #d4af37;
             font-weight: 600;
@@ -848,6 +901,44 @@
             ]
         };
 
+        // Compatible personas based on HOST dynamic tags
+        const dynamicToPersona = {
+            'Dominant': ['Luna', 'Sage'],
+            'Submissive': ['Max', 'Kai'],
+            'Switch': ['Ember', 'Nova'],
+            'Brat': ['Max', 'Zara'],
+            'Service': ['Luna', 'Kai'],
+            'Soft': ['Luna', 'Sage']
+        };
+
+        // Sample personas for suggestions
+        const suggestedPersonas = [
+            { name: 'Luna', archetype: 'Romantic', gender: 'female' },
+            { name: 'Ember', archetype: 'Playful', gender: 'female' },
+            { name: 'Max', archetype: 'Dominant', gender: 'male' },
+            { name: 'Sage', archetype: 'Intellectual', gender: 'neutral' },
+            { name: 'Nova', archetype: 'Adventurous', gender: 'female' },
+            { name: 'Kai', archetype: 'Caring', gender: 'male' },
+            { name: 'Zara', archetype: 'Creative', gender: 'female' }
+        ];
+
+        // Get compatible personas for a HOST
+        function getCompatiblePersonas(persona) {
+            const dynamicTags = persona.tags.dynamic || [];
+            let compatNames = new Set();
+
+            dynamicTags.forEach(tag => {
+                if (dynamicToPersona[tag]) {
+                    dynamicToPersona[tag].forEach(name => compatNames.add(name));
+                }
+            });
+
+            // Get matching persona objects (limit to 3)
+            return suggestedPersonas
+                .filter(p => compatNames.has(p.name))
+                .slice(0, 3);
+        }
+
         // Render a persona card
         function renderPersona(persona) {
             const price = calculatePrice(persona);
@@ -865,6 +956,22 @@
                 `;
             }
 
+            // Get compatible personas for this HOST
+            const compatPersonas = getCompatiblePersonas(persona);
+            const pairsWellHtml = compatPersonas.length > 0 ? `
+                <div class="pairs-well">
+                    <div class="pairs-well-label">Pairs well with</div>
+                    <div class="pairs-well-items">
+                        ${compatPersonas.map(p => `
+                            <span class="pairs-well-item" title="${p.archetype}">
+                                <span class="mini-avatar ${p.gender}">${p.name[0]}</span>
+                                ${p.name}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : '';
+
             return `
                 <div class="persona-card">
                     <div class="persona-header">
@@ -880,6 +987,7 @@
                     </div>
                     <div class="persona-bio">${persona.bio}</div>
                     ${tagsHtml}
+                    ${pairsWellHtml}
                     <div class="persona-footer">
                         <div>
                             <div class="price">${price} gems</div>
