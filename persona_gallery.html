@@ -280,6 +280,90 @@
             background: rgba(0,212,255,0.4);
         }
 
+        /* Compatibility badge */
+        .compat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .compat-badge.excellent { background: rgba(46,204,113,0.2); color: #2ecc71; }
+        .compat-badge.good { background: rgba(52,152,219,0.2); color: #3498db; }
+        .compat-badge.partial { background: rgba(243,156,18,0.2); color: #f39c12; }
+        .compat-badge.poor { background: rgba(231,76,60,0.2); color: #e74c3c; }
+        .compat-badge.incompatible { background: rgba(192,57,43,0.3); color: #e74c3c; border: 1px solid #e74c3c; }
+
+        .compat-warning {
+            padding: 10px;
+            background: rgba(231,76,60,0.1);
+            border: 1px solid rgba(231,76,60,0.3);
+            border-radius: 8px;
+            margin: 10px 15px;
+            font-size: 12px;
+        }
+
+        .compat-warning .suggestions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .compat-warning button {
+            background: rgba(0,212,255,0.2);
+            border: 1px solid rgba(0,212,255,0.4);
+            color: #00d4ff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .compat-warning button:hover {
+            background: rgba(0,212,255,0.4);
+        }
+
+        /* Session state display in popup */
+        .session-state {
+            padding: 8px 15px;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+        }
+
+        .session-state .host-label,
+        .session-state .persona-label {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .session-state .host-value {
+            color: #00d4ff;
+            font-family: monospace;
+        }
+
+        .session-state .persona-value {
+            color: #d4af37;
+        }
+
+        .session-state .swap-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .session-state .swap-btn:hover {
+            color: #00d4ff;
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -873,6 +957,12 @@
                     <a href="store.html" class="frame-bar-link">More</a>
                 </div>
             </div>
+            <div class="session-state" id="session-state">
+                <span class="host-label">HOST:</span>
+                <span class="host-value">Default</span>
+                <span class="persona-label">Persona:</span>
+                <span class="persona-value">None</span>
+            </div>
             <div class="chat-header" id="chat-header-main">
                 <img class="chat-avatar" id="chat-avatar" src="" alt="">
                 <div class="chat-persona-info">
@@ -1214,6 +1304,16 @@
             currentPersona = personas.find(p => p.name === name);
             if (!currentPersona) return;
 
+            // Update session state
+            NexusSession.setPersona(currentPersona);
+
+            // Check compatibility with current HOST
+            const session = NexusSession.getState();
+            if (session.host && typeof NexusCompatibility !== 'undefined') {
+                const compat = NexusCompatibility.check(session.host, currentPersona);
+                updateCompatibilityDisplay(compat);
+            }
+
             // Update chat header
             document.getElementById('chat-persona-name').textContent = currentPersona.name;
             document.getElementById('chat-persona-archetype').textContent = currentPersona.archetype;
@@ -1484,6 +1584,68 @@ Be genuine, be YOU, but help users find their perfect match!`;
             }
         }
 
+        // Update compatibility display
+        function updateCompatibilityDisplay(compat) {
+            // Remove existing warning
+            const existing = document.querySelector('.compat-warning');
+            if (existing) existing.remove();
+
+            if (!compat.compatible) {
+                // Show warning with suggestions
+                const warning = document.createElement('div');
+                warning.className = 'compat-warning';
+                warning.innerHTML = `
+                    <div>${compat.message}</div>
+                    <div class="suggestions">
+                        ${compat.suggestions.map(s =>
+                            `<button onclick="handleCompatSuggestion('${s.action}')">${s.text}</button>`
+                        ).join('')}
+                    </div>
+                `;
+                const chatTags = document.getElementById('chat-tags');
+                chatTags.parentNode.insertBefore(warning, chatTags);
+            }
+
+            // Update badge in header if exists
+            const badgeContainer = document.getElementById('compat-badge');
+            if (badgeContainer) {
+                const badge = NexusCompatibility.getBadge(compat.score, compat.level);
+                badgeContainer.className = 'compat-badge ' + compat.level;
+                badgeContainer.innerHTML = badge.emoji + ' ' + badge.text;
+            }
+        }
+
+        function handleCompatSuggestion(action) {
+            switch(action) {
+                case 'showCompatiblePersonas':
+                    alert('Browse compatible personas feature coming soon!');
+                    break;
+                case 'showUpgradeOptions':
+                    alert('Persona upgrades coming soon!');
+                    break;
+                case 'showCompatibleHosts':
+                    window.location.href = '/persona_hosts.html';
+                    break;
+            }
+        }
+
+        // Update session display
+        function updateSessionDisplay() {
+            const session = NexusSession.getState();
+            const stateDiv = document.getElementById('session-state');
+            if (stateDiv && session) {
+                const hostId = session.host?.id || 'Default';
+                const personaName = session.persona?.name || 'None';
+                stateDiv.innerHTML = `
+                    <span class="host-label">HOST:</span>
+                    <span class="host-value">${hostId}</span>
+                    <button class="swap-btn" onclick="window.location.href='/persona_hosts.html'">↻</button>
+                    <span class="persona-label">Persona:</span>
+                    <span class="persona-value">${personaName}</span>
+                `;
+            }
+        }
+
         // Initialize
         async function init() {
             // Load tag definitions from database first
@@ -1493,6 +1655,7 @@ Be genuine, be YOU, but help users find their perfect match!`;
             renderPersonas(personas);
             loadWalletBalance();
             updateFrameDisplay();
+            updateSessionDisplay();
 
             // Initialize auth if available
             if (window.auth && window.auth.init) {
@@ -1506,6 +1669,8 @@ Be genuine, be YOU, but help users find their perfect match!`;
     <!-- Frame Selector Panel -->
     
 
+    <script src="/js/nexus-session.js"></script>
+    <script src="/js/nexus-compatibility.js"></script>
     <script src="/js/navbar.js"></script>
 </body>
 </html>
