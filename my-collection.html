@@ -828,6 +828,109 @@
             justify-content: center;
         }
 
+        /* Recommendations Section */
+        .recommendations {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(123, 44, 191, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .rec-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .rec-header h3 {
+            font-size: 16px;
+            color: #00d4ff;
+            margin: 0;
+        }
+
+        .rec-badge {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        .rec-grid {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .rec-card {
+            flex: 0 0 180px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .rec-card:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .rec-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .rec-avatar.host { background: linear-gradient(135deg, #00d4ff, #7b2cbf); }
+        .rec-avatar.persona { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+
+        .rec-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .rec-reason {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 10px;
+        }
+
+        .rec-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rec-cost {
+            color: #d4af37;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .rec-btn {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
         .load-more-card:hover {
             border-color: rgba(212, 175, 55, 0.6);
             background: rgba(212, 175, 55, 0.05);
@@ -847,6 +950,17 @@
 </head>
 <body>
     <div class="container">
+        <!-- Recommended for You -->
+        <div class="recommendations" id="recommendations-section">
+            <div class="rec-header">
+                <h3>Recommended for You</h3>
+                <span class="rec-badge">Based on your collection</span>
+            </div>
+            <div class="rec-grid" id="rec-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
         <!-- Tab Navigation -->
         <nav class="tab-nav">
             <button class="tab-btn active" onclick="showTab('chat')">
@@ -1129,6 +1243,71 @@
         // Slot limits
         const MAX_SLOTS = 6;
 
+        // Generate recommendations based on user's collection
+        function generateRecommendations() {
+            const recGrid = document.getElementById('rec-grid');
+            if (!recGrid) return;
+
+            // Recommendations based on what they have
+            const recs = [];
+
+            // If they have romantic personas, suggest compatible HOSTs
+            const hasRomantic = collection.personas.some(p => p.archetype === 'Romantic');
+            if (hasRomantic) {
+                recs.push({
+                    type: 'host',
+                    name: 'Mono-Switch',
+                    reason: 'Pairs great with Luna',
+                    cost: 50
+                });
+            }
+
+            // If they have dominant personas, suggest submissive HOSTs
+            const hasDominant = collection.personas.some(p => p.archetype === 'Dominant');
+            if (hasDominant) {
+                recs.push({
+                    type: 'host',
+                    name: 'ENM-Sub-Soft',
+                    reason: 'Perfect match for Max',
+                    cost: 45
+                });
+            }
+
+            // Suggest new personas based on HOST tags
+            const hasPolyHost = collection.hosts.some(h => h.tags.includes('Polyamorous'));
+            if (hasPolyHost) {
+                recs.push({
+                    type: 'persona',
+                    name: 'Nova',
+                    reason: 'Adventurous - matches your Poly HOST',
+                    cost: 60
+                });
+            }
+
+            // Always suggest at least one popular item
+            if (recs.length < 2) {
+                recs.push({
+                    type: 'persona',
+                    name: 'Ember',
+                    reason: 'Most popular - Playful energy',
+                    cost: 55
+                });
+            }
+
+            // Render recommendations
+            recGrid.innerHTML = recs.slice(0, 4).map(rec => `
+                <div class="rec-card" onclick="window.location.href='persona_hosts.html'">
+                    <div class="rec-avatar ${rec.type}">${rec.name[0]}</div>
+                    <div class="rec-name">${rec.name}</div>
+                    <div class="rec-reason">${rec.reason}</div>
+                    <div class="rec-price">
+                        <span class="rec-cost">${rec.cost} gems</span>
+                        <button class="rec-btn">View</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // Demo collection for testing (experienced user - Rev gets unlocked items)
         function loadDemoCollection() {
             collection = {
@@ -1159,6 +1338,7 @@
             renderPersonas();
             updateCounts();
             updateChatState();
+            generateRecommendations();
         }
 
         // Render HOSTs grid with slots

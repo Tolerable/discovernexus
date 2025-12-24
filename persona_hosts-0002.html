@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOST Personas - NEXUS</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#00d4ff">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding-top: 70px;
+        }
+
+        .page-header {
+            padding: 30px 40px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .category-section {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            font-size: 20px;
+            color: #d4af37;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .category-title:hover {
+            color: #00d4ff;
+        }
+
+        .collapse-icon {
+            display: inline-block;
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+            font-size: 14px;
+        }
+
+        .category-section.collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .category-section.collapsed .persona-grid {
+            display: none;
+        }
+
+        .persona-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .persona-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 320px;
+        }
+
+        .persona-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .persona-card .persona-content {
+            flex: 1;
+        }
+
+        .persona-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .persona-avatar-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+
+        .persona-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .persona-avatar.male { background: linear-gradient(135deg, #4a90d9, #2c5aa0); }
+        .persona-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+        .persona-avatar.nonbinary { background: linear-gradient(135deg, #9b59b6, #3498db); }
+
+        /* HOST indicator badge at 7 o'clock */
+        .host-indicator {
+            position: absolute;
+            bottom: -2px;
+            left: -2px;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            color: #0a0a0f;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 6px;
+            z-index: 10;
+            white-space: nowrap;
+            border: 1px solid rgba(0,0,0,0.3);
+        }
+
+        .host-indicator::before {
+            content: '⚡';
+            margin-right: 2px;
+        }
+
+        /* Frame emoji at 2 o'clock */
+        .frame-emoji {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            font-size: 14px;
+            z-index: 10;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .persona-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            background: rgba(0,212,255,0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,212,255,0.3);
+        }
+
+        .persona-meta {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .persona-bio {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .tag-section {
+            margin-bottom: 12px;
+        }
+
+        .tag-category {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: help;
+        }
+
+        /* Tag category colors */
+        .tag.orientation { background: rgba(233, 69, 96, 0.3); border: 1px solid rgba(233, 69, 96, 0.5); }
+        .tag.relationship { background: rgba(155, 89, 182, 0.3); border: 1px solid rgba(155, 89, 182, 0.5); }
+        .tag.communication { background: rgba(52, 152, 219, 0.3); border: 1px solid rgba(52, 152, 219, 0.5); }
+        .tag.physical { background: rgba(231, 76, 60, 0.3); border: 1px solid rgba(231, 76, 60, 0.5); }
+        .tag.dynamic { background: rgba(241, 196, 15, 0.3); border: 1px solid rgba(241, 196, 15, 0.5); }
+        .tag.lifestyle { background: rgba(46, 204, 113, 0.3); border: 1px solid rgba(46, 204, 113, 0.5); }
+        .tag.experience { background: rgba(149, 165, 166, 0.3); border: 1px solid rgba(149, 165, 166, 0.5); }
+
+        .persona-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .pairs-well {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+        }
+
+        .pairs-well-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .pairs-well-items {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .pairs-well-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            font-size: 11px;
+            color: #00d4ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pairs-well-item:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+
+        .pairs-well-item .mini-avatar {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        .pairs-well-item .mini-avatar.female { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+        .pairs-well-item .mini-avatar.male { background: linear-gradient(135deg, #4a90d9, #2c5aa0); }
+
+        /* Bundle Deals Section */
+        .bundle-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0, 212, 255, 0.05));
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        .bundle-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .bundle-header h2 {
+            font-size: 20px;
+            color: #d4af37;
+            margin: 0;
+        }
+
+        .bundle-badge {
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            color: #1a1a2e;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .bundle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .bundle-card {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .bundle-card:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .bundle-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .bundle-items {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .bundle-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .bundle-item .b-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .bundle-item .b-avatar.host { background: linear-gradient(135deg, #00d4ff, #7b2cbf); }
+        .bundle-item .b-avatar.persona { background: linear-gradient(135deg, #e94560, #7b2cbf); }
+
+        .bundle-pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .bundle-prices {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bundle-original {
+            color: rgba(255,255,255,0.4);
+            text-decoration: line-through;
+            font-size: 14px;
+        }
+
+        .bundle-sale {
+            color: #d4af37;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .bundle-save {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .bundle-btn {
+            background: linear-gradient(90deg, #d4af37, #f39c12);
+            color: #1a1a2e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bundle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .price {
+            color: #d4af37;
+            font-weight: 600;
+        }
+
+        .price-breakdown {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .action-btn {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .legend {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .legend h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .legend-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .legend-item.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        .legend-item.active .legend-dot {
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .clear-filter {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+            color: #e74c3c;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 10px;
+            display: none;
+        }
+
+        .clear-filter.show {
+            display: inline-block;
+        }
+
+        .clear-filter:hover {
+            background: rgba(231, 76, 60, 0.4);
+        }
+
+        .persona-card.hidden {
+            display: none;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.orientation { background: rgba(233, 69, 96, 0.5); }
+        .legend-dot.relationship { background: rgba(155, 89, 182, 0.5); }
+        .legend-dot.communication { background: rgba(52, 152, 219, 0.5); }
+        .legend-dot.physical { background: rgba(231, 76, 60, 0.5); }
+        .legend-dot.dynamic { background: rgba(241, 196, 15, 0.5); }
+        .legend-dot.lifestyle { background: rgba(46, 204, 113, 0.5); }
+        .legend-dot.experience { background: rgba(149, 165, 166, 0.5); }
+        /* Persona Preview Modal */
+        .persona-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .persona-modal-overlay.active {
+            display: flex;
+        }
+
+        .persona-modal {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid rgba(0, 212, 255, 0.5);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: #e94560;
+            transform: scale(1.2);
+        }
+
+        .modal-avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .modal-avatar-preview .host-indicator {
+            font-size: 10px;
+            padding: 3px 8px;
+            bottom: 0;
+            left: 0;
+        }
+
+        .modal-avatar-preview .frame-emoji {
+            font-size: 24px;
+            top: -5px;
+            right: -5px;
+        }
+
+        .modal-title {
+            text-align: center;
+            color: #00d4ff;
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .modal-bio {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-tags {
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-collect {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            color: white;
+        }
+
+        .modal-btn-collect:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .modal-btn-chat {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .modal-btn-chat:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .modal-btn-cancel {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .modal-btn-cancel:hover {
+            border-color: #e94560;
+            color: #e94560;
+        }
+
+        .modal-price {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-price .gems {
+            color: #d4af37;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .collection-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+
+
+    </style>
+    <script src="/auth.js"></script>
+    <script src="/js/nexus-core.js"></script>
+</head>
+<body>
+    <div class="page-header">
+        <h1>HOST Personas</h1>
+        <p>AI companions built with real NEXUS tags • Varied from vanilla to adventurous</p>
+    </div>
+
+    <div class="container">
+        <!-- Featured Bundles -->
+        <div class="bundle-section">
+            <div class="bundle-header">
+                <h2>Featured Bundles</h2>
+                <span class="bundle-badge">Save up to 40%</span>
+            </div>
+            <div class="bundle-grid">
+                <div class="bundle-card">
+                    <div class="bundle-title">Romantic Starter Pack</div>
+                    <div class="bundle-items">
+                        <span class="bundle-item"><span class="b-avatar host">M</span>Mono-Switch</span>
+                        <span class="bundle-item"><span class="b-avatar persona">L</span>Luna</span>
+                        <span class="bundle-item"><span class="b-avatar persona">K</span>Kai</span>
+                    </div>
+                    <div class="bundle-pricing">
+                        <div class="bundle-prices">
+                            <span class="bundle-original">180 gems</span>
+                            <span class="bundle-sale">120 gems</span>
+                            <span class="bundle-save">Save 33%</span>
+                        </div>
+                        <button class="bundle-btn" onclick="window.open('https://ko-fi.com/D1D8JS946/shop', '_blank')">Get Bundle</button>
+                    </div>
+                </div>
+                <div class="bundle-card">
+                    <div class="bundle-title">Adventure Seeker</div>
+                    <div class="bundle-items">
+                        <span class="bundle-item"><span class="b-avatar host">P</span>Poly-Dom</span>
+                        <span class="bundle-item"><span class="b-avatar persona">E</span>Ember</span>
+                        <span class="bundle-item"><span class="b-avatar persona">N</span>Nova</span>
+                    </div>
+                    <div class="bundle-pricing">
+                        <div class="bundle-prices">
+                            <span class="bundle-original">200 gems</span>
+                            <span class="bundle-sale">140 gems</span>
+                            <span class="bundle-save">Save 30%</span>
+                        </div>
+                        <button class="bundle-btn" onclick="window.open('https://ko-fi.com/D1D8JS946/shop', '_blank')">Get Bundle</button>
+                    </div>
+                </div>
+                <div class="bundle-card">
+                    <div class="bundle-title">Deep Connections</div>
+                    <div class="bundle-items">
+                        <span class="bundle-item"><span class="b-avatar host">E</span>ENM-Sub</span>
+                        <span class="bundle-item"><span class="b-avatar persona">S</span>Sage</span>
+                        <span class="bundle-item"><span class="b-avatar persona">M</span>Max</span>
+                    </div>
+                    <div class="bundle-pricing">
+                        <div class="bundle-prices">
+                            <span class="bundle-original">175 gems</span>
+                            <span class="bundle-sale">110 gems</span>
+                            <span class="bundle-save">Save 37%</span>
+                        </div>
+                        <button class="bundle-btn" onclick="window.open('https://ko-fi.com/D1D8JS946/shop', '_blank')">Get Bundle</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tag Legend (clickable filters) -->
+        <div class="legend">
+            <h3>Tag Categories <span class="clear-filter" id="clearFilter" onclick="clearTagFilter()">✕ Clear</span></h3>
+            <div class="legend-grid">
+                <div class="legend-item" data-category="orientation" onclick="filterByCategory('orientation')"><div class="legend-dot orientation"></div> Orientation</div>
+                <div class="legend-item" data-category="relationship" onclick="filterByCategory('relationship')"><div class="legend-dot relationship"></div> Relationship Style</div>
+                <div class="legend-item" data-category="communication" onclick="filterByCategory('communication')"><div class="legend-dot communication"></div> Communication</div>
+                <div class="legend-item" data-category="physical" onclick="filterByCategory('physical')"><div class="legend-dot physical"></div> Physical/Intimate</div>
+                <div class="legend-item" data-category="dynamic" onclick="filterByCategory('dynamic')"><div class="legend-dot dynamic"></div> Power Dynamic</div>
+                <div class="legend-item" data-category="lifestyle" onclick="filterByCategory('lifestyle')"><div class="legend-dot lifestyle"></div> Lifestyle</div>
+                <div class="legend-item" data-category="experience" onclick="filterByCategory('experience')"><div class="legend-dot experience"></div> Experience Level</div>
+            </div>
+        </div>
+
+        <!-- VANILLA / TRADITIONAL -->
+        <div class="category-section" data-section="vanilla">
+            <h2 class="category-title" onclick="toggleSection('vanilla')"><span class="collapse-icon">▼</span> Traditional / Vanilla</h2>
+            <div class="persona-grid" id="vanilla-grid"></div>
+        </div>
+
+        <!-- MODERATE / EXPLORING -->
+        <div class="category-section" data-section="moderate">
+            <h2 class="category-title" onclick="toggleSection('moderate')"><span class="collapse-icon">▼</span> Moderate / Exploring</h2>
+            <div class="persona-grid" id="moderate-grid"></div>
+        </div>
+
+        <!-- ADVENTUROUS / KINKY -->
+        <div class="category-section" data-section="adventurous">
+            <h2 class="category-title" onclick="toggleSection('adventurous')"><span class="collapse-icon">▼</span> Adventurous / Alternative</h2>
+            <div class="persona-grid" id="adventurous-grid"></div>
+        </div>
+
+        <!-- SPECIALIZED / NICHE -->
+        <div class="category-section" data-section="niche">
+            <h2 class="category-title" onclick="toggleSection('niche')"><span class="collapse-icon">▼</span> Specialized / Niche</h2>
+            <div class="persona-grid" id="niche-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Pricing formula
+        function calculatePrice(persona) {
+            let base = 10;
+            let genderMod = persona.gender === 'female' ? 2 : persona.gender === 'male' ? -1 : 0;
+            let tagCount = Object.values(persona.tags).flat().length;
+            let tagMod = tagCount; // +1 per tag
+            return base + genderMod + tagMod;
+        }
+
+        // HOST Personas with REAL NEXUS tags
+        const personas = {
+
+            // ========== VANILLA / TRADITIONAL ==========
+            vanilla: [
+                {
+                    name: "Str-Mono-Rom-Van",
+                    gender: "male",
+                    bio: "Blue-collar guy who values loyalty and straightforward communication. Looking for something real, no games.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Monogamous", "Long-term Focused"],
+                        communication: ["Direct Communication", "Phone Calls Preferred"],
+                        physical: ["Vanilla", "Traditional Intimacy"],
+                        lifestyle: ["Conservative Values", "Family-Oriented"],
+                        experience: ["Experienced"]
+                    }
+                },
+                {
+                    name: "Bi-Mono-LT-Cud",
+                    gender: "female",
+                    bio: "Traditional at heart but not boring. Believes in building something real before getting physical.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Monogamous", "Marriage-Minded"],
+                        communication: ["Deep Conversation Seeker", "Quality Time"],
+                        physical: ["Takes It Slow", "Emotional Connection First"],
+                        lifestyle: ["Traditional Values", "Homemaker Energy"],
+                        experience: ["Moderate Experience"]
+                    }
+                },
+                {
+                    name: "Str-Mar-Emo-Van",
+                    gender: "male",
+                    bio: "Dad vibes. Protective, stable, knows what he wants. Looking for someone who appreciates consistency.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Monogamous", "Provider Mentality"],
+                        communication: ["Actions Over Words", "Steady Presence"],
+                        physical: ["Vanilla", "Affectionate"],
+                        lifestyle: ["Stable Career", "Traditional Gender Roles"],
+                        experience: ["Very Experienced"]
+                    }
+                },
+                {
+                    name: "Pan-Mono-Play-Touch",
+                    gender: "female",
+                    bio: "Sweet, nurturing, and old-fashioned romantic. Loves handwritten notes and real dates.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Monogamous", "Romance-Focused"],
+                        communication: ["Text-Primary", "Thoughtful Responses"],
+                        physical: ["Slow Build", "Sensual Not Sexual"],
+                        lifestyle: ["Romantic", "Appreciates Chivalry"],
+                        experience: ["Somewhat Experienced"]
+                    }
+                }
+            ],
+
+            // ========== MODERATE / EXPLORING ==========
+            moderate: [
+                {
+                    name: "Bi-Open-Flirt-Swi",
+                    gender: "male",
+                    bio: "Open-minded straight guy. Comfortable with himself, curious about others. Not into labels but knows what he likes.",
+                    tags: {
+                        orientation: ["Straight", "Heteroflexible-Curious"],
+                        relationship: ["Monogamish", "Open to ENM Discussion"],
+                        communication: ["Text-Primary", "Async Comfortable"],
+                        physical: ["Vanilla-Plus", "Open to Experimentation"],
+                        dynamic: ["Vers Energy", "Switch-Curious"],
+                        experience: ["Exploring"]
+                    }
+                },
+                {
+                    name: "Str-Cas-Sens-HiLib",
+                    gender: "female",
+                    bio: "Bisexual and figuring out what that means for her. Loves deep conversations and doesn't rush.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["Flexible Structure", "Connection Over Labels"],
+                        communication: ["Deep Conversation Seeker", "Emotional Availability"],
+                        physical: ["Sensual", "Responsive to Chemistry"],
+                        lifestyle: ["Sex-Positive", "Body-Positive"],
+                        experience: ["Exploring"]
+                    }
+                },
+                {
+                    name: "Gay-Poly-Dir-Dom",
+                    gender: "male",
+                    bio: "Bisexual, been with both, comfortable in his skin. Looking for genuine connection regardless of gender.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["Monogamous", "Long-Distance Compatible"],
+                        communication: ["Text-Primary", "Meme Language"],
+                        physical: ["Versatile", "Enthusiastic Partner"],
+                        dynamic: ["Switch"],
+                        experience: ["Experienced"]
+                    }
+                },
+                {
+                    name: "Les-ENM-Int-Sub",
+                    gender: "female",
+                    bio: "Pansexual and proud. Attracted to energy more than gender. Open relationship veteran.",
+                    tags: {
+                        orientation: ["Pansexual"],
+                        relationship: ["Polyamorous", "Kitchen Table Poly"],
+                        communication: ["Radical Honesty", "Over-Communicator"],
+                        physical: ["High Libido", "Adventurous"],
+                        lifestyle: ["Sex-Positive Community", "Queer Spaces"],
+                        experience: ["Very Experienced"]
+                    }
+                },
+                {
+                    name: "Pan-Open-Play-Kink",
+                    gender: "nonbinary",
+                    bio: "Non-binary, uses they/them. Somewhere between everything and nothing. Sapiosexual to the core.",
+                    tags: {
+                        orientation: ["Queer", "Sapiosexual"],
+                        relationship: ["Relationship Anarchist"],
+                        communication: ["Intellectual Intimacy", "Async Preference"],
+                        physical: ["Demisexual Tendencies", "Connection Required"],
+                        lifestyle: ["Non-Traditional", "Creative Industry"],
+                        experience: ["Moderate Experience"]
+                    }
+                }
+            ],
+
+            // ========== ADVENTUROUS / KINKY ==========
+            adventurous: [
+                {
+                    name: "Bi-Poly-Dom-PE",
+                    gender: "male",
+                    bio: "Dominant energy, but earns it. Believes in consent, communication, and aftercare. Not a weekend Dom.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["D/s Dynamic Preferred", "Monogamous"],
+                        communication: ["Clear Expectations", "Check-Ins"],
+                        physical: ["BDSM", "Rope", "Impact Play"],
+                        dynamic: ["Dominant", "Daddy Dom"],
+                        experience: ["Expert"]
+                    }
+                },
+                {
+                    name: "Pan-ENM-Sub-Rope",
+                    gender: "female",
+                    bio: "Submissive but not a doormat. Knows her worth and chooses who to give her submission to.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["D/s Dynamic", "Collared Eventually"],
+                        communication: ["Service-Oriented", "Attentive"],
+                        physical: ["Submissive", "Pain Curious", "Praise Kink"],
+                        dynamic: ["Submissive", "Brat Tendencies"],
+                        experience: ["Experienced"]
+                    }
+                },
+                {
+                    name: "Qr-Open-Swi-Imp",
+                    gender: "nonbinary",
+                    bio: "Switch who can read the room. Sometimes leads, sometimes follows. Always authentic.",
+                    tags: {
+                        orientation: ["Pansexual"],
+                        relationship: ["ENM", "Multiple Partners"],
+                        communication: ["Kink-Aware Communication", "Negotiation Skills"],
+                        physical: ["Switch", "Sensation Play", "Bondage"],
+                        dynamic: ["Switch", "Service Top/Bottom"],
+                        experience: ["Very Experienced"]
+                    }
+                },
+                {
+                    name: "Bi-Poly-Pri-Sns",
+                    gender: "female",
+                    bio: "Domme who doesn't need to raise her voice. Control through presence. Findom adjacent.",
+                    tags: {
+                        orientation: ["Bisexual", "Female Preference"],
+                        relationship: ["Female-Led Relationship", "Power Exchange"],
+                        communication: ["Commanding", "Protocols"],
+                        physical: ["Domme", "CBT", "Orgasm Control"],
+                        dynamic: ["Dominant", "Goddess Energy"],
+                        experience: ["Expert"]
+                    }
+                },
+                {
+                    name: "Pan-ENM-Exh-Voy",
+                    gender: "male",
+                    bio: "Bisexual switch who's equally comfortable in leather or lace. No shame, all game.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["Polyamorous", "Triad Open"],
+                        communication: ["Sex-Positive", "Boundary Respectful"],
+                        physical: ["Switch", "Exhibitionist", "Group Friendly"],
+                        dynamic: ["Versatile", "Role Play"],
+                        experience: ["Very Experienced"]
+                    }
+                }
+            ],
+
+            // ========== SPECIALIZED / NICHE ==========
+            niche: [
+                {
+                    name: "Str-LT-Dom-RP",
+                    gender: "male",
+                    bio: "Academic type. Gets off on teaching and intellectual superiority. Sapiosexual Dom.",
+                    tags: {
+                        orientation: ["Straight"],
+                        relationship: ["Mentor/Student Dynamic"],
+                        communication: ["Intellectual Intimacy", "Socratic Method"],
+                        physical: ["Mind Fuck", "Delayed Gratification"],
+                        dynamic: ["Dominant", "Intellectual Control"],
+                        lifestyle: ["Academia", "Bibliophile"],
+                        experience: ["Expert"]
+                    }
+                },
+                {
+                    name: "Bi-Cas-Sub-Pet",
+                    gender: "female",
+                    bio: "Age player and little. Looking for a caring Daddy/Mommy dynamic. Soft and sweet.",
+                    tags: {
+                        orientation: ["Bisexual"],
+                        relationship: ["CG/l Dynamic", "Nurturing Partner"],
+                        communication: ["Little Space Safe", "Gentle Guidance"],
+                        physical: ["Age Play", "Stuffies", "Soft Dom"],
+                        dynamic: ["Little", "Middle"],
+                        experience: ["Experienced in Scene"]
+                    }
+                },
+                {
+                    name: "Pan-Poly-Dom-Deg",
+                    gender: "male",
+                    bio: "Leather Daddy. Old guard values. Respect is earned. Community builder.",
+                    tags: {
+                        orientation: ["Gay"],
+                        relationship: ["Leather Family", "Mentorship"],
+                        communication: ["Protocol", "Titles Matter"],
+                        physical: ["Leather", "Cigar", "Boot Worship"],
+                        dynamic: ["Daddy", "Old Guard"],
+                        lifestyle: ["Leather Community", "Event Regular"],
+                        experience: ["Master Level"]
+                    }
+                },
+                {
+                    name: "Qr-Open-Sub-Wor",
+                    gender: "female",
+                    bio: "Rope bunny and exhibitionist. Loves being art. Consent queen.",
+                    tags: {
+                        orientation: ["Pansexual"],
+                        relationship: ["Play Partners", "Scene Focused"],
+                        communication: ["Negotiation Expert", "Aftercare Priority"],
+                        physical: ["Shibari", "Suspension", "Photography"],
+                        dynamic: ["Bottom", "Exhibitionist"],
+                        lifestyle: ["Kink Events", "Art Model"],
+                        experience: ["Expert"]
+                    }
+                },
+                {
+                    name: "Demi-Mono-Swi-Svc",
+                    gender: "nonbinary",
+                    bio: "Asexual but not aromantic. Deep emotional connection without the physical pressure.",
+                    tags: {
+                        orientation: ["Asexual", "Panromantic"],
+                        relationship: ["Queerplatonic", "Deep Bonds"],
+                        communication: ["Intellectual Intimacy", "Emotional Depth"],
+                        physical: ["Cuddling", "Non-Sexual Touch", "Sensory"],
+                        lifestyle: ["Ace Community", "Creative"],
+                        experience: ["Self-Aware"]
+                    }
+                },
+                {
+                    name: "Ace-LT-Van-Emo",
+                    gender: "male",
+                    bio: "Pet player. Pup mode activated. Looking for a handler who gets it.",
+                    tags: {
+                        orientation: ["Gay", "Bi-Curious"],
+                        relationship: ["Handler/Pet Dynamic"],
+                        communication: ["Non-Verbal OK", "Pack Mentality"],
+                        physical: ["Pet Play", "Pup", "Gear"],
+                        dynamic: ["Pet", "Submissive"],
+                        lifestyle: ["Pup Community", "Mosh Regular"],
+                        experience: ["Experienced"]
+                    }
+                }
+            ]
+        };
+
+        // Compatible personas based on HOST dynamic tags
+        const dynamicToPersona = {
+            'Dominant': ['Luna', 'Sage'],
+            'Submissive': ['Max', 'Kai'],
+            'Switch': ['Ember', 'Nova'],
+            'Brat': ['Max', 'Zara'],
+            'Service': ['Luna', 'Kai'],
+            'Soft': ['Luna', 'Sage']
+        };
+
+        // Sample personas for suggestions
+        const suggestedPersonas = [
+            { name: 'Luna', archetype: 'Romantic', gender: 'female' },
+            { name: 'Ember', archetype: 'Playful', gender: 'female' },
+            { name: 'Max', archetype: 'Dominant', gender: 'male' },
+            { name: 'Sage', archetype: 'Intellectual', gender: 'neutral' },
+            { name: 'Nova', archetype: 'Adventurous', gender: 'female' },
+            { name: 'Kai', archetype: 'Caring', gender: 'male' },
+            { name: 'Zara', archetype: 'Creative', gender: 'female' }
+        ];
+
+        // Get compatible personas for a HOST
+        function getCompatiblePersonas(persona) {
+            const dynamicTags = persona.tags.dynamic || [];
+            let compatNames = new Set();
+
+            dynamicTags.forEach(tag => {
+                if (dynamicToPersona[tag]) {
+                    dynamicToPersona[tag].forEach(name => compatNames.add(name));
+                }
+            });
+
+            // Get matching persona objects (limit to 3)
+            return suggestedPersonas
+                .filter(p => compatNames.has(p.name))
+                .slice(0, 3);
+        }
+
+        // Render a persona card
+        function renderPersona(persona) {
+            const price = calculatePrice(persona);
+            const tagCount = Object.values(persona.tags).flat().length;
+
+            let tagsHtml = '';
+            for (const [category, tagList] of Object.entries(persona.tags)) {
+                tagsHtml += `
+                    <div class="tag-section">
+                        <div class="tag-category">${category.replace(/_/g, ' ')}</div>
+                        <div class="tags">
+                            ${tagList.map(t => `<span class="tag ${category}">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Get compatible personas for this HOST
+            const compatPersonas = getCompatiblePersonas(persona);
+            const pairsWellHtml = compatPersonas.length > 0 ? `
+                <div class="pairs-well">
+                    <div class="pairs-well-label">Pairs well with</div>
+                    <div class="pairs-well-items">
+                        ${compatPersonas.map(p => `
+                            <span class="pairs-well-item" title="${p.archetype}">
+                                <span class="mini-avatar ${p.gender}">${p.name[0]}</span>
+                                ${p.name}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : '';
+
+            return `
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar-container">
+                            <div class="persona-avatar ${persona.gender}">${persona.name[0]}</div>
+                            <span class="host-indicator">HOST</span>
+                            <span class="frame-emoji">${persona.gender === 'female' ? '💎' : persona.gender === 'male' ? '⚡' : '🌟'}</span>
+                        </div>
+                        <div>
+                            <div class="persona-name">${persona.name}</div>
+                            <div class="persona-meta">${persona.gender} • ${tagCount} tags</div>
+                        </div>
+                    </div>
+                    <div class="persona-bio">${persona.bio}</div>
+                    ${tagsHtml}
+                    ${pairsWellHtml}
+                    <div class="persona-footer">
+                        <div>
+                            <div class="price">${price} gems</div>
+                            <div class="price-breakdown">base 10 ${persona.gender === 'female' ? '+2' : persona.gender === 'male' ? '-1' : '+0'} gender +${tagCount} tags</div>
+                        </div>
+                        <button class="action-btn">Try</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render all sections
+        function renderAll() {
+            document.getElementById('vanilla-grid').innerHTML = personas.vanilla.map(renderPersona).join('');
+            document.getElementById('moderate-grid').innerHTML = personas.moderate.map(renderPersona).join('');
+            document.getElementById('adventurous-grid').innerHTML = personas.adventurous.map(renderPersona).join('');
+            document.getElementById('niche-grid').innerHTML = personas.niche.map(renderPersona).join('');
+        }
+
+        renderAll();
+
+        // ===== FILTERING & COLLAPSING =====
+
+        let activeFilter = null;
+
+        // Filter cards by tag category
+        function filterByCategory(category) {
+            const legendItems = document.querySelectorAll('.legend-item');
+            const clearBtn = document.getElementById('clearFilter');
+
+            // Toggle filter
+            if (activeFilter === category) {
+                clearTagFilter();
+                return;
+            }
+
+            activeFilter = category;
+
+            // Update legend UI
+            legendItems.forEach(item => {
+                item.classList.toggle('active', item.dataset.category === category);
+            });
+            clearBtn.classList.add('show');
+
+            // Filter cards - show only those with tags in this category
+            document.querySelectorAll('.persona-card').forEach(card => {
+                const hasCategory = card.querySelector(`.tag.${category}`);
+                card.classList.toggle('hidden', !hasCategory);
+            });
+
+            // Also highlight matching tags
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.style.opacity = tag.classList.contains(category) ? '1' : '0.3';
+            });
+        }
+
+        // Clear tag filter
+        function clearTagFilter() {
+            activeFilter = null;
+
+            document.querySelectorAll('.legend-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById('clearFilter').classList.remove('show');
+
+            document.querySelectorAll('.persona-card').forEach(card => {
+                card.classList.remove('hidden');
+            });
+
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.style.opacity = '1';
+            });
+        }
+
+        // Toggle section collapse
+        function toggleSection(sectionName) {
+            const section = document.querySelector(`[data-section="${sectionName}"]`);
+            if (section) {
+                section.classList.toggle('collapsed');
+            }
+        }
+    </script>
+    <script src="/js/navbar.js"></script>
+</body>
+</html>
