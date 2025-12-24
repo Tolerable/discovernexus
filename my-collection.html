@@ -360,6 +360,51 @@
             letter-spacing: 1px;
         }
 
+        .wizard-step {
+            padding: 20px;
+        }
+
+        .wizard-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .wizard-header h4 {
+            flex: 1;
+            font-size: 16px;
+            color: #00d4ff;
+            margin: 0;
+            text-transform: none;
+        }
+
+        .step-indicator {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .back-btn {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.6);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+
         .selection-grid {
             display: flex;
             gap: 10px;
@@ -612,16 +657,27 @@
                         <span class="expand-indicator">▼</span>
                     </div>
                     
-                    <!-- Selection Panel (popup overlay) -->
+                    <!-- Selection Panel (wizard-style popup) -->
                     <div class="selection-panel" id="selection-panel">
                         <button class="close-btn" onclick="toggleSelectionPanel(); event.stopPropagation();">&times;</button>
-                        <div class="selection-section">
-                            <h4>Select Persona</h4>
-                            <div class="selection-grid" id="persona-selection"></div>
-                        </div>
-                        <div class="selection-section">
-                            <h4>Select HOST</h4>
+
+                        <!-- Step 1: Select HOST -->
+                        <div class="wizard-step" id="step-host">
+                            <div class="wizard-header">
+                                <span class="step-indicator">1/2</span>
+                                <h4>Select HOST</h4>
+                            </div>
                             <div class="selection-grid" id="host-selection"></div>
+                        </div>
+
+                        <!-- Step 2: Select Persona -->
+                        <div class="wizard-step" id="step-persona" style="display:none;">
+                            <div class="wizard-header">
+                                <span class="step-indicator">2/2</span>
+                                <h4>Select Persona</h4>
+                                <button class="back-btn" onclick="wizardBack()">← Back</button>
+                            </div>
+                            <div class="selection-grid" id="persona-selection"></div>
                         </div>
                     </div>
                     <div class="chat-messages" id="chat-messages">
@@ -728,6 +784,11 @@
             const header = document.getElementById('chat-header');
 
             if (selectionPanelOpen) {
+                // Reset to step 1
+                wizardStep = 1;
+                document.getElementById('step-host').style.display = 'block';
+                document.getElementById('step-persona').style.display = 'none';
+
                 panel.classList.add('expanded');
                 header.classList.add('expanded');
                 renderSelectionPanel();
@@ -775,19 +836,38 @@
             }).join('');
         }
 
-        // Quick select from panel (auto-closes)
-        function quickSelectPersona(id) {
-            collection.activePersona = id;
-            renderPersonas();
-            updateChatState();
-            toggleSelectionPanel();
-        }
+        // Wizard state
+        let wizardStep = 1;
 
+        // Quick select HOST - move to step 2
         function quickSelectHost(id) {
             collection.activeHost = id;
             renderHosts();
             updateChatState();
+
+            // Move to persona selection
+            wizardStep = 2;
+            document.getElementById('step-host').style.display = 'none';
+            document.getElementById('step-persona').style.display = 'block';
+            renderSelectionPanel(); // Re-render to show persona options
+        }
+
+        // Quick select Persona - complete wizard
+        function quickSelectPersona(id) {
+            collection.activePersona = id;
+            renderPersonas();
+            updateChatState();
+
+            // Complete - close panel
+            wizardStep = 1;
             toggleSelectionPanel();
+        }
+
+        // Go back to HOST selection
+        function wizardBack() {
+            wizardStep = 1;
+            document.getElementById('step-host').style.display = 'block';
+            document.getElementById('step-persona').style.display = 'none';
         }
 
         // Slot limits
