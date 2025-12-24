@@ -1171,12 +1171,11 @@
         .floating-recs {
             position: fixed;
             right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 100px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            z-index: 1000;
+            z-index: 9999;
         }
 
         .floating-rec-bubble {
@@ -1287,17 +1286,6 @@
     </div>
 
     <div class="container">
-        <!-- Recommended for You -->
-        <div class="recommendations" id="recommendations-section">
-            <div class="rec-header">
-                <h3>Recommended for You</h3>
-                <span class="rec-badge">Based on your collection</span>
-            </div>
-            <div class="rec-grid" id="rec-grid">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-
         <!-- Tab Navigation -->
         <nav class="tab-nav">
             <button class="tab-btn active" onclick="showTab('chat')">
