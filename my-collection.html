@@ -1291,20 +1291,13 @@
     
         /* Big Round Recommendation Cards */
         .round-recs {
-            width: 180px;
-            flex-shrink: 0;
+            position: fixed;
+            right: 180px;
+            top: 120px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            padding-top: 0;
-        }
-        
-        .round-recs-sticky {
-            position: sticky;
-            top: 90px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            gap: 20px;
+            z-index: 100;
         }
 
         .round-rec {
@@ -1353,7 +1346,7 @@
         }
 
         @media (max-width: 1000px) {
-            .round-recs { display: none !important; }
+            .round-recs { display: none; }
         }
 
 
@@ -1363,6 +1356,7 @@
     <script src="/js/pollinations.js"></script>
 </head>
 <body>
+    <div class="round-recs" id="round-recs"></div>
     <div class="container">
         <!-- Tab Navigation -->
         <nav class="tab-nav">
