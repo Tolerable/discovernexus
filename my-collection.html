@@ -421,7 +421,7 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            min-width: 200px;
+            min-width: 140px;
         }
 
         .selection-item:hover {
@@ -731,7 +731,75 @@
         }
 
 
-        
+        /* Right Column - Recommendations */
+        .chat-aside-right {
+            width: 200px;
+            flex-shrink: 0;
+        }
+
+        .right-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 12px;
+            position: sticky;
+            top: 90px;
+        }
+
+        .right-panel-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .right-rec-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .right-rec-item:hover {
+            background: rgba(0,212,255,0.1);
+        }
+
+        .right-rec-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(0,212,255,0.3);
+            margin-bottom: 8px;
+        }
+
+        .right-rec-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .right-rec-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+
+        .right-rec-type {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 1100px) {
+            .chat-aside-right { display: none; }
+        }
 
         @media (max-width: 900px) {
             .chat-layout {
@@ -1288,89 +1356,6 @@
         }
 
 
-    
-        /* Big Round Recommendation Cards */
-        .round-recs {
-            width: 240px;
-            flex-shrink: 0;
-        }
-        
-        .round-recs-inner {
-            position: sticky;
-            top: 90px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .round-rec {
-            width: 140px;
-            height: 200px;
-            border-radius: 50%;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-            border: 3px solid rgba(0, 212, 255, 0.5);
-            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-        }
-
-        .round-rec:hover {
-            transform: scale(1.08);
-            border-color: #00d4ff;
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
-        }
-
-        .round-rec img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .round-rec-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            padding: 30px 10px 10px;
-            text-align: center;
-        }
-
-        .round-rec-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .round-rec-type {
-            font-size: 11px;
-            color: #00d4ff;
-        }
-
-        
-        .round-rec-bio {
-            font-size: 10px;
-            color: rgba(255,255,255,0.7);
-            margin: 5px 0;
-            line-height: 1.3;
-        }
-        .round-rec-tags {
-            font-size: 9px;
-            color: #00d4ff;
-        }
-        .round-rec-price {
-            font-size: 11px;
-            color: #d4af37;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        @media (max-width: 1000px) {
-            .round-recs { display: none; }
-        }
-
-
     </style>
     <script src="/auth.js"></script>
     <script src="/js/nexus-core.js"></script>
@@ -1498,12 +1483,12 @@
                 </div>
             </div>
             </div>
-            <!-- Right Column - Recommendations -->
-            <div class="round-recs">
-                <div class="round-recs-inner" id="round-recs"></div>
             </div>
-            </div>
-            
+            <!-- Right Column -->
+            <div class="chat-aside-right">
+                <div class="right-panel" id="right-recs">
+                    <div class="right-panel-title">Suggested</div>
+                </div>
             </div>
             </div>
         </div>
@@ -1786,17 +1771,18 @@
         function loadDemoCollection() {
             collection = {
                 hosts: [
-                    { id: 'str-mono-rom', name: 'Str-Mono-Rom-Van', bio: 'Blue-collar guy who values loyalty and straightforward communication.', tags: ['Straight', 'Monogamous', 'Traditional'], gemsRemaining: 50, gender: 'male', image: 'https://image.pollinations.ai/prompt/traditional%20male%20host%20frame%20digital?width=256&height=256&seed=host1', ownership: 'owned' },
-                    { id: 'bi-open-flirt', name: 'Bi-Open-Flirt-Swi', bio: 'Open-minded, comfortable with himself, curious about others.', tags: ['Bisexual', 'Open', 'Switch'], gemsRemaining: 30, gender: 'male', image: 'https://image.pollinations.ai/prompt/open%20minded%20male%20host%20frame?width=256&height=256&seed=host2', ownership: 'owned' },
-                    { id: 'pan-mono-play', name: 'Pan-Mono-Play-Touch', bio: 'Sweet, nurturing, old-fashioned romantic.', tags: ['Pansexual', 'Monogamous', 'Romantic'], gemsRemaining: 0, gender: 'female', image: 'https://image.pollinations.ai/prompt/romantic%20female%20host%20frame?width=256&height=256&seed=host3', ownership: 'locked' }
+                    { id: 'Bi-Poly-Dom-PE', name: 'Bi-Poly-Dom-PE', tags: ['Bisexual', 'Polyamorous', 'Dominant', 'PE'], gemsRemaining: 45, gender: 'male' },
+                    { id: 'Pan-ENM-Sub-Rope', name: 'Pan-ENM-Sub-Rope', tags: ['Pansexual', 'ENM', 'Submissive', 'Rope'], gemsRemaining: 25, gender: 'female' },
+                    { id: 'Straight-Mono-Switch', name: 'Straight-Mono-Switch', tags: ['Straight', 'Mono', 'Switch'], gemsRemaining: 15, gender: 'male' },
+                    { id: 'Queer-Solo-Brat', name: 'Queer-Solo-Brat', tags: ['Queer', 'Solo', 'Brat'], gemsRemaining: 0, gender: 'neutral' }
                 ],
                 personas: [
-                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic who loves late-night conversations.', tags: ['Long-Distance', 'Text-Primary', 'Intellectual'], gemsRemaining: 40, gender: 'female', image: 'https://image.pollinations.ai/prompt/luna%20dreamy%20romantic%20woman%20moonlight?width=256&height=256&seed=luna1', ownership: 'owned' },
-                    { id: 'ember', name: 'Ember', archetype: 'Romantic', bio: 'Passionate and uninhibited, loves in abundance.', tags: ['High Libido', 'Spontaneous', 'Polyamory'], gemsRemaining: 25, gender: 'female', image: 'https://image.pollinations.ai/prompt/ember%20passionate%20fiery%20woman?width=256&height=256&seed=ember1', ownership: 'rented', rentalMins: 120, rentalTotal: 180 },
-                    { id: 'velvet', name: 'Velvet', archetype: 'Romantic', bio: 'Sensual explorer of power dynamics and deep connection.', tags: ['Power Exchange', 'Sensual', 'Deep Connection'], gemsRemaining: 35, gender: 'female', image: 'https://image.pollinations.ai/prompt/velvet%20sensual%20romantic%20woman?width=256&height=256&seed=velvet1', ownership: 'owned' },
-                    { id: 'aurora', name: 'Aurora', archetype: 'Romantic', bio: 'Devoted and genuine, seeks one deep connection.', tags: ['Monogamy', 'Deep Talks', 'Authentic'], gemsRemaining: 0, gender: 'female', image: 'https://image.pollinations.ai/prompt/aurora%20devoted%20genuine%20woman?width=256&height=256&seed=aurora1', ownership: 'locked' }
+                    { id: 'luna', name: 'Luna', archetype: 'Romantic', bio: 'A dreamy romantic with deep emotional intelligence.', gemsRemaining: 30, gender: 'female', image: 'https://image.pollinations.ai/prompt/beautiful%20romantic%20woman%20fantasy%20portrait%20soft%20lighting?width=256&height=256&seed=luna1', ownership: 'owned' },
+                    { id: 'ember', name: 'Ember', archetype: 'Playful', bio: 'Fiery and fun-loving, always up for adventure.', gemsRemaining: 20, gender: 'female', image: 'https://image.pollinations.ai/prompt/playful%20fiery%20woman%20fantasy%20portrait%20vibrant%20colors?width=256&height=256&seed=ember2', ownership: 'rented', rentalMins: 165, rentalTotal: 180 },
+                    { id: 'max', name: 'Max', archetype: 'Dominant', bio: 'Confident and commanding, yet caring.', gemsRemaining: 35, gender: 'male', image: 'https://image.pollinations.ai/prompt/confident%20dominant%20man%20fantasy%20portrait%20dark%20aesthetic?width=256&height=256&seed=max3', ownership: 'owned' },
+                    { id: 'sage', name: 'Sage', archetype: 'Intellectual', bio: 'Thoughtful conversationalist who loves deep discussions.', gemsRemaining: 0, gender: 'neutral', image: 'https://image.pollinations.ai/prompt/wise%20intellectual%20androgynous%20person%20fantasy%20portrait?width=256&height=256&seed=sage4', ownership: 'locked' }
                 ],
-                activeHost: 'str-mono-rom',
+                activeHost: 'Bi-Poly-Dom-PE',
                 activePersona: 'luna',
                 hostSlots: 6,
                 personaSlots: 6,
@@ -1805,34 +1791,27 @@
             renderCollection();
         }
 
-        // Purchasable personas from persona_gallery
-        const galleryPersonas = [
-            { name: 'Velvet', archetype: 'Romantic', bio: 'Sensual explorer of power dynamics', tags: ['Power Exchange','Sensual'], price: 20, image: 'https://image.pollinations.ai/prompt/velvet%20sensual%20woman?width=256&height=256&seed=velvet1' },
-            { name: 'Moon', archetype: 'Romantic', bio: 'Mysterious nocturnal presence', tags: ['Mysterious','Nocturnal'], price: 20, image: 'https://image.pollinations.ai/prompt/moon%20mysterious%20woman?width=256&height=256&seed=moon1' },
-            { name: 'Sage', archetype: 'Intellectual', bio: 'Philosophical debates', tags: ['Philosophy','Debate'], price: 25, image: 'https://image.pollinations.ai/prompt/sage%20intellectual?width=256&height=256&seed=sage1' },
-            { name: 'Storm', archetype: 'Dominant', bio: 'Bold and in charge', tags: ['Bold','Authority'], price: 25, image: 'https://image.pollinations.ai/prompt/storm%20dominant?width=256&height=256&seed=storm1' },
-            { name: 'Willow', archetype: 'Submissive', bio: 'Graceful devotion', tags: ['Graceful','Devoted'], price: 20, image: 'https://image.pollinations.ai/prompt/willow%20gentle?width=256&height=256&seed=willow1' },
-            { name: 'Pixie', archetype: 'Playful', bio: 'Mischievous fun', tags: ['Mischievous','Fun'], price: 20, image: 'https://image.pollinations.ai/prompt/pixie%20playful?width=256&height=256&seed=pixie1' },
-            { name: 'Meadow', archetype: 'Nurturing', bio: 'Comfort and care', tags: ['Comfort','Gentle'], price: 20, image: 'https://image.pollinations.ai/prompt/meadow%20nurturing?width=256&height=256&seed=meadow1' }
-        ];
-
-        // Show purchasable personas
+        // Simple floating circles
         function updateFloatCircles() {
-            const el = document.getElementById('round-recs');
-            if (!el) return;
-            const owned = collection && collection.personas ? collection.personas.map(p => p.name) : [];
-            let recs = galleryPersonas.filter(p => !owned.includes(p.name)).slice(0, 3);
-            el.innerHTML = recs.map(p =>
-                '<div class="round-rec" onclick="window.location.href='persona_gallery.html'">' +
-                '<img src="' + p.image + '">' +
-                '<div class="round-rec-info">' +
-                '<div class="round-rec-name">' + p.name + '</div>' +
-                '<div class="round-rec-type">' + p.archetype + '</div>' +
-                '<div class="round-rec-bio">' + p.bio + '</div>' +
-                '<div class="round-rec-tags">' + p.tags.join(' · ') + '</div>' +
-                '<div class="round-rec-price">' + p.price + ' gems</div>' +
-                '</div></div>'
+            const el = document.getElementById('right-recs');
+            if (!el || !collection) return;
+
+            const active = collection.personas.find(p => p.id === collection.activePersona);
+            const compat = { 'Romantic': ['Nurturing','Playful'], 'Playful': ['Romantic','Dominant'], 'Dominant': ['Submissive','Intellectual'], 'Submissive': ['Dominant','Nurturing'], 'Intellectual': ['Romantic','Dominant'], 'Nurturing': ['Submissive','Romantic'] };
+            const types = active ? (compat[active.archetype] || []) : [];
+
+            let items = collection.personas.filter(p => p.id !== (active?.id) && types.includes(p.archetype)).slice(0,3);
+            if (items.length < 3) items = collection.personas.filter(p => p.ownership !== 'locked').slice(0,3);
+
+            let html = '<div class="right-panel-title">Suggested</div>';
+            html += items.map(p =>
+                '<div class="right-rec-item" onclick="selectPersona(\'' + p.id + '\')">' +
+                '<div class="right-rec-avatar"><img src="' + (p.image || '') + '" alt="' + p.name + '"></div>' +
+                '<div class="right-rec-name">' + p.name + '</div>' +
+                '<div class="right-rec-type">' + p.archetype + '</div>' +
+                '</div>'
             ).join('');
+            el.innerHTML = html;
         }
 
 
