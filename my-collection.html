@@ -1348,6 +1348,24 @@
             color: #00d4ff;
         }
 
+        
+        .round-rec-bio {
+            font-size: 10px;
+            color: rgba(255,255,255,0.7);
+            margin: 5px 0;
+            line-height: 1.3;
+        }
+        .round-rec-tags {
+            font-size: 9px;
+            color: #00d4ff;
+        }
+        .round-rec-price {
+            font-size: 11px;
+            color: #d4af37;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
         @media (max-width: 1000px) {
             .round-recs { display: none; }
         }
@@ -1788,24 +1806,32 @@
             renderCollection();
         }
 
-        // Simple floating circles
+        // Purchasable personas from persona_gallery
+        const galleryPersonas = [
+            { name: 'Velvet', archetype: 'Romantic', bio: 'Sensual explorer of power dynamics', tags: ['Power Exchange','Sensual'], price: 20, image: 'https://image.pollinations.ai/prompt/velvet%20sensual%20woman?width=256&height=256&seed=velvet1' },
+            { name: 'Moon', archetype: 'Romantic', bio: 'Mysterious nocturnal presence', tags: ['Mysterious','Nocturnal'], price: 20, image: 'https://image.pollinations.ai/prompt/moon%20mysterious%20woman?width=256&height=256&seed=moon1' },
+            { name: 'Sage', archetype: 'Intellectual', bio: 'Philosophical debates', tags: ['Philosophy','Debate'], price: 25, image: 'https://image.pollinations.ai/prompt/sage%20intellectual?width=256&height=256&seed=sage1' },
+            { name: 'Storm', archetype: 'Dominant', bio: 'Bold and in charge', tags: ['Bold','Authority'], price: 25, image: 'https://image.pollinations.ai/prompt/storm%20dominant?width=256&height=256&seed=storm1' },
+            { name: 'Willow', archetype: 'Submissive', bio: 'Graceful devotion', tags: ['Graceful','Devoted'], price: 20, image: 'https://image.pollinations.ai/prompt/willow%20gentle?width=256&height=256&seed=willow1' },
+            { name: 'Pixie', archetype: 'Playful', bio: 'Mischievous fun', tags: ['Mischievous','Fun'], price: 20, image: 'https://image.pollinations.ai/prompt/pixie%20playful?width=256&height=256&seed=pixie1' },
+            { name: 'Meadow', archetype: 'Nurturing', bio: 'Comfort and care', tags: ['Comfort','Gentle'], price: 20, image: 'https://image.pollinations.ai/prompt/meadow%20nurturing?width=256&height=256&seed=meadow1' }
+        ];
+
+        // Show purchasable personas
         function updateFloatCircles() {
             const el = document.getElementById('round-recs');
-            if (!el || !collection) return;
-
-            const active = collection.personas.find(p => p.id === collection.activePersona);
-            const compat = { 'Romantic': ['Nurturing','Playful'], 'Playful': ['Romantic','Dominant'], 'Dominant': ['Submissive','Intellectual'], 'Submissive': ['Dominant','Nurturing'], 'Intellectual': ['Romantic','Dominant'], 'Nurturing': ['Submissive','Romantic'] };
-            const types = active ? (compat[active.archetype] || []) : [];
-
-            let items = collection.personas.filter(p => p.id !== (active?.id) && types.includes(p.archetype)).slice(0,3);
-            if (items.length < 3) items = collection.personas.filter(p => p.ownership !== 'locked').slice(0,3);
-
-            el.innerHTML = items.map(p =>
-                '<div class="round-rec" onclick="selectPersona(\'' + p.id + '\')">' +
-                '<img src="' + (p.image || '') + '" alt="' + p.name + '">' +
+            if (!el) return;
+            const owned = collection && collection.personas ? collection.personas.map(p => p.name) : [];
+            let recs = galleryPersonas.filter(p => !owned.includes(p.name)).slice(0, 3);
+            el.innerHTML = recs.map(p =>
+                '<div class="round-rec" onclick="window.location.href='persona_gallery.html'">' +
+                '<img src="' + p.image + '">' +
                 '<div class="round-rec-info">' +
                 '<div class="round-rec-name">' + p.name + '</div>' +
                 '<div class="round-rec-type">' + p.archetype + '</div>' +
+                '<div class="round-rec-bio">' + p.bio + '</div>' +
+                '<div class="round-rec-tags">' + p.tags.join(' · ') + '</div>' +
+                '<div class="round-rec-price">' + p.price + ' gems</div>' +
                 '</div></div>'
             ).join('');
         }
