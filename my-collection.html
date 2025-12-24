@@ -1291,13 +1291,16 @@
     
         /* Big Round Recommendation Cards */
         .round-recs {
-            position: fixed;
-            right: 180px;
-            top: 120px;
+            width: 180px;
+            flex-shrink: 0;
+        }
+        
+        .round-recs-inner {
+            position: sticky;
+            top: 90px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            z-index: 100;
+            gap: 15px;
         }
 
         .round-rec {
@@ -1356,7 +1359,6 @@
     <script src="/js/pollinations.js"></script>
 </head>
 <body>
-    <div class="round-recs" id="round-recs"></div>
     <div class="container">
         <!-- Tab Navigation -->
         <nav class="tab-nav">
@@ -1477,6 +1479,10 @@
                     </div>
                 </div>
             </div>
+            </div>
+            <!-- Right Column - Recommendations -->
+            <div class="round-recs">
+                <div class="round-recs-inner" id="round-recs"></div>
             </div>
             </div>
             
