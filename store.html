@@ -1413,7 +1413,11 @@
         let userGems = 0;
         let inventory = [];
 
-        // Load wallet from server
+        // COLAB DATABASE - Source of truth for gems across all domains
+        const COLAB_SUPABASE_URL = 'https://yjyryzlbkbtdzguvqegt.supabase.co';
+        const COLAB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqeXJ5emxia2J0ZHpndXZxZWd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0NTMzOTYsImV4cCI6MjA3NTAyOTM5Nn0.Vujw3q9_iHj4x5enf42V-7g355Tnzp9zdsoNYVCV8TY';
+
+        // Load wallet from COLAB database (universe-wide gem source of truth)
         async function loadWallet() {
             // Wait for auth to initialize if available
             if (window.auth && window.auth.init) {
@@ -1427,35 +1431,59 @@
                 return;
             }
 
+            // Get user email from auth
+            let userEmail = null;
+            if (window.auth && window.auth.user) {
+                userEmail = window.auth.user.email;
+            } else {
+                // Try to get from local profile
+                try {
+                    const localResp = await fetch('/.netlify/functions/supabase-proxy', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ action: 'getProfile', payload: {} })
+                    });
+                    const localResult = await localResp.json();
+                    if (localResult.data && localResult.data.email) {
+                        userEmail = localResult.data.email;
+                    }
+                } catch (e) {
+                    console.log('Could not get user email:', e);
+                }
+            }
+
+            if (!userEmail) {
+                console.log('No user email - showing 0 gems');
+                updateGemDisplay();
+                return;
+            }
+
+            // Fetch gems from COLAB database (source of truth)
             try {
-                const response = await fetch('/.netlify/functions/supabase-proxy', {
-                    method: 'POST',
+                const gemUrl = `${COLAB_SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(userEmail)}&select=gems`;
+                const response = await fetch(gemUrl, {
+                    method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        action: 'getProfile',
-                        payload: {}
-                    })
+                        'apikey': COLAB_ANON_KEY,
+                        'Authorization': `Bearer ${COLAB_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
                 });
 
                 const result = await response.json();
+                console.log('Colab gem lookup result:', result);
 
-                // Check multiple possible locations for gems/tokens
-                if (result.data) {
-                    if (result.data.wallet) {
-                        userGems = result.data.wallet.tokens || result.data.wallet.credits || 0;
-                    }
-                    if (result.data.supporter_gems) {
-                        userGems = result.data.supporter_gems;
-                    }
-                    if (result.data.gems !== undefined) {
-                        userGems = result.data.gems;
-                    }
+                if (result && result.length > 0 && result[0].gems !== undefined) {
+                    userGems = result[0].gems || 0;
+                    console.log('Gems loaded from Colab:', userGems);
+                } else {
+                    console.log('No Colab profile found for', userEmail);
+                    userGems = 0;
                 }
 
-                console.log('Wallet loaded:', userGems, 'gems');
                 updateGemDisplay();
             } catch (err) {
                 console.log('Wallet load failed:', err);
