@@ -504,15 +504,43 @@
 
         /* Frame Tier Groups */
         .tryon-tier-row {
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
 
         .tryon-tier-header {
             font-size: 0.7rem;
             color: #777;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        /* Circular frame picker row */
+        .tryon-frame-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tryon-frame-pick {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .tryon-frame-pick:hover {
+            transform: scale(1.15);
+        }
+
+        .tryon-frame-pick.active {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        .tryon-frame-pick .frame-preview {
+            width: 36px;
+            height: 36px;
         }
 
         .tryon-options {
@@ -1276,125 +1304,87 @@
 
                 <!-- Right Column: All Selectors -->
                 <div class="tryon-selectors">
-                    <!-- Frame Selector -->
+                    <!-- Frame Selector - Using actual frame circle previews -->
                     <div class="tryon-selector-section">
                         <h3>Frames</h3>
 
                         <div class="tryon-tier-row">
                             <div class="tryon-tier-header">Basic - 12 gems</div>
-                            <div class="tryon-options">
-                                <button class="tryon-option active" data-frame="none" onclick="setFrame('none')">
-                                    <span class="option-icon">❌</span>
-                                    <span class="option-label">None</span>
-                                </button>
-                                <button class="tryon-option" data-frame="ruby" onclick="setFrame('ruby')">
-                                    <span class="option-icon">❤️</span>
-                                    <span class="option-label">Ruby</span>
-                                </button>
-                                <button class="tryon-option" data-frame="diamond" onclick="setFrame('diamond')">
-                                    <span class="option-icon">💎</span>
-                                    <span class="option-label">Diamond</span>
-                                </button>
-                                <button class="tryon-option" data-frame="emerald" onclick="setFrame('emerald')">
-                                    <span class="option-icon">💚</span>
-                                    <span class="option-label">Emerald</span>
-                                </button>
-                                <button class="tryon-option" data-frame="sapphire" onclick="setFrame('sapphire')">
-                                    <span class="option-icon">💙</span>
-                                    <span class="option-label">Sapphire</span>
-                                </button>
-                                <button class="tryon-option" data-frame="amethyst" onclick="setFrame('amethyst')">
-                                    <span class="option-icon">💜</span>
-                                    <span class="option-label">Amethyst</span>
-                                </button>
-                                <button class="tryon-option" data-frame="citrine" onclick="setFrame('citrine')">
-                                    <span class="option-icon">💛</span>
-                                    <span class="option-label">Citrine</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="tryon-tier-row">
-                            <div class="tryon-tier-header">Standard - 30 gems</div>
-                            <div class="tryon-options">
-                                <button class="tryon-option" data-frame="ruby-standard" onclick="setFrame('ruby-standard')">
-                                    <span class="option-icon">❤️</span>
-                                    <span class="option-label">Ruby+</span>
-                                </button>
-                                <button class="tryon-option" data-frame="diamond-standard" onclick="setFrame('diamond-standard')">
-                                    <span class="option-icon">💎</span>
-                                    <span class="option-label">Diamond+</span>
-                                </button>
-                                <button class="tryon-option" data-frame="emerald-standard" onclick="setFrame('emerald-standard')">
-                                    <span class="option-icon">💚</span>
-                                    <span class="option-label">Emerald+</span>
-                                </button>
+                            <div class="tryon-frame-row">
+                                <div class="tryon-frame-pick active" data-frame="none" onclick="setFrame('none')">
+                                    <div class="frame-preview" style="background: #333;">
+                                        <span style="color:#666;font-size:0.7rem;">None</span>
+                                    </div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="ruby" onclick="setFrame('ruby')">
+                                    <div class="frame-preview frame-ruby"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="diamond" onclick="setFrame('diamond')">
+                                    <div class="frame-preview frame-diamond"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="emerald" onclick="setFrame('emerald')">
+                                    <div class="frame-preview frame-emerald"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="sapphire" onclick="setFrame('sapphire')">
+                                    <div class="frame-preview frame-sapphire"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="amethyst" onclick="setFrame('amethyst')">
+                                    <div class="frame-preview frame-amethyst"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="citrine" onclick="setFrame('citrine')">
+                                    <div class="frame-preview frame-citrine"></div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="tryon-tier-row">
                             <div class="tryon-tier-header">Animated - 80 gems</div>
-                            <div class="tryon-options">
-                                <button class="tryon-option" data-frame="neon" onclick="setFrame('neon')">
-                                    <span class="option-icon">⚡</span>
-                                    <span class="option-label">Neon</span>
-                                </button>
-                                <button class="tryon-option" data-frame="plasma" onclick="setFrame('plasma')">
-                                    <span class="option-icon">🔥</span>
-                                    <span class="option-label">Plasma</span>
-                                </button>
-                                <button class="tryon-option" data-frame="electric" onclick="setFrame('electric')">
-                                    <span class="option-icon">⚡</span>
-                                    <span class="option-label">Electric</span>
-                                </button>
+                            <div class="tryon-frame-row">
+                                <div class="tryon-frame-pick" data-frame="neon" onclick="setFrame('neon')">
+                                    <div class="frame-preview frame-neon"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="plasma" onclick="setFrame('plasma')">
+                                    <div class="frame-preview frame-plasma"></div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="tryon-tier-row">
                             <div class="tryon-tier-header">Premium - 180 gems</div>
-                            <div class="tryon-options">
-                                <button class="tryon-option" data-frame="hologram" onclick="setFrame('hologram')">
-                                    <span class="option-icon">🌈</span>
-                                    <span class="option-label">Hologram</span>
-                                </button>
-                                <button class="tryon-option" data-frame="quantum" onclick="setFrame('quantum')">
-                                    <span class="option-icon">⚛️</span>
-                                    <span class="option-label">Quantum</span>
-                                </button>
-                                <button class="tryon-option" data-frame="cosmic" onclick="setFrame('cosmic')">
-                                    <span class="option-icon">🌌</span>
-                                    <span class="option-label">Cosmic</span>
-                                </button>
-                                <button class="tryon-option" data-frame="legendary" onclick="setFrame('legendary')">
-                                    <span class="option-icon">👑</span>
-                                    <span class="option-label">Legendary</span>
-                                </button>
+                            <div class="tryon-frame-row">
+                                <div class="tryon-frame-pick" data-frame="hologram" onclick="setFrame('hologram')">
+                                    <div class="frame-preview frame-hologram"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="quantum" onclick="setFrame('quantum')">
+                                    <div class="frame-preview frame-quantum"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="cosmic" onclick="setFrame('cosmic')">
+                                    <div class="frame-preview frame-cosmic"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="legendary" onclick="setFrame('legendary')">
+                                    <div class="frame-preview frame-legendary"></div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="tryon-tier-row">
                             <div class="tryon-tier-header">Mythic - 400 gems</div>
-                            <div class="tryon-options">
-                                <button class="tryon-option" data-frame="mythic" onclick="setFrame('mythic')">
-                                    <span class="option-icon">🌈</span>
-                                    <span class="option-label">Rainbow</span>
-                                </button>
-                                <button class="tryon-option" data-frame="mythic-inferno" onclick="setFrame('mythic-inferno')">
-                                    <span class="option-icon">🔶</span>
-                                    <span class="option-label">Inferno</span>
-                                </button>
-                                <button class="tryon-option" data-frame="mythic-frost" onclick="setFrame('mythic-frost')">
-                                    <span class="option-icon">❄️</span>
-                                    <span class="option-label">Frost</span>
-                                </button>
-                                <button class="tryon-option" data-frame="mythic-shadow" onclick="setFrame('mythic-shadow')">
-                                    <span class="option-icon">🖤</span>
-                                    <span class="option-label">Shadow</span>
-                                </button>
-                                <button class="tryon-option" data-frame="mythic-blood" onclick="setFrame('mythic-blood')">
-                                    <span class="option-icon">🩸</span>
-                                    <span class="option-label">Blood</span>
-                                </button>
+                            <div class="tryon-frame-row">
+                                <div class="tryon-frame-pick" data-frame="mythic" onclick="setFrame('mythic')">
+                                    <div class="frame-preview frame-mythic"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="mythic-inferno" onclick="setFrame('mythic-inferno')">
+                                    <div class="frame-preview frame-mythic-inferno"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="mythic-frost" onclick="setFrame('mythic-frost')">
+                                    <div class="frame-preview frame-mythic-frost"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="mythic-shadow" onclick="setFrame('mythic-shadow')">
+                                    <div class="frame-preview frame-mythic-shadow"></div>
+                                </div>
+                                <div class="tryon-frame-pick" data-frame="mythic-blood" onclick="setFrame('mythic-blood')">
+                                    <div class="frame-preview frame-mythic-blood"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2482,9 +2472,9 @@
         function setFrame(frame) {
             currentFrame = frame;
 
-            // Update button states
-            document.querySelectorAll('#frame-options .tryon-option').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.frame === frame);
+            // Update picker states (circular frame previews)
+            document.querySelectorAll('.tryon-frame-pick').forEach(pick => {
+                pick.classList.toggle('active', pick.dataset.frame === frame);
             });
 
             // Apply frame to avatar
@@ -2543,22 +2533,34 @@
             updateSummary();
         }
 
+        // Frame names for display
+        const FRAME_NAMES = {
+            'none': '', 'ruby': 'Ruby', 'diamond': 'Diamond', 'emerald': 'Emerald',
+            'sapphire': 'Sapphire', 'amethyst': 'Amethyst', 'citrine': 'Citrine',
+            'neon': 'Neon', 'plasma': 'Plasma', 'hologram': 'Hologram',
+            'quantum': 'Quantum', 'cosmic': 'Cosmic', 'legendary': 'Legendary',
+            'mythic': 'Mythic Rainbow', 'mythic-inferno': 'Mythic Inferno',
+            'mythic-frost': 'Mythic Frost', 'mythic-shadow': 'Mythic Shadow',
+            'mythic-blood': 'Mythic Blood'
+        };
+
         function updateComboLabel() {
             const labelEl = document.getElementById('tryon-combo-name');
             let parts = [];
 
             if (currentFrame !== 'none') {
-                parts.push(document.querySelector(`[data-frame="${currentFrame}"] .option-label`).textContent + ' Frame');
+                parts.push(FRAME_NAMES[currentFrame] + ' Frame');
             }
             if (currentTitle !== 'none') {
-                parts.push(document.querySelector(`[data-title="${currentTitle}"] .option-label`).textContent + ' Title');
+                const titleBtn = document.querySelector(`[data-title="${currentTitle}"] .option-label`);
+                parts.push((titleBtn ? titleBtn.textContent : currentTitle) + ' Title');
             }
             if (currentBadge !== 'none') {
                 parts.push(BADGE_EMOJIS[currentBadge] + ' Badge');
             }
 
             if (parts.length === 0) {
-                labelEl.textContent = 'Select cosmetics below';
+                labelEl.textContent = 'Select cosmetics';
             } else {
                 labelEl.textContent = parts.join(' + ');
             }
