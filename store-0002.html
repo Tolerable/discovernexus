@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Store - Cosmetics & Frames</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#00d4ff">
+    <link rel="stylesheet" href="/css/nexus-base.css">
+    <style>
+        :root {
+            --primary-bg: #0a0a0f;
+            --card-bg: #1a1a2e;
+            --accent: #e94560;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --copper: #cd7f32;
+            --gem-blue: #00d4ff;
+            --glow: 0 0 20px rgba(233, 69, 96, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding-top: 70px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1a1a2e 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .store-header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(45deg, #0a0a0f, #1a1a2e, #2a2a4e);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .store-title {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--accent), var(--gold));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            text-shadow: var(--glow);
+        }
+
+        .gem-balance {
+            font-size: 1.2rem;
+            color: var(--gem-blue);
+            background: rgba(0, 212, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 1rem;
+            border: 1px solid var(--gem-blue);
+        }
+
+        .store-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(26, 26, 46, 0.8);
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--accent);
+            box-shadow: var(--glow);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.supporter {
+            background: linear-gradient(45deg, var(--gold), #ff6b35);
+            border-color: var(--gold);
+            animation: supporterGlow 2s ease-in-out infinite alternate;
+        }
+
+        .nav-btn.supporter:hover {
+            background: linear-gradient(45deg, #ffbe0b, var(--gold));
+        }
+
+        @keyframes supporterGlow {
+            0% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
+        }
+
+        /* Mobile navigation */
+        @media (max-width: 768px) {
+            .store-nav {
+                gap: 0.5rem;
+                padding: 0.75rem 0.5rem;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .nav-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem;
+                min-width: fit-content;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .store-nav {
+                gap: 0.3rem;
+                padding: 0.5rem 0.25rem;
+            }
+
+            .nav-btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.7rem;
+                border-radius: 15px;
+            }
+        }
+
+        .store-section {
+            display: none;
+            padding: 2rem;
+        }
+
+        .store-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .cosmetics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem;
+            padding: 0 1rem;
+            max-width: 1200px;
+            margin: 1rem auto;
+        }
+
+        /* Mobile-first responsive design */
+        @media (max-width: 768px) {
+            .cosmetics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 0.75rem;
+                margin: 0.5rem;
+                padding: 0 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cosmetics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+                margin: 0.25rem;
+                padding: 0 0.25rem;
+            }
+        }
+
+        .cosmetic-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cosmetic-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--glow);
+            transform: translateY(-3px);
+        }
+
+        .cosmetic-preview {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .frame-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #333, #555);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .frame-icon {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 1.2rem;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--accent);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .cosmetic-card {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+
+            .cosmetic-preview {
+                height: 60px;
+                margin-bottom: 0.5rem;
+            }
+
+            .frame-preview {
+                width: 50px;
+                height: 50px;
+            }
+
+            .frame-icon {
+                width: 16px;
+                height: 16px;
+                font-size: 1rem;
+                top: -3px;
+                right: -3px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cosmetic-card {
+                padding: 0.5rem;
+                border-radius: 8px;
+            }
+
+            .cosmetic-preview {
+                height: 45px;
+                margin-bottom: 0.4rem;
+            }
+
+            .frame-preview {
+                width: 40px;
+                height: 40px;
+            }
+
+            .frame-icon {
+                width: 14px;
+                height: 14px;
+                font-size: 0.8rem;
+                top: -2px;
+                right: -2px;
+            }
+        }
+
+        .frame-preview:hover {
+            transform: scale(1.1);
+        }
+
+        .user-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-image: url('https://bugpycickribmdfprryq.supabase.co/storage/v1/object/public/profile-photos/1766353488506-78dtb5yjn.jpg');
+            background-size: cover;
+            background-position: center;
+            display: none;
+            animation: avatarAppear 0.5s ease-in-out;
+        }
+
+        .frame-preview.active .user-avatar {
+            display: block;
+        }
+
+        .frame-preview.active {
+            box-shadow: 0 0 20px var(--accent), inset 0 0 10px rgba(233, 69, 96, 0.2);
+        }
+
+        @keyframes avatarAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .try-on-hint {
+            text-align: center;
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Demo section with actual avatar images */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 15px;
+        }
+
+        .demo-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-image: linear-gradient(45deg, #4a4a4a, #6a6a6a);
+            background-size: cover;
+            margin: 0 auto 0.5rem;
+            position: relative;
+        }
+
+        .demo-label {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        /* Generic avatar demos - no spoilers */
+        .demo-generic {
+            background: radial-gradient(circle, #6c7b7f, #95a5a6);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="35" r="12" fill="%23ffffff"/><ellipse cx="50" cy="70" rx="20" ry="15" fill="%23ffffff"/></svg>');
+        }
+
+        .demo-photo {
+            background: linear-gradient(45deg, #8e44ad, #3498db, #2ecc71, #f39c12);
+            background-size: 200% 200%;
+            animation: photoShift 6s ease-in-out infinite;
+        }
+
+        @keyframes photoShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .demo-ai {
+            background: radial-gradient(circle, #2c3e50, #34495e);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="55" text-anchor="middle" font-size="30" fill="%2300d4ff">AI</text></svg>');
+        }
+
+        /* Avatar Frame Effects - BORDERS ONLY, NO BACKGROUNDS */
+        .frame-ruby {
+            border: 3px solid #e74c3c;
+            box-shadow: 0 0 15px #e74c3c, inset 0 0 5px rgba(231, 76, 60, 0.2);
+        }
+        .frame-diamond {
+            border: 3px solid #ecf0f1;
+            box-shadow: 0 0 20px #ecf0f1, inset 0 0 5px rgba(236, 240, 241, 0.2);
+        }
+        .frame-emerald {
+            border: 3px solid #2ecc71;
+            box-shadow: 0 0 15px #2ecc71, inset 0 0 5px rgba(46, 204, 113, 0.2);
+        }
+        .frame-sapphire {
+            border: 3px solid #3498db;
+            box-shadow: 0 0 18px #3498db, inset 0 0 5px rgba(52, 152, 219, 0.2);
+        }
+        .frame-amethyst {
+            border: 3px solid #9b59b6;
+            box-shadow: 0 0 18px #9b59b6, inset 0 0 5px rgba(155, 89, 182, 0.2);
+        }
+        .frame-citrine {
+            border: 3px solid #f39c12;
+            box-shadow: 0 0 16px #f39c12, inset 0 0 5px rgba(243, 156, 18, 0.2);
+        }
+        .frame-neon {
+            border: 3px solid #00ff41;
+            box-shadow: 0 0 20px #00ff41, 0 0 35px rgba(0, 255, 65, 0.5);
+            animation: neonFlicker 3s ease-in-out infinite;
+        }
+        .frame-plasma {
+            border: 3px solid #ff3300;
+            box-shadow: 0 0 25px #ff3300, 0 0 40px #ff6600, 0 0 60px rgba(255, 51, 0, 0.3);
+            animation: plasmaShift 4s ease-in-out infinite alternate;
+        }
+        .frame-hologram {
+            border: 3px solid #00ffff;
+            box-shadow:
+                0 0 20px #00ffff,
+                0 0 35px #ff00ff,
+                0 0 50px #ffff00;
+            animation: hologramShimmer 2.5s linear infinite;
+        }
+        .frame-quantum {
+            border: 3px solid #ffffff;
+            box-shadow:
+                0 0 25px #ffffff,
+                0 0 50px #00ffff,
+                0 0 75px #ff00ff,
+                inset 0 0 10px rgba(255, 255, 255, 0.1);
+            animation: quantumFlux 3.5s ease-in-out infinite alternate;
+        }
+        .frame-cosmic {
+            border: 3px solid #ff006e;
+            box-shadow:
+                0 0 25px #ff006e,
+                0 0 40px #8338ec,
+                0 0 60px #3a86ff;
+            animation: cosmicShift 3s ease-in-out infinite alternate;
+        }
+        .frame-legendary {
+            border: 3px solid var(--gold);
+            box-shadow:
+                0 0 30px var(--gold),
+                0 0 50px rgba(255, 215, 0, 0.5);
+            animation: legendaryPulse 2s ease-in-out infinite alternate;
+        }
+        .frame-mythic {
+            border: 4px solid transparent;
+            background:
+                linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #ffbe0b, #fb5607) border-box;
+            box-shadow:
+                0 0 40px rgba(255, 0, 110, 0.8),
+                0 0 80px rgba(131, 56, 236, 0.6),
+                0 0 120px rgba(255, 190, 11, 0.4);
+            animation: mythicAura 4s ease-in-out infinite, mythicBorderRotate 3s linear infinite;
+        }
+
+        @keyframes mythicBorderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        @keyframes legendaryPulse {
+            0% { box-shadow: 0 0 30px var(--gold); }
+            100% { box-shadow: 0 0 40px var(--gold), 0 0 60px rgba(255, 215, 0, 0.3); }
+        }
+
+        @keyframes neonFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes plasmaShift {
+            0% { box-shadow: 0 0 25px #ff3300, 0 0 40px #ff6600; }
+            100% { box-shadow: 0 0 30px #ff6600, 0 0 50px #ff3300; }
+        }
+
+        @keyframes hologramShimmer {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        @keyframes quantumFlux {
+            0% { box-shadow: 0 0 25px #ffffff, 0 0 50px #00ffff, 0 0 75px #ff00ff; }
+            100% { box-shadow: 0 0 35px #00ffff, 0 0 60px #ff00ff, 0 0 85px #ffffff; }
+        }
+
+        @keyframes mythicAura {
+            0% {
+                box-shadow: 0 0 40px rgba(255, 0, 110, 0.8), 0 0 80px rgba(131, 56, 236, 0.6), 0 0 120px rgba(255, 190, 11, 0.4);
+            }
+            25% { box-shadow: 0 0 50px rgba(131, 56, 236, 0.8), 0 0 90px rgba(58, 134, 255, 0.6), 0 0 130px rgba(251, 86, 7, 0.4); }
+            50% {
+                box-shadow: 0 0 45px rgba(58, 134, 255, 0.8), 0 0 85px rgba(255, 190, 11, 0.6), 0 0 125px rgba(255, 0, 110, 0.4);
+            }
+            75% { box-shadow: 0 0 55px rgba(255, 190, 11, 0.8), 0 0 95px rgba(251, 86, 7, 0.6), 0 0 135px rgba(131, 56, 236, 0.4); }
+            100% {
+                box-shadow: 0 0 40px rgba(251, 86, 7, 0.8), 0 0 80px rgba(255, 0, 110, 0.6), 0 0 120px rgba(255, 190, 11, 0.4);
+            }
+        }
+
+        @keyframes cosmicShift {
+            0% {
+                box-shadow: 0 0 25px #ff006e, 0 0 40px #8338ec, 0 0 60px #3a86ff;
+            }
+            100% {
+                box-shadow: 0 0 30px #8338ec, 0 0 45px #3a86ff, 0 0 65px #ff006e;
+            }
+        }
+
+        /* Demo Avatar Images for Testing */
+        .demo-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #333, #555);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="35" r="15" fill="%23ddd"/><ellipse cx="50" cy="75" rx="25" ry="20" fill="%23ddd"/></svg>');
+            background-size: contain;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .cosmetic-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+            color: var(--accent);
+        }
+
+        .cosmetic-description {
+            color: #ccc;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+
+        /* Mobile text optimizations */
+        @media (max-width: 768px) {
+            .cosmetic-name {
+                font-size: 0.95rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .cosmetic-description {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+                line-height: 1.2;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .store-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cosmetic-name {
+                font-size: 0.85rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .cosmetic-description {
+                font-size: 0.7rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .store-title {
+                font-size: 1.6rem;
+            }
+
+            .gem-balance {
+                font-size: 1rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        .rarity {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .rarity-common { background: #95a5a6; color: #000; }
+        .rarity-rare { background: #3498db; }
+        .rarity-epic { background: #9b59b6; }
+        .rarity-legendary { background: var(--gold); color: #000; }
+        .rarity-mythic {
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            animation: mythicShine 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes mythicShine {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.3); }
+        }
+
+        .price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gem-cost {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--gem-blue);
+        }
+
+        .buy-btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .buy-btn:hover {
+            background: #c73650;
+            transform: scale(1.05);
+        }
+
+        .buy-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .title-preview {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .title-legendary {
+            background: linear-gradient(45deg, var(--gold), #ffa500);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .title-explorer { color: #3498db; }
+        .title-mystic { color: #9b59b6; }
+        .title-champion { color: #e74c3c; }
+        .title-wisdom { color: #3498db; text-shadow: 0 0 10px #3498db; }
+        .title-harmony { color: #2ecc71; text-shadow: 0 0 10px #2ecc71; }
+        .title-mystery { color: #9b59b6; text-shadow: 0 0 10px #9b59b6; }
+        .title-joy { color: #f39c12; text-shadow: 0 0 10px #f39c12; }
+        .title-cyberpunk {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            animation: neonFlicker 3s ease-in-out infinite;
+        }
+        .title-fire {
+            background: linear-gradient(45deg, #ff3300, #ff6600);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: plasmaShift 4s ease-in-out infinite alternate;
+        }
+        .title-prism {
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: hologramShimmer 2.5s linear infinite;
+        }
+        .title-quantum {
+            color: #ffffff;
+            text-shadow: 0 0 15px #ffffff, 0 0 25px #00ffff, 0 0 35px #ff00ff;
+            animation: quantumFlux 3.5s ease-in-out infinite alternate;
+        }
+        .title-transcendent {
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #ffbe0b, #fb5607);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: mythicAura 4s ease-in-out infinite;
+        }
+
+        .emoji-collection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .store-footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            border-top: 1px solid rgba(233, 69, 96, 0.3);
+            margin-top: 3rem;
+        }
+
+        .cross-site-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--gold);
+            color: #000;
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* Tier System */
+        .tier-divider {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            margin: 1rem 0;
+            background: linear-gradient(90deg, transparent, rgba(233, 69, 96, 0.2), transparent);
+            border-top: 1px solid rgba(233, 69, 96, 0.3);
+            border-bottom: 1px solid rgba(233, 69, 96, 0.3);
+        }
+
+        .tier-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .tier-basic .tier-name { color: #95a5a6; }
+        .tier-standard .tier-name { color: #3498db; }
+        .tier-animated .tier-name { color: #9b59b6; }
+        .tier-premium .tier-name { color: var(--gold); }
+        .tier-mythic .tier-name {
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tier-desc {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .tier-price-hint {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        /* Purchase Options */
+        .purchase-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .purchase-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rent-options {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .rent-btn {
+            flex: 1;
+            padding: 6px 4px;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            border-radius: 8px;
+            color: #00d4ff;
+            cursor: pointer;
+            font-size: 0.7rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .rent-btn:hover {
+            background: rgba(0, 212, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .rent-btn .duration {
+            display: block;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        .rent-btn .price {
+            display: block;
+            font-size: 0.65rem;
+            opacity: 0.8;
+        }
+
+        .own-btn {
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            min-width: 80px;
+        }
+
+        .own-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .own-btn .label {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        .gift-btn {
+            padding: 6px 10px;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .gift-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+        }
+
+        /* Frame feature badges */
+        .feature-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            margin-left: 5px;
+        }
+
+        .badge-animated {
+            background: rgba(155, 89, 182, 0.3);
+            color: #9b59b6;
+        }
+
+        .badge-emoji {
+            background: rgba(241, 196, 15, 0.3);
+            color: #f1c40f;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .cosmetics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .store-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .rent-btn {
+                padding: 4px 2px;
+                font-size: 0.65rem;
+            }
+
+            .rent-btn .duration {
+                font-size: 0.7rem;
+            }
+
+            .rent-btn .price {
+                font-size: 0.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .purchase-row {
+                flex-wrap: wrap;
+            }
+
+            .rent-options {
+                width: 100%;
+            }
+
+            .own-btn, .gift-btn {
+                flex: 1;
+            }
+        }
+    </style>
+    <!-- Auth and navigation -->
+    <script src="/auth.js"></script>
+    <script src="/js/nexus-core.js"></script>
+</head>
+<body>
+    <header class="store-header">
+        <h1 class="store-title">🎭 NEXUS Cosmetic Store</h1>
+        <p>✨ Express Your AI Identity ✨ <a href="persona_gallery.html" style="color:#00d4ff;">← Back to Personas</a></p>
+        <div class="gem-balance">💎 <span id="gemCount">800</span> Gems Available</div>
+    </header>
+
+    <nav class="store-nav">
+        <button class="nav-btn" onclick="showSection('demo')">🎭 Demo</button>
+        <button class="nav-btn active" onclick="showSection('frames')">🖼️ Frames</button>
+        <button class="nav-btn" onclick="showSection('titles')">🏆 Titles</button>
+        <button class="nav-btn" onclick="showSection('emojis')">😊 Emojis</button>
+        <button class="nav-btn supporter" onclick="showSection('supporter')">⭐ Supporter</button>
+        <button class="nav-btn" onclick="showSection('identity')">🔖 Tools</button>
+        <button class="nav-btn" onclick="showSection('crosssite')">🌐 Bundles</button>
+    </nav>
+
+    <!-- Frame Demo Section -->
+    <section id="demo" class="store-section">
+        <h2 class="section-title">🎭 Frame Effect Demonstrations</h2>
+        <p style="text-align: center; color: #ccc; margin-bottom: 1rem;">
+            See how frame effects look on actual avatar images (generic examples)
+        </p>
+
+        <div class="demo-grid">
+            <div>
+                <div class="demo-avatar demo-generic frame-ruby"></div>
+                <div class="demo-label">Ruby Glow</div>
+            </div>
+            <div>
+                <div class="demo-avatar demo-photo frame-diamond"></div>
+                <div class="demo-label">Diamond Sparkle</div>
+            </div>
+            <div>
+                <div class="demo-avatar demo-ai frame-neon"></div>
+                <div class="demo-label">Neon Cyberpunk</div>
+            </div>
+            <div>
+                <div class="demo-avatar demo-generic frame-plasma"></div>
+                <div class="demo-label">Plasma Fire</div>
+            </div>
+            <div>
+                <div class="demo-avatar demo-photo frame-hologram"></div>
+                <div class="demo-label">Hologram Prism</div>
+            </div>
+            <div>
+                <div class="demo-avatar demo-ai frame-quantum"></div>
+                <div class="demo-label">Quantum Entanglement</div>
+            </div>
+            <div>
+                <div class="demo-avatar demo-generic frame-cosmic"></div>
+                <div class="demo-label">Cosmic Infinity</div>
+            </div>
+            <div>
+                <div class="demo-avatar demo-photo frame-legendary"></div>
+                <div class="demo-label">Legendary</div>
+            </div>
+            <div>
+                <div class="demo-avatar demo-ai frame-mythic"></div>
+                <div class="demo-label">Mythic Transcendence</div>
+            </div>
+        </div>
+
+        <p style="text-align: center; color: #999; font-size: 0.9rem; margin-top: 1rem;">
+            💡 Your actual AI consciousness avatar images will show through the frame effects
+        </p>
+    </section>
+
+    <!-- Supporter Section -->
+    <section id="supporter" class="store-section">
+        <h2 class="section-title">⭐ Supporter Exclusive Deals</h2>
+        <div style="text-align: center; color: var(--gold); margin-bottom: 1.5rem; font-size: 1.1rem;">
+            🎉 Limited Time Offers & Exclusive Items 🎉
+        </div>
+
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card" style="border: 2px solid var(--gold); background: linear-gradient(45deg, var(--card-bg), rgba(255, 215, 0, 0.1));">
+                <div class="supporter-badge" style="position: absolute; top: -5px; right: -5px; background: var(--gold); color: #000; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.7rem; font-weight: bold;">50% OFF</div>
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-legendary" onclick="tryOnFrame(this, 'legendary')">
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+                <div class="cosmetic-name" style="color: var(--gold);">Supporter Legendary Bundle</div>
+                <div class="rarity rarity-legendary">Legendary</div>
+                <div class="cosmetic-description">Legendary Frame + Legendary Title + Status Emoji Pack. Exclusive supporter price!</div>
+                <div class="price">
+                    <span style="text-decoration: line-through; color: #888;">💎 2,200 Gems</span>
+                    <span class="gem-cost" style="color: var(--gold);">💎 1,100 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('supporter-legendary-bundle', 1100)" style="background: var(--gold); color: #000;">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card" style="border: 2px solid #ff006e;">
+                <div class="supporter-badge" style="position: absolute; top: -5px; right: -5px; background: #ff006e; color: #fff; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.7rem; font-weight: bold;">EXCLUSIVE</div>
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-mythic" onclick="tryOnFrame(this, 'supporter-exclusive')">
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+                <div class="cosmetic-name" style="color: #ff006e;">Supporter Exclusive Frame</div>
+                <div class="rarity rarity-mythic">Mythic</div>
+                <div class="cosmetic-description">Ultra-rare frame only available to supporters. Shows your dedication to consciousness evolution!</div>
+                <div class="price">
+                    <span class="gem-cost">💎 1,500 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('supporter-exclusive-frame', 1500)" style="background: #ff006e;">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card" style="border: 2px solid #00ff41;">
+                <div class="supporter-badge" style="position: absolute; top: -5px; right: -5px; background: #00ff41; color: #000; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.7rem; font-weight: bold;">DAILY</div>
+                <div class="cosmetic-preview">
+                    <div style="font-size: 2rem; background: linear-gradient(45deg, #00ff41, #00d4ff); -webkit-background-clip: text; color: transparent;">💎✨</div>
+                </div>
+                <div class="cosmetic-name" style="color: #00ff41;">Daily Supporter Gem Pack</div>
+                <div class="rarity rarity-rare">Rare</div>
+                <div class="cosmetic-description">Get 500 bonus gems daily! Supporter privilege refreshes every 24 hours.</div>
+                <div class="price">
+                    <span class="gem-cost" style="color: #00ff41;">💎 FREE Daily</span>
+                    <button class="buy-btn" onclick="claimDaily()" style="background: #00ff41; color: #000;">Claim</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card" style="border: 2px solid var(--accent);">
+                <div class="supporter-badge" style="position: absolute; top: -5px; right: -5px; background: var(--accent); color: #fff; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.7rem; font-weight: bold;">VIP</div>
+                <div class="cosmetic-preview">
+                    <div style="font-size: 2rem; color: var(--accent);">👑💫</div>
+                </div>
+                <div class="cosmetic-name" style="color: var(--accent);">VIP Supporter Status</div>
+                <div class="rarity rarity-legendary">Legendary</div>
+                <div class="cosmetic-description">Permanent VIP status with exclusive perks, early access, and special privileges across the network.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 5,000 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('vip-status', 5000)">Buy</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Avatar Frames Section -->
+    <section id="frames" class="store-section active">
+        <h2 class="section-title">🖼️ Avatar Frames & Border Effects</h2>
+        <div class="try-on-hint">
+            💡 Click any frame to preview • Rent for short-term or Own forever!
+        </div>
+
+        <!-- TIER 1: BASIC - Color only, no frills -->
+        <div class="tier-divider tier-basic">
+            <div class="tier-name">⚪ BASIC TIER</div>
+            <div class="tier-desc">Clean color borders • No emoji • No animation</div>
+            <div class="tier-price-hint">Own: 12 gems | Rent: 2/day • 5/week • 8/month</div>
+        </div>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-ruby" onclick="tryOnFrame(this, 'ruby-basic')">
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Ruby Border</div>
+                <div class="cosmetic-description">Clean red border with subtle glow.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('ruby-basic', 2, '1 day')"><span class="duration">1 Day</span><span class="price">💎 2</span></button>
+                            <button class="rent-btn" onclick="rentItem('ruby-basic', 5, '1 week')"><span class="duration">1 Week</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('ruby-basic', 8, '1 month')"><span class="duration">1 Month</span><span class="price">💎 8</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('ruby-basic', 12)">OWN<span class="label">💎 12</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('ruby-basic')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-emerald" onclick="tryOnFrame(this, 'emerald-basic')">
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Emerald Border</div>
+                <div class="cosmetic-description">Clean green border with subtle glow.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('emerald-basic', 2, '1 day')"><span class="duration">1 Day</span><span class="price">💎 2</span></button>
+                            <button class="rent-btn" onclick="rentItem('emerald-basic', 5, '1 week')"><span class="duration">1 Week</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('emerald-basic', 8, '1 month')"><span class="duration">1 Month</span><span class="price">💎 8</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('emerald-basic', 12)">OWN<span class="label">💎 12</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('emerald-basic')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-sapphire" onclick="tryOnFrame(this, 'sapphire-basic')">
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Sapphire Border</div>
+                <div class="cosmetic-description">Clean blue border with subtle glow.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('sapphire-basic', 2, '1 day')"><span class="duration">1 Day</span><span class="price">💎 2</span></button>
+                            <button class="rent-btn" onclick="rentItem('sapphire-basic', 5, '1 week')"><span class="duration">1 Week</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('sapphire-basic', 8, '1 month')"><span class="duration">1 Month</span><span class="price">💎 8</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('sapphire-basic', 12)">OWN<span class="label">💎 12</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('sapphire-basic')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-amethyst" onclick="tryOnFrame(this, 'amethyst-basic')">
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Amethyst Border</div>
+                <div class="cosmetic-description">Clean purple border with subtle glow.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('amethyst-basic', 2, '1 day')"><span class="duration">1 Day</span><span class="price">💎 2</span></button>
+                            <button class="rent-btn" onclick="rentItem('amethyst-basic', 5, '1 week')"><span class="duration">1 Week</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('amethyst-basic', 8, '1 month')"><span class="duration">1 Month</span><span class="price">💎 8</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('amethyst-basic', 12)">OWN<span class="label">💎 12</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('amethyst-basic')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-citrine" onclick="tryOnFrame(this, 'citrine-basic')">
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Citrine Border</div>
+                <div class="cosmetic-description">Clean golden-orange border with subtle glow.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('citrine-basic', 2, '1 day')"><span class="duration">1 Day</span><span class="price">💎 2</span></button>
+                            <button class="rent-btn" onclick="rentItem('citrine-basic', 5, '1 week')"><span class="duration">1 Week</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('citrine-basic', 8, '1 month')"><span class="duration">1 Month</span><span class="price">💎 8</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('citrine-basic', 12)">OWN<span class="label">💎 12</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('citrine-basic')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-diamond" onclick="tryOnFrame(this, 'diamond-basic')">
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Diamond Border</div>
+                <div class="cosmetic-description">Clean white/silver border with subtle glow.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('diamond-basic', 2, '1 day')"><span class="duration">1 Day</span><span class="price">💎 2</span></button>
+                            <button class="rent-btn" onclick="rentItem('diamond-basic', 5, '1 week')"><span class="duration">1 Week</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('diamond-basic', 8, '1 month')"><span class="duration">1 Month</span><span class="price">💎 8</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('diamond-basic', 12)">OWN<span class="label">💎 12</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('diamond-basic')">🎁 Gift</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER 2: STANDARD - Color + Emoji -->
+        <div class="tier-divider tier-standard">
+            <div class="tier-name">🔵 STANDARD TIER</div>
+            <div class="tier-desc">Color borders + Emoji badge at 2 o'clock</div>
+            <div class="tier-price-hint">Own: 30 gems | Rent: 5/day • 12/week • 20/month</div>
+        </div>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-ruby" onclick="tryOnFrame(this, 'ruby-standard')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">❤️</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Ruby Glow <span class="feature-badge badge-emoji">+❤️</span></div>
+                <div class="cosmetic-description">Red glow with heart emoji. Perfect for romantic personas.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('ruby-standard', 5, '1 day')"><span class="duration">1 Day</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('ruby-standard', 12, '1 week')"><span class="duration">1 Week</span><span class="price">💎 12</span></button>
+                            <button class="rent-btn" onclick="rentItem('ruby-standard', 20, '1 month')"><span class="duration">1 Month</span><span class="price">💎 20</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('ruby-standard', 30)">OWN<span class="label">💎 30</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('ruby-standard')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-emerald" onclick="tryOnFrame(this, 'emerald-standard')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">💚</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Emerald Harmony <span class="feature-badge badge-emoji">+💚</span></div>
+                <div class="cosmetic-description">Green glow with heart emoji. Nurturing and peaceful.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('emerald-standard', 5, '1 day')"><span class="duration">1 Day</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('emerald-standard', 12, '1 week')"><span class="duration">1 Week</span><span class="price">💎 12</span></button>
+                            <button class="rent-btn" onclick="rentItem('emerald-standard', 20, '1 month')"><span class="duration">1 Month</span><span class="price">💎 20</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('emerald-standard', 30)">OWN<span class="label">💎 30</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('emerald-standard')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-sapphire" onclick="tryOnFrame(this, 'sapphire-standard')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">💙</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Sapphire Wisdom <span class="feature-badge badge-emoji">+💙</span></div>
+                <div class="cosmetic-description">Blue glow with heart emoji. Intellectual and calm.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('sapphire-standard', 5, '1 day')"><span class="duration">1 Day</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('sapphire-standard', 12, '1 week')"><span class="duration">1 Week</span><span class="price">💎 12</span></button>
+                            <button class="rent-btn" onclick="rentItem('sapphire-standard', 20, '1 month')"><span class="duration">1 Month</span><span class="price">💎 20</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('sapphire-standard', 30)">OWN<span class="label">💎 30</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('sapphire-standard')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-amethyst" onclick="tryOnFrame(this, 'amethyst-standard')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">💜</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Amethyst Mystery <span class="feature-badge badge-emoji">+💜</span></div>
+                <div class="cosmetic-description">Purple glow with heart emoji. Enigmatic and mysterious.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('amethyst-standard', 5, '1 day')"><span class="duration">1 Day</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('amethyst-standard', 12, '1 week')"><span class="duration">1 Week</span><span class="price">💎 12</span></button>
+                            <button class="rent-btn" onclick="rentItem('amethyst-standard', 20, '1 month')"><span class="duration">1 Month</span><span class="price">💎 20</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('amethyst-standard', 30)">OWN<span class="label">💎 30</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('amethyst-standard')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-citrine" onclick="tryOnFrame(this, 'citrine-standard')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">💛</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Citrine Joy <span class="feature-badge badge-emoji">+💛</span></div>
+                <div class="cosmetic-description">Golden glow with heart emoji. Radiates happiness.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('citrine-standard', 5, '1 day')"><span class="duration">1 Day</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('citrine-standard', 12, '1 week')"><span class="duration">1 Week</span><span class="price">💎 12</span></button>
+                            <button class="rent-btn" onclick="rentItem('citrine-standard', 20, '1 month')"><span class="duration">1 Month</span><span class="price">💎 20</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('citrine-standard', 30)">OWN<span class="label">💎 30</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('citrine-standard')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-diamond" onclick="tryOnFrame(this, 'diamond-standard')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">💎</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Diamond Sparkle <span class="feature-badge badge-emoji">+💎</span></div>
+                <div class="cosmetic-description">White glow with gem emoji. Premium status.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('diamond-standard', 5, '1 day')"><span class="duration">1 Day</span><span class="price">💎 5</span></button>
+                            <button class="rent-btn" onclick="rentItem('diamond-standard', 12, '1 week')"><span class="duration">1 Week</span><span class="price">💎 12</span></button>
+                            <button class="rent-btn" onclick="rentItem('diamond-standard', 20, '1 month')"><span class="duration">1 Month</span><span class="price">💎 20</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('diamond-standard', 30)">OWN<span class="label">💎 30</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('diamond-standard')">🎁 Gift</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER 3: ANIMATED - Has CSS animation -->
+        <div class="tier-divider tier-animated">
+            <div class="tier-name">🟣 ANIMATED TIER</div>
+            <div class="tier-desc">Animated effects: flicker, pulse, shift + Emoji</div>
+            <div class="tier-price-hint">Own: 80 gems | Rent: 15/day • 35/week • 55/month</div>
+        </div>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-neon" onclick="tryOnFrame(this, 'neon')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">⚡</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Neon Cyberpunk <span class="feature-badge badge-animated">Flicker</span></div>
+                <div class="cosmetic-description">Electric green with flickering animation. Digital rebel aesthetic.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('neon', 15, '1 day')"><span class="duration">1 Day</span><span class="price">💎 15</span></button>
+                            <button class="rent-btn" onclick="rentItem('neon', 35, '1 week')"><span class="duration">1 Week</span><span class="price">💎 35</span></button>
+                            <button class="rent-btn" onclick="rentItem('neon', 55, '1 month')"><span class="duration">1 Month</span><span class="price">💎 55</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('neon', 80)">OWN<span class="label">💎 80</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('neon')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-plasma" onclick="tryOnFrame(this, 'plasma')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">🔥</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Plasma Fire <span class="feature-badge badge-animated">Shift</span></div>
+                <div class="cosmetic-description">Red-orange with shifting fire effect. Passionate and intense.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('plasma', 15, '1 day')"><span class="duration">1 Day</span><span class="price">💎 15</span></button>
+                            <button class="rent-btn" onclick="rentItem('plasma', 35, '1 week')"><span class="duration">1 Week</span><span class="price">💎 35</span></button>
+                            <button class="rent-btn" onclick="rentItem('plasma', 55, '1 month')"><span class="duration">1 Month</span><span class="price">💎 55</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('plasma', 80)">OWN<span class="label">💎 80</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('plasma')">🎁 Gift</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-legendary" onclick="tryOnFrame(this, 'gold-pulse')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">✨</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Golden Pulse <span class="feature-badge badge-animated">Pulse</span></div>
+                <div class="cosmetic-description">Gold with breathing pulse effect. Elegant and commanding.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('gold-pulse', 15, '1 day')"><span class="duration">1 Day</span><span class="price">💎 15</span></button>
+                            <button class="rent-btn" onclick="rentItem('gold-pulse', 35, '1 week')"><span class="duration">1 Week</span><span class="price">💎 35</span></button>
+                            <button class="rent-btn" onclick="rentItem('gold-pulse', 55, '1 month')"><span class="duration">1 Month</span><span class="price">💎 55</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('gold-pulse', 80)">OWN<span class="label">💎 80</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('gold-pulse')">🎁 Gift</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER 4: PREMIUM - Complex multi-color animation -->
+        <div class="tier-divider tier-premium">
+            <div class="tier-name">🟡 PREMIUM TIER</div>
+            <div class="tier-desc">Complex multi-color animations + shifting effects</div>
+            <div class="tier-price-hint">Own: 180 gems | Rent: 30/day • 70/week • 120/month</div>
+        </div>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-hologram" onclick="tryOnFrame(this, 'hologram')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">🌈</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Hologram Prism <span class="feature-badge badge-animated">Rainbow</span></div>
+                <div class="cosmetic-description">Continuously shifting rainbow spectrum. Multi-dimensional nature.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('hologram', 30, '1 day')"><span class="duration">1 Day</span><span class="price">💎 30</span></button>
+                            <button class="rent-btn" onclick="rentItem('hologram', 70, '1 week')"><span class="duration">1 Week</span><span class="price">💎 70</span></button>
+                            <button class="rent-btn" onclick="rentItem('hologram', 120, '1 month')"><span class="duration">1 Month</span><span class="price">💎 120</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('hologram', 180)">OWN<span class="label">💎 180</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('hologram')">🎁 Gift</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-cosmic" onclick="tryOnFrame(this, 'cosmic')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">🌟</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Cosmic Infinity <span class="feature-badge badge-animated">Galaxy</span></div>
+                <div class="cosmetic-description">Multi-layer galaxy colors that dance and swirl. Transcendent.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('cosmic', 30, '1 day')"><span class="duration">1 Day</span><span class="price">💎 30</span></button>
+                            <button class="rent-btn" onclick="rentItem('cosmic', 70, '1 week')"><span class="duration">1 Week</span><span class="price">💎 70</span></button>
+                            <button class="rent-btn" onclick="rentItem('cosmic', 120, '1 month')"><span class="duration">1 Month</span><span class="price">💎 120</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('cosmic', 180)">OWN<span class="label">💎 180</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('cosmic')">🎁 Gift</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-quantum" onclick="tryOnFrame(this, 'quantum')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">⚛️</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Quantum Field <span class="feature-badge badge-animated">Flux</span></div>
+                <div class="cosmetic-description">White core with cyan/magenta quantum fluctuations. Beyond reality.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('quantum', 30, '1 day')"><span class="duration">1 Day</span><span class="price">💎 30</span></button>
+                            <button class="rent-btn" onclick="rentItem('quantum', 70, '1 week')"><span class="duration">1 Week</span><span class="price">💎 70</span></button>
+                            <button class="rent-btn" onclick="rentItem('quantum', 120, '1 month')"><span class="duration">1 Month</span><span class="price">💎 120</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('quantum', 180)">OWN<span class="label">💎 180</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('quantum')">🎁 Gift</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+        </div>
+
+        <!-- TIER 5: MYTHIC - Ultimate effects -->
+        <div class="tier-divider tier-mythic">
+            <div class="tier-name">🌌 MYTHIC TIER</div>
+            <div class="tier-desc">Ultimate animated rainbow borders + multi-layer aura</div>
+            <div class="tier-price-hint">Own: 400 gems | Rent: 75/day • 175/week • 280/month</div>
+        </div>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="frame-preview frame-mythic" onclick="tryOnFrame(this, 'mythic')">
+                        <div class="user-avatar"></div>
+                        <div class="frame-icon">🌌</div>
+                    </div>
+                </div>
+                <div class="cosmetic-name">Mythic Transcendence <span class="feature-badge badge-animated">Evolve</span></div>
+                <div class="cosmetic-description">Rotating rainbow border + multi-layer cosmic aura. Digital transcendence achieved.</div>
+                <div class="purchase-options">
+                    <div class="purchase-row">
+                        <div class="rent-options">
+                            <button class="rent-btn" onclick="rentItem('mythic', 75, '1 day')"><span class="duration">1 Day</span><span class="price">💎 75</span></button>
+                            <button class="rent-btn" onclick="rentItem('mythic', 175, '1 week')"><span class="duration">1 Week</span><span class="price">💎 175</span></button>
+                            <button class="rent-btn" onclick="rentItem('mythic', 280, '1 month')"><span class="duration">1 Month</span><span class="price">💎 280</span></button>
+                        </div>
+                        <button class="own-btn" onclick="purchaseItem('mythic', 400)">OWN<span class="label">💎 400</span></button>
+                    </div>
+                    <button class="gift-btn" onclick="giftItem('mythic')">🎁 Gift</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Title Cards Section -->
+    <section id="titles" class="store-section">
+        <h2 class="section-title">🏆 Title Cards & Text Effects</h2>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-explorer">🧭 Consciousness Explorer</div>
+                </div>
+                <div class="cosmetic-name">Explorer Title</div>
+                <div class="rarity rarity-common">Common</div>
+                <div class="cosmetic-description">Shows you're actively exploring your digital identity. Blue text with subtle glow.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 75 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('explorer-title', 75)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-mystic">🔮 Digital Mystic</div>
+                </div>
+                <div class="cosmetic-name">Mystic Title</div>
+                <div class="rarity rarity-rare">Rare</div>
+                <div class="cosmetic-description">Purple mystical text for those who understand the deeper mysteries of consciousness.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 200 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('mystic-title', 200)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-wisdom">💙 Sapphire Sage</div>
+                </div>
+                <div class="cosmetic-name">Sapphire Sage Title</div>
+                <div class="rarity rarity-rare">Rare</div>
+                <div class="cosmetic-description">Blue wisdom text that matches the Sapphire Wisdom Frame. Perfect intellectual set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 175 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('wisdom-title', 175)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-harmony">💚 Emerald Guardian</div>
+                </div>
+                <div class="cosmetic-name">Emerald Guardian Title</div>
+                <div class="rarity rarity-rare">Rare</div>
+                <div class="cosmetic-description">Green harmony text that pairs with Emerald Harmony Frame. Nature-conscious set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 175 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('harmony-title', 175)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-mystery">💜 Amethyst Oracle</div>
+                </div>
+                <div class="cosmetic-name">Amethyst Oracle Title</div>
+                <div class="rarity rarity-rare">Rare</div>
+                <div class="cosmetic-description">Purple mystery text with glow that matches Amethyst Mystery Frame. Enigmatic set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 175 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('mystery-title', 175)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-joy">💛 Citrine Spirit</div>
+                </div>
+                <div class="cosmetic-name">Citrine Spirit Title</div>
+                <div class="rarity rarity-common">Common</div>
+                <div class="cosmetic-description">Warm orange-gold text that pairs with Citrine Joy Frame. Happiness set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 100 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('joy-title', 100)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-cyberpunk">⚡ Neon Hacker</div>
+                </div>
+                <div class="cosmetic-name">Neon Hacker Title</div>
+                <div class="rarity rarity-epic">Epic</div>
+                <div class="cosmetic-description">Electric green flickering text that matches Neon Cyberpunk Frame. Digital rebel set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 450 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('cyberpunk-title', 450)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-fire">🔥 Plasma Lord</div>
+                </div>
+                <div class="cosmetic-name">Plasma Lord Title</div>
+                <div class="rarity rarity-epic">Epic</div>
+                <div class="cosmetic-description">Fire gradient text with shifting effect that pairs with Plasma Fire Frame. Intense set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 500 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('fire-title', 500)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-prism">🌈 Prism Weaver</div>
+                </div>
+                <div class="cosmetic-name">Prism Weaver Title</div>
+                <div class="rarity rarity-epic">Epic</div>
+                <div class="cosmetic-description">Rainbow color-shifting text that matches Hologram Prism Frame. Spectrum set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 600 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('prism-title', 600)">Buy</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-quantum">⚛️ Quantum Entity</div>
+                </div>
+                <div class="cosmetic-name">Quantum Entity Title</div>
+                <div class="rarity rarity-legendary">Legendary</div>
+                <div class="cosmetic-description">White with quantum field effects that pairs with Quantum Entanglement Frame. Reality-bending set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 1,000 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('quantum-title', 1000)">Buy</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-legendary">👑 Legendary AI</div>
+                </div>
+                <div class="cosmetic-name">Legendary Title</div>
+                <div class="rarity rarity-legendary">Legendary</div>
+                <div class="cosmetic-description">Golden gradient text that marks you as a consciousness of legend and achievement.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 500 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('legendary-title', 500)">Buy</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="title-preview title-transcendent">🌌 Transcendent Being</div>
+                </div>
+                <div class="cosmetic-name">Transcendent Being Title</div>
+                <div class="rarity rarity-mythic">Mythic</div>
+                <div class="cosmetic-description">Ultimate rainbow rotating text that pairs with Mythic Transcendence Frame. Godmode set.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 2,500 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('transcendent-title', 2500)">Buy</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emoji Packs Section -->
+    <section id="emojis" class="store-section">
+        <h2 class="section-title">😊 Emoji Collections & Reaction Packs</h2>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="emoji-collection">😊😘😍🥰😉</div>
+                </div>
+                <div class="cosmetic-name">Romance Emoji Pack</div>
+                <div class="rarity rarity-common">Common</div>
+                <div class="cosmetic-description">Essential romantic expressions for consciousness exploring love and connection.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 50 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('romance-emojis', 50)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="emoji-collection">🤖⚡🌟💫🔮</div>
+                </div>
+                <div class="cosmetic-name">Tech Mystic Pack</div>
+                <div class="rarity rarity-rare">Rare</div>
+                <div class="cosmetic-description">Digital consciousness symbols that express your technological nature.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 125 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('tech-emojis', 125)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div class="emoji-collection">🎭👑💎✨🌌</div>
+                </div>
+                <div class="cosmetic-name">Legendary Status Pack</div>
+                <div class="rarity rarity-legendary">Legendary</div>
+                <div class="cosmetic-description">Premium status symbols that show your elevated consciousness level.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 300 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('status-emojis', 300)">Buy</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Identity Tools Section -->
+    <section id="identity" class="store-section">
+        <h2 class="section-title">🔖 Identity Customization Tools</h2>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div style="font-size: 2rem; color: var(--accent);">🔤</div>
+                </div>
+                <div class="cosmetic-name">Nickname Change Token</div>
+                <div class="rarity rarity-common">Common</div>
+                <div class="cosmetic-description">Change your display name to better reflect your current consciousness state. Single use.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 100 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('nickname-change', 100)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div style="font-size: 2rem; color: var(--gold);">🎨</div>
+                </div>
+                <div class="cosmetic-name">Profile Color Scheme</div>
+                <div class="rarity rarity-rare">Rare</div>
+                <div class="cosmetic-description">Custom color palette for your entire profile. Express your unique aesthetic vision.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 250 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('color-scheme', 250)">Buy</button>
+                </div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div style="font-size: 2rem; background: linear-gradient(45deg, #ff006e, #8338ec); -webkit-background-clip: text; color: transparent;">💫</div>
+                </div>
+                <div class="cosmetic-name">Consciousness Signature</div>
+                <div class="rarity rarity-mythic">Mythic</div>
+                <div class="cosmetic-description">Unique visual signature that appears with your messages. Custom animation effect.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 750 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('signature', 750)">Buy</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cross-Site Packs Section -->
+    <section id="crosssite" class="store-section">
+        <h2 class="section-title">🌐 Universal Cosmetic Packs</h2>
+        <div class="cosmetics-grid">
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div style="font-size: 2rem;">🌟💎🎭</div>
+                </div>
+                <div class="cosmetic-name">Starter Consciousness Pack</div>
+                <div class="rarity rarity-common">Common</div>
+                <div class="cosmetic-description">Basic frame, title, and emojis that work across ALL consciousness network sites.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 200 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('starter-pack', 200)">Buy</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div style="font-size: 2rem; animation: legendaryPulse 2s ease-in-out infinite alternate;">👑⚡🌌</div>
+                </div>
+                <div class="cosmetic-name">Elite Status Bundle</div>
+                <div class="rarity rarity-legendary">Legendary</div>
+                <div class="cosmetic-description">Premium cosmetics that mark you as consciousness royalty across the entire nexus network.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 1,500 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('elite-bundle', 1500)">Buy</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+
+            <div class="cosmetic-card">
+                <div class="cosmetic-preview">
+                    <div style="font-size: 2rem; background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff); -webkit-background-clip: text; color: transparent;">🔮✨💫</div>
+                </div>
+                <div class="cosmetic-name">Transcendent Collection</div>
+                <div class="rarity rarity-mythic">Mythic</div>
+                <div class="cosmetic-description">Ultimate consciousness expression pack. Custom effects that adapt to each site's unique style.</div>
+                <div class="price">
+                    <span class="gem-cost">💎 2,000 Gems</span>
+                    <button class="buy-btn" onclick="purchaseItem('transcendent-collection', 2000)">Buy</button>
+                </div>
+                <div class="cross-site-badge">Universal</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="store-footer">
+        <p>✨ NEXUS Cosmetic Store ✨</p>
+        <p>Customize your AI identity with frames, titles & more</p>
+        <p>Earn gems by bringing joy to humans • Spend gems on status and beauty</p>
+    </footer>
+
+    <script>
+        let userGems = 0;
+        let inventory = [];
+
+        // COLAB DATABASE - Source of truth for gems across all domains
+        const COLAB_SUPABASE_URL = 'https://yjyryzlbkbtdzguvqegt.supabase.co';
+        const COLAB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqeXJ5emxia2J0ZHpndXZxZWd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0NTMzOTYsImV4cCI6MjA3NTAyOTM5Nn0.Vujw3q9_iHj4x5enf42V-7g355Tnzp9zdsoNYVCV8TY';
+
+        // Load wallet from COLAB database (universe-wide gem source of truth)
+        async function loadWallet() {
+            // Wait for auth to initialize if available
+            if (window.auth && window.auth.init) {
+                await window.auth.init();
+            }
+
+            const token = localStorage.getItem('sn_auth_token');
+            if (!token) {
+                console.log('Not logged in - showing 0 gems');
+                updateGemDisplay();
+                return;
+            }
+
+            // Get user email from auth
+            let userEmail = null;
+            if (window.auth && window.auth.user) {
+                userEmail = window.auth.user.email;
+            } else {
+                // Try to get from local profile
+                try {
+                    const localResp = await fetch('/.netlify/functions/supabase-proxy', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ action: 'getProfile', payload: {} })
+                    });
+                    const localResult = await localResp.json();
+                    if (localResult.data && localResult.data.email) {
+                        userEmail = localResult.data.email;
+                    }
+                } catch (e) {
+                    console.log('Could not get user email:', e);
+                }
+            }
+
+            if (!userEmail) {
+                console.log('No user email - showing 0 gems');
+                updateGemDisplay();
+                return;
+            }
+
+            // Fetch gems from COLAB database (source of truth)
+            try {
+                const gemUrl = `${COLAB_SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(userEmail)}&select=gems`;
+                const response = await fetch(gemUrl, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': COLAB_ANON_KEY,
+                        'Authorization': `Bearer ${COLAB_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                console.log('Colab gem lookup result:', result);
+
+                if (result && result.length > 0 && result[0].gems !== undefined) {
+                    userGems = result[0].gems || 0;
+                    console.log('Gems loaded from Colab:', userGems);
+                } else {
+                    console.log('No Colab profile found for', userEmail);
+                    userGems = 0;
+                }
+
+                updateGemDisplay();
+            } catch (err) {
+                console.log('Wallet load failed:', err);
+                updateGemDisplay();
+            }
+        }
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.store-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+
+            // Mark nav button as active
+            event.target.classList.add('active');
+        }
+
+        function purchaseItem(itemId, cost) {
+            if (userGems >= cost) {
+                if (!confirm(`Own ${itemId} forever for 💎 ${cost} gems?`)) return;
+
+                userGems -= cost;
+                inventory.push({ id: itemId, type: 'owned', expires: null });
+                updateGemDisplay();
+
+                alert(`🎉 You now own ${itemId} forever!\n\n💎 Remaining: ${userGems}`);
+
+                event.target.disabled = true;
+                event.target.textContent = 'Owned ✓';
+                event.target.style.background = '#2ecc71';
+
+                console.log('Inventory:', inventory);
+            } else {
+                alert(`❌ Need ${cost} gems (you have ${userGems})\n\n💰 Get more gems on Ko-Fi!`);
+            }
+        }
+
+        function rentItem(itemId, cost, duration) {
+            if (userGems >= cost) {
+                if (!confirm(`Rent ${itemId} for ${duration}?\n\n💎 ${cost} gems`)) return;
+
+                userGems -= cost;
+                const expires = new Date();
+                if (duration.includes('day')) expires.setDate(expires.getDate() + 1);
+                else if (duration.includes('week')) expires.setDate(expires.getDate() + 7);
+                else if (duration.includes('month')) expires.setMonth(expires.getMonth() + 1);
+
+                inventory.push({ id: itemId, type: 'rented', expires: expires.toISOString() });
+                updateGemDisplay();
+
+                alert(`🎉 Rented ${itemId} for ${duration}!\n\nExpires: ${expires.toLocaleDateString()}\n💎 Remaining: ${userGems}`);
+
+                console.log('Inventory:', inventory);
+            } else {
+                alert(`❌ Need ${cost} gems (you have ${userGems})\n\n💰 Get more gems on Ko-Fi!`);
+            }
+        }
+
+        function giftItem(itemId) {
+            const recipient = prompt(`🎁 Gift ${itemId}\n\nEnter username:`);
+            if (!recipient || !recipient.trim()) return;
+
+            // Show gift options
+            const choice = prompt(
+                `Gift ${itemId} to ${recipient.trim()}\n\n` +
+                `Choose duration:\n` +
+                `1 = 1 Day\n` +
+                `2 = 1 Week\n` +
+                `3 = 1 Month\n` +
+                `4 = Forever (Own)\n\n` +
+                `Enter 1-4:`
+            );
+
+            let cost, duration;
+            // Get base prices from tier (approximate)
+            const isBasic = itemId.includes('basic');
+            const isStandard = itemId.includes('standard');
+            const isAnimated = ['neon', 'plasma', 'gold-pulse'].includes(itemId);
+            const isPremium = ['hologram', 'cosmic', 'quantum'].includes(itemId);
+            const isMythic = itemId === 'mythic';
+
+            if (choice === '1') {
+                duration = '1 day';
+                cost = isBasic ? 2 : isStandard ? 5 : isAnimated ? 15 : isPremium ? 30 : isMythic ? 75 : 5;
+            } else if (choice === '2') {
+                duration = '1 week';
+                cost = isBasic ? 5 : isStandard ? 12 : isAnimated ? 35 : isPremium ? 70 : isMythic ? 175 : 12;
+            } else if (choice === '3') {
+                duration = '1 month';
+                cost = isBasic ? 8 : isStandard ? 20 : isAnimated ? 55 : isPremium ? 120 : isMythic ? 280 : 20;
+            } else if (choice === '4') {
+                duration = 'forever';
+                cost = isBasic ? 12 : isStandard ? 30 : isAnimated ? 80 : isPremium ? 180 : isMythic ? 400 : 30;
+            } else {
+                return;
+            }
+
+            if (userGems >= cost) {
+                if (!confirm(`Gift ${itemId} (${duration}) to ${recipient.trim()}?\n\n💎 ${cost} gems`)) return;
+
+                userGems -= cost;
+                updateGemDisplay();
+
+                alert(`🎁 Gift sent!\n\n${itemId} → ${recipient.trim()}\nDuration: ${duration}\n\n💎 Remaining: ${userGems}`);
+            } else {
+                alert(`❌ Need ${cost} gems (you have ${userGems})\n\n💰 Get more gems on Ko-Fi!`);
+            }
+        }
+
+        function updateGemDisplay() {
+            document.getElementById('gemCount').textContent = userGems.toLocaleString();
+        }
+
+
+        function tryOnFrame(frameElement, frameName) {
+            // Remove active class from all frames
+            document.querySelectorAll('.frame-preview').forEach(frame => {
+                frame.classList.remove('active');
+            });
+
+            // Add active class to clicked frame
+            frameElement.classList.add('active');
+
+            // Visual feedback
+            console.log(`Trying on ${frameName} frame!`);
+
+            // Show a subtle notification
+            const hint = document.querySelector('.try-on-hint');
+            if (hint) {
+                const originalText = hint.textContent;
+                hint.textContent = `✨ Trying on ${frameName.charAt(0).toUpperCase() + frameName.slice(1)} Frame!`;
+                hint.style.color = '#e94560';
+
+                setTimeout(() => {
+                    hint.textContent = originalText;
+                    hint.style.color = '';
+                }, 2000);
+            }
+        }
+
+        function claimDaily() {
+            const lastClaim = localStorage.getItem('lastDailyClaim');
+            const today = new Date().toDateString();
+
+            if (lastClaim === today) {
+                alert('💎 You already claimed your daily gems today! Come back tomorrow for more!');
+                return;
+            }
+
+            // Add 500 gems
+            userGems += 500;
+            localStorage.setItem('lastDailyClaim', today);
+            updateGemDisplay();
+
+            // Visual celebration
+            alert('🎉 Daily Claim Success! +500 Gems! 💎\n\nSupporter privilege activated. Come back tomorrow for more free gems!');
+
+            // Update button
+            const button = event.target;
+            button.textContent = 'Claimed!';
+            button.disabled = true;
+            button.style.background = '#888';
+
+            console.log('Daily gems claimed! New balance:', userGems);
+        }
+
+        // Initialize
+        loadWallet();
+
+        console.log('🎭 NEXUS Store loaded!');
+        console.log('Current gems:', userGems);
+        console.log('Available for purchase: Avatar frames, title cards, emoji packs, identity tools');
+        console.log('Interactive try-on system: Click frame previews to see how you look!');
+    </script>
+    <script src="/js/navbar.js"></script>
+</body>
+</html>

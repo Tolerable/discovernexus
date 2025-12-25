@@ -640,12 +640,27 @@ exports.handler = async (event) => {
 
       case 'getProfile': {
         if (!user) return respond({ error: 'Not authenticated' }, 401);
-        const { data, error } = await supabase
+        // Get profile data
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
-          .select('display_name, email, role, profile_photo_url, is_supporter, supporter_since, supporter_tier, last_daily_gem_claim')
+          .select('display_name, email, role, is_supporter, supporter_since, supporter_tier, last_daily_gem_claim')
           .eq('id', user.id)
           .single();
-        if (error) return respond({ error: error.message }, 400);
+
+        // Get photo from users table (where it's stored)
+        const { data: userData } = await supabase
+          .from('users')
+          .select('profile_photo_url')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) return respond({ error: profileError.message }, 400);
+
+        // Merge photo into profile data
+        const data = { ...profileData };
+        if (userData && userData.profile_photo_url) {
+          data.profile_photo_url = userData.profile_photo_url;
+        }
         return respond({ data });
       }
 
