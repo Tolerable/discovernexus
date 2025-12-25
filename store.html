@@ -626,14 +626,24 @@
         }
         .frame-mythic {
             border: 4px solid transparent;
+            border-radius: inherit;  /* Inherit from parent (50% for avatars) */
             background:
                 linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
                 linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #ffbe0b, #fb5607) border-box;
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
             box-shadow:
                 0 0 40px rgba(255, 0, 110, 0.8),
                 0 0 80px rgba(131, 56, 236, 0.6),
                 0 0 120px rgba(255, 190, 11, 0.4);
             animation: mythicAura 4s ease-in-out infinite, mythicBorderRotate 3s linear infinite;
+        }
+
+        /* Ensure mythic frame works on circular avatars */
+        .tryon-main-avatar.frame-mythic,
+        .demo-avatar.frame-mythic,
+        .frame-preview.frame-mythic {
+            border-radius: 50%;
         }
 
         @keyframes mythicBorderRotate {
