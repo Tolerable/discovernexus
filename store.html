@@ -225,18 +225,13 @@
 
         .frame-icon {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            font-size: 1.2rem;
+            top: -3px;
+            right: -3px;
+            font-size: 0.9rem;
             z-index: 2;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--accent);
+            background: none;
+            border: none;
+            /* text-shadow set dynamically via JS to match frame color */
         }
 
         /* Mobile optimizations */
@@ -257,11 +252,9 @@
             }
 
             .frame-icon {
-                width: 16px;
-                height: 16px;
-                font-size: 1rem;
-                top: -3px;
-                right: -3px;
+                font-size: 0.8rem;
+                top: -2px;
+                right: -2px;
             }
         }
 
@@ -447,22 +440,17 @@
             z-index: 1;
         }
 
-        /* Icon on main avatar preview - larger and positioned at 2 o'clock */
+        /* Icon on main avatar preview - just emoji, no border */
         .tryon-main-avatar .frame-icon {
             position: absolute;
             top: 5px;
             right: 5px;
-            font-size: 1.8rem;
+            font-size: 2rem;
             z-index: 10;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--accent);
-            box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+            background: none;
+            border: none;
+            box-shadow: none;
+            /* text-shadow set dynamically via JS to match frame color */
         }
 
 
@@ -2440,6 +2428,28 @@
             'mythic-blood': '🩸'
         };
 
+        // Frame colors for icon glow (matching frame border colors)
+        const FRAME_COLORS = {
+            'none': 'transparent',
+            'ruby': '#e74c3c',
+            'diamond': '#ecf0f1',
+            'emerald': '#2ecc71',
+            'sapphire': '#3498db',
+            'amethyst': '#9b59b6',
+            'citrine': '#f39c12',
+            'neon': '#00ff41',
+            'plasma': '#ff3300',
+            'hologram': '#00ffff',
+            'quantum': '#ffffff',
+            'cosmic': '#ff006e',
+            'legendary': '#ffd700',
+            'mythic': '#ff00ff',
+            'mythic-inferno': '#ff4500',
+            'mythic-frost': '#00bfff',
+            'mythic-shadow': '#4a0080',
+            'mythic-blood': '#8b0000'
+        };
+
         function setFrame(frame) {
             currentFrame = frame;
 
@@ -2458,12 +2468,17 @@
                 avatarEl.classList.add('frame-' + frame);
             }
 
-            // Update the 2 o'clock icon
+            // Update the 2 o'clock icon with matching frame color glow
             if (iconEl) {
                 const icon = FRAME_ICONS[frame] || '';
+                const color = FRAME_COLORS[frame] || 'transparent';
                 if (icon) {
                     iconEl.textContent = icon;
                     iconEl.style.display = 'flex';
+                    // Apply glow matching the frame color
+                    iconEl.style.textShadow = color !== 'transparent'
+                        ? `0 0 8px ${color}, 0 0 12px ${color}`
+                        : 'none';
                 } else {
                     iconEl.style.display = 'none';
                 }
