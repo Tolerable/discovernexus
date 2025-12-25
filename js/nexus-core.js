@@ -8,6 +8,76 @@
 // === CONSTANTS ===
 const SUPABASE_PROXY = '/.netlify/functions/supabase-proxy';
 
+// === AVATAR FRAME SYSTEM ===
+// Frame icons - emoji displayed at 2 o'clock position
+const FRAME_ICONS = {
+  'none': '', 'ruby': '❤️', 'diamond': '💎', 'emerald': '💚',
+  'sapphire': '💙', 'amethyst': '💜', 'citrine': '💛',
+  'neon': '⚡', 'plasma': '🔥', 'hologram': '🌈',
+  'quantum': '⚛️', 'cosmic': '🌌', 'legendary': '👑',
+  'mythic': '✨', 'mythic-inferno': '🔶', 'mythic-frost': '❄️',
+  'mythic-shadow': '🖤', 'mythic-blood': '🩸'
+};
+
+// Frame colors for icon glow (matching frame border colors)
+const FRAME_COLORS = {
+  'none': 'transparent', 'ruby': '#e74c3c', 'diamond': '#ecf0f1',
+  'emerald': '#2ecc71', 'sapphire': '#3498db', 'amethyst': '#9b59b6',
+  'citrine': '#f39c12', 'neon': '#00ff41', 'plasma': '#ff3300',
+  'hologram': '#00ffff', 'quantum': '#ffffff', 'cosmic': '#ff006e',
+  'legendary': '#ffd700', 'mythic': '#ff00ff', 'mythic-inferno': '#ff4500',
+  'mythic-frost': '#00bfff', 'mythic-shadow': '#4a0080', 'mythic-blood': '#8b0000'
+};
+
+/**
+ * Apply frame styling to an avatar element
+ * @param {HTMLElement} avatarEl - The avatar container element
+ * @param {string} frame - Frame name (e.g., 'ruby', 'diamond')
+ * @param {object} options - { showIcon: true, iconSize: 'normal'|'small' }
+ */
+function applyAvatarFrame(avatarEl, frame, options = {}) {
+  if (!avatarEl || !frame || frame === 'none') return;
+
+  const { showIcon = true, iconSize = 'normal' } = options;
+
+  // Add frame class
+  avatarEl.classList.add('avatar-framed', `frame-${frame}`);
+
+  // Add icon if enabled
+  if (showIcon && FRAME_ICONS[frame]) {
+    let iconEl = avatarEl.querySelector('.avatar-frame-icon');
+    if (!iconEl) {
+      iconEl = document.createElement('span');
+      iconEl.className = 'avatar-frame-icon';
+      avatarEl.style.position = 'relative';
+      avatarEl.appendChild(iconEl);
+    }
+    iconEl.textContent = FRAME_ICONS[frame];
+    const color = FRAME_COLORS[frame] || 'transparent';
+    iconEl.style.textShadow = color !== 'transparent'
+      ? `0 0 8px ${color}, 0 0 12px ${color}`
+      : 'none';
+    if (iconSize === 'small') {
+      iconEl.style.fontSize = '0.5rem';
+      iconEl.style.top = '-2px';
+      iconEl.style.right = '-2px';
+    }
+  }
+}
+
+/**
+ * Get user's equipped look from localStorage
+ * @returns {object} { frame: 'ruby', title: 'explorer' }
+ */
+function getSavedLook() {
+  try {
+    const saved = localStorage.getItem('saved_look');
+    return saved ? JSON.parse(saved) : { frame: 'none', title: 'none' };
+  } catch {
+    return { frame: 'none', title: 'none' };
+  }
+}
+
 // === SUPABASE PROXY HELPERS ===
 
 /**
