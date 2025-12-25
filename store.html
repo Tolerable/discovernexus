@@ -447,23 +447,6 @@
             z-index: 1;
         }
 
-        /* Emoji/icon badge overlay - above frame border */
-        .tryon-avatar-badge {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            width: 32px;
-            height: 32px;
-            background: var(--card-bg);
-            border: 2px solid var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            z-index: 10;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        }
 
         .tryon-title-display {
             display: inline-block;
@@ -1296,7 +1279,6 @@
                 <div class="tryon-preview-container">
                     <div id="tryon-avatar" class="tryon-main-avatar">
                         <img id="tryon-avatar-img" src="" alt="Your Avatar" />
-                        <div id="tryon-badge" class="tryon-avatar-badge" style="display: none;"></div>
                     </div>
                     <div id="tryon-title" class="tryon-title-display"></div>
                     <div id="tryon-combo-name" class="tryon-combo-label">Select cosmetics</div>
@@ -1313,26 +1295,26 @@
                             <div class="tryon-frame-row">
                                 <div class="tryon-frame-pick active" data-frame="none" onclick="setFrame('none')">
                                     <div class="frame-preview" style="background: #333;">
-                                        <span style="color:#666;font-size:0.7rem;">None</span>
+                                        <span style="color:#666;font-size:0.6rem;">X</span>
                                     </div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="ruby" onclick="setFrame('ruby')">
-                                    <div class="frame-preview frame-ruby"></div>
+                                    <div class="frame-preview frame-ruby"><span class="frame-icon">❤️</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="diamond" onclick="setFrame('diamond')">
-                                    <div class="frame-preview frame-diamond"></div>
+                                    <div class="frame-preview frame-diamond"><span class="frame-icon">💎</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="emerald" onclick="setFrame('emerald')">
-                                    <div class="frame-preview frame-emerald"></div>
+                                    <div class="frame-preview frame-emerald"><span class="frame-icon">💚</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="sapphire" onclick="setFrame('sapphire')">
-                                    <div class="frame-preview frame-sapphire"></div>
+                                    <div class="frame-preview frame-sapphire"><span class="frame-icon">💙</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="amethyst" onclick="setFrame('amethyst')">
-                                    <div class="frame-preview frame-amethyst"></div>
+                                    <div class="frame-preview frame-amethyst"><span class="frame-icon">💜</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="citrine" onclick="setFrame('citrine')">
-                                    <div class="frame-preview frame-citrine"></div>
+                                    <div class="frame-preview frame-citrine"><span class="frame-icon">💛</span></div>
                                 </div>
                             </div>
                         </div>
@@ -1341,10 +1323,10 @@
                             <div class="tryon-tier-header">Animated - 80 gems</div>
                             <div class="tryon-frame-row">
                                 <div class="tryon-frame-pick" data-frame="neon" onclick="setFrame('neon')">
-                                    <div class="frame-preview frame-neon"></div>
+                                    <div class="frame-preview frame-neon"><span class="frame-icon">⚡</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="plasma" onclick="setFrame('plasma')">
-                                    <div class="frame-preview frame-plasma"></div>
+                                    <div class="frame-preview frame-plasma"><span class="frame-icon">🔥</span></div>
                                 </div>
                             </div>
                         </div>
@@ -1353,16 +1335,16 @@
                             <div class="tryon-tier-header">Premium - 180 gems</div>
                             <div class="tryon-frame-row">
                                 <div class="tryon-frame-pick" data-frame="hologram" onclick="setFrame('hologram')">
-                                    <div class="frame-preview frame-hologram"></div>
+                                    <div class="frame-preview frame-hologram"><span class="frame-icon">🌈</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="quantum" onclick="setFrame('quantum')">
-                                    <div class="frame-preview frame-quantum"></div>
+                                    <div class="frame-preview frame-quantum"><span class="frame-icon">⚛️</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="cosmic" onclick="setFrame('cosmic')">
-                                    <div class="frame-preview frame-cosmic"></div>
+                                    <div class="frame-preview frame-cosmic"><span class="frame-icon">🌌</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="legendary" onclick="setFrame('legendary')">
-                                    <div class="frame-preview frame-legendary"></div>
+                                    <div class="frame-preview frame-legendary"><span class="frame-icon">👑</span></div>
                                 </div>
                             </div>
                         </div>
@@ -1371,19 +1353,19 @@
                             <div class="tryon-tier-header">Mythic - 400 gems</div>
                             <div class="tryon-frame-row">
                                 <div class="tryon-frame-pick" data-frame="mythic" onclick="setFrame('mythic')">
-                                    <div class="frame-preview frame-mythic"></div>
+                                    <div class="frame-preview frame-mythic"><span class="frame-icon">✨</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="mythic-inferno" onclick="setFrame('mythic-inferno')">
-                                    <div class="frame-preview frame-mythic-inferno"></div>
+                                    <div class="frame-preview frame-mythic-inferno"><span class="frame-icon">🔶</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="mythic-frost" onclick="setFrame('mythic-frost')">
-                                    <div class="frame-preview frame-mythic-frost"></div>
+                                    <div class="frame-preview frame-mythic-frost"><span class="frame-icon">❄️</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="mythic-shadow" onclick="setFrame('mythic-shadow')">
-                                    <div class="frame-preview frame-mythic-shadow"></div>
+                                    <div class="frame-preview frame-mythic-shadow"><span class="frame-icon">🖤</span></div>
                                 </div>
                                 <div class="tryon-frame-pick" data-frame="mythic-blood" onclick="setFrame('mythic-blood')">
-                                    <div class="frame-preview frame-mythic-blood"></div>
+                                    <div class="frame-preview frame-mythic-blood"><span class="frame-icon">🩸</span></div>
                                 </div>
                             </div>
                         </div>
@@ -1416,45 +1398,6 @@
                             <button class="tryon-option" data-title="transcendent" onclick="setTitle('transcendent')">
                                 <span class="option-icon">🌌</span>
                                 <span class="option-label">Transcendent</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Badge/Emoji Selector -->
-                    <div class="tryon-selector-section">
-                        <h3>Badges</h3>
-                        <div class="tryon-options" id="badge-options">
-                            <button class="tryon-option active" data-badge="none" onclick="setBadge('none')">
-                                <span class="option-icon">❌</span>
-                                <span class="option-label">None</span>
-                            </button>
-                            <button class="tryon-option" data-badge="star" onclick="setBadge('star')">
-                                <span class="option-icon">⭐</span>
-                                <span class="option-label">Star</span>
-                            </button>
-                            <button class="tryon-option" data-badge="heart" onclick="setBadge('heart')">
-                                <span class="option-icon">❤️</span>
-                                <span class="option-label">Heart</span>
-                            </button>
-                            <button class="tryon-option" data-badge="crown" onclick="setBadge('crown')">
-                                <span class="option-icon">👑</span>
-                                <span class="option-label">Crown</span>
-                            </button>
-                            <button class="tryon-option" data-badge="gem" onclick="setBadge('gem')">
-                                <span class="option-icon">💎</span>
-                                <span class="option-label">Gem</span>
-                            </button>
-                            <button class="tryon-option" data-badge="fire" onclick="setBadge('fire')">
-                                <span class="option-icon">🔥</span>
-                                <span class="option-label">Fire</span>
-                            </button>
-                            <button class="tryon-option" data-badge="sparkle" onclick="setBadge('sparkle')">
-                                <span class="option-icon">✨</span>
-                                <span class="option-label">Sparkle</span>
-                            </button>
-                            <button class="tryon-option" data-badge="robot" onclick="setBadge('robot')">
-                                <span class="option-icon">🤖</span>
-                                <span class="option-label">Robot</span>
                             </button>
                         </div>
                     </div>
@@ -2338,21 +2281,8 @@
         // Try-On Studio State
         let currentFrame = 'none';
         let currentTitle = 'none';
-        let currentBadge = 'none';
         let currentPersona = null;
         let userAvatarUrl = null;
-
-        // Badge emoji mapping
-        const BADGE_EMOJIS = {
-            'none': '',
-            'star': '⭐',
-            'heart': '❤️',
-            'crown': '👑',
-            'gem': '💎',
-            'fire': '🔥',
-            'sparkle': '✨',
-            'robot': '🤖'
-        };
 
         // Frame prices for cart calculation
         const FRAME_PRICES = {
@@ -2421,9 +2351,9 @@
                 });
                 const result = await resp.json();
 
-                if (result.data && result.data.avatar_url) {
-                    imgEl.src = result.data.avatar_url;
-                    userAvatarUrl = result.data.avatar_url;
+                if (result.data && result.data.profile_photo_url) {
+                    imgEl.src = result.data.profile_photo_url;
+                    userAvatarUrl = result.data.profile_photo_url;
                     return;
                 }
 
@@ -2431,9 +2361,9 @@
                 const snUser = localStorage.getItem('sn_user');
                 if (snUser) {
                     const user = JSON.parse(snUser);
-                    if (user.avatar_url) {
-                        imgEl.src = user.avatar_url;
-                        userAvatarUrl = user.avatar_url;
+                    if (user.profile_photo_url) {
+                        imgEl.src = user.profile_photo_url;
+                        userAvatarUrl = user.profile_photo_url;
                         return;
                     }
                 }
@@ -2511,28 +2441,6 @@
             updateSummary();
         }
 
-        function setBadge(badge) {
-            currentBadge = badge;
-
-            // Update button states
-            document.querySelectorAll('#badge-options .tryon-option').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.badge === badge);
-            });
-
-            // Update badge display
-            const badgeEl = document.getElementById('tryon-badge');
-            if (badge === 'none') {
-                badgeEl.style.display = 'none';
-                badgeEl.innerHTML = '';
-            } else {
-                badgeEl.innerHTML = BADGE_EMOJIS[badge];
-                badgeEl.style.display = 'flex';
-            }
-
-            updateComboLabel();
-            updateSummary();
-        }
-
         // Frame names for display
         const FRAME_NAMES = {
             'none': '', 'ruby': 'Ruby', 'diamond': 'Diamond', 'emerald': 'Emerald',
@@ -2554,9 +2462,6 @@
             if (currentTitle !== 'none') {
                 const titleBtn = document.querySelector(`[data-title="${currentTitle}"] .option-label`);
                 parts.push((titleBtn ? titleBtn.textContent : currentTitle) + ' Title');
-            }
-            if (currentBadge !== 'none') {
-                parts.push(BADGE_EMOJIS[currentBadge] + ' Badge');
             }
 
             if (parts.length === 0) {
@@ -2597,11 +2502,10 @@
         function resetTryOn() {
             setFrame('none');
             setTitle('none');
-            setBadge('none');
         }
 
         function saveLook() {
-            if (currentFrame === 'none' && currentTitle === 'none' && currentBadge === 'none') {
+            if (currentFrame === 'none' && currentTitle === 'none') {
                 alert('Select at least one cosmetic to save');
                 return;
             }
@@ -2610,7 +2514,6 @@
             const look = {
                 frame: currentFrame,
                 title: currentTitle,
-                badge: currentBadge,
                 saved_at: new Date().toISOString()
             };
             localStorage.setItem('saved_look', JSON.stringify(look));
