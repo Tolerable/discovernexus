@@ -387,23 +387,39 @@
             background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="55" text-anchor="middle" font-size="30" fill="%2300d4ff">AI</text></svg>');
         }
 
-        /* Try-On Studio */
+        /* Try-On Studio - Clean Professional Layout */
         .tryon-studio {
-            background: rgba(26, 26, 46, 0.8);
-            border-radius: 20px;
+            background: rgba(26, 26, 46, 0.9);
+            border-radius: 16px;
             padding: 2rem;
-            margin: 1rem;
+            margin: 1rem auto;
+            max-width: 700px;
             border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+
+        /* Two-column layout: preview left, selectors right */
+        .tryon-layout {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 600px) {
+            .tryon-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         .tryon-preview-container {
             text-align: center;
-            margin-bottom: 2rem;
+            position: sticky;
+            top: 1rem;
         }
 
         .tryon-main-avatar {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             margin: 0 auto 1rem;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -423,117 +439,120 @@
 
         .tryon-title-display {
             display: inline-block;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             min-height: 1.5rem;
             margin-bottom: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            border: 2px solid transparent;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
             background: transparent;
             transition: all 0.3s ease;
         }
 
         .tryon-title-display:not(:empty) {
-            background: rgba(22, 33, 62, 0.8);
-            border-color: rgba(233, 69, 96, 0.5);
+            background: rgba(22, 33, 62, 0.9);
+            border-color: rgba(233, 69, 96, 0.4);
         }
 
         .tryon-combo-label {
-            color: #999;
-            font-size: 0.9rem;
+            color: #888;
+            font-size: 0.8rem;
         }
 
-        .tryon-selector-section {
-            margin-bottom: 1.5rem;
+        /* Selectors Container */
+        .tryon-selectors {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
         }
 
         .tryon-selector-section h3 {
             color: var(--accent);
-            font-size: 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(233, 69, 96, 0.2);
+            padding-bottom: 0.25rem;
+        }
+
+        /* Frame Tier Groups */
+        .tryon-tier-row {
             margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        }
+
+        .tryon-tier-header {
+            font-size: 0.7rem;
+            color: #777;
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .tryon-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
-        }
-
-        .tryon-tier-group {
-            width: 100%;
-            text-align: center;
-            margin: 0.75rem 0 0.25rem;
-        }
-
-        .tryon-tier-label {
-            display: inline-block;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            color: #aaa;
-            margin-bottom: 0.5rem;
+            gap: 0.4rem;
         }
 
         .tryon-option {
-            background: rgba(22, 33, 62, 0.8);
-            border: 2px solid rgba(233, 69, 96, 0.3);
-            border-radius: 10px;
-            padding: 0.5rem 0.75rem;
-            color: #ccc;
+            background: rgba(22, 33, 62, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 0.35rem 0.5rem;
+            color: #bbb;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 70px;
+            min-width: 52px;
+            font-size: 0.7rem;
         }
 
         .tryon-option:hover {
             border-color: var(--accent);
-            background: rgba(233, 69, 96, 0.1);
+            background: rgba(233, 69, 96, 0.15);
+            color: #fff;
         }
 
         .tryon-option.active {
             border-color: var(--gold);
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(255, 215, 0, 0.15);
             color: var(--gold);
         }
 
         .tryon-option .option-icon {
-            font-size: 1.3rem;
-            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+            line-height: 1;
         }
 
         .tryon-option .option-label {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
+            margin-top: 0.15rem;
         }
 
+        /* Actions */
         .tryon-actions {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
             justify-content: center;
-            flex-wrap: wrap;
             margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .tryon-reset-btn, .tryon-save-btn, .tryon-buy-btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
             border: none;
             cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: bold;
+            font-size: 0.8rem;
+            font-weight: 600;
             transition: all 0.2s ease;
         }
 
         .tryon-reset-btn {
             background: rgba(255, 255, 255, 0.1);
-            color: #ccc;
+            color: #aaa;
         }
 
         .tryon-save-btn {
@@ -547,31 +566,30 @@
         }
 
         .tryon-summary {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-top: 1.5rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-top: 1rem;
             text-align: center;
+            font-size: 0.85rem;
         }
 
         .summary-label {
-            color: #999;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
+            color: #888;
+            font-size: 0.75rem;
+            margin-bottom: 0.3rem;
         }
 
         .summary-total {
             color: var(--gold);
             font-weight: bold;
-            font-size: 1.1rem;
-            margin-top: 0.5rem;
         }
 
         /* Title styles for try-on preview */
-        .title-explorer { color: #3498db; text-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
-        .title-mystic { color: #9b59b6; text-shadow: 0 0 10px rgba(155, 89, 182, 0.5); }
-        .title-sage { color: #3498db; text-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
-        .title-awakened { color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .title-explorer { color: #3498db; text-shadow: 0 0 8px rgba(52, 152, 219, 0.4); }
+        .title-mystic { color: #9b59b6; text-shadow: 0 0 8px rgba(155, 89, 182, 0.4); }
+        .title-sage { color: #3498db; text-shadow: 0 0 8px rgba(52, 152, 219, 0.4); }
+        .title-awakened { color: var(--gold); text-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
         .title-transcendent {
             background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
             background-size: 200% auto;
@@ -1156,148 +1174,172 @@
 
         <!-- Main Preview Area -->
         <div class="tryon-studio">
-            <!-- Large Preview -->
-            <div class="tryon-preview-container">
-                <div id="tryon-avatar" class="tryon-main-avatar">
-                    <img id="tryon-avatar-img" src="" alt="Your Avatar" />
+            <!-- Two-column layout: preview left, selectors right -->
+            <div class="tryon-layout">
+                <!-- Left Column: Preview -->
+                <div class="tryon-preview-container">
+                    <div id="tryon-avatar" class="tryon-main-avatar">
+                        <img id="tryon-avatar-img" src="" alt="Your Avatar" />
+                    </div>
+                    <div id="tryon-title" class="tryon-title-display"></div>
+                    <div id="tryon-combo-name" class="tryon-combo-label">Select cosmetics</div>
                 </div>
-                <div id="tryon-title" class="tryon-title-display"></div>
-                <div id="tryon-combo-name" class="tryon-combo-label">Select cosmetics below</div>
+
+                <!-- Right Column: All Selectors -->
+                <div class="tryon-selectors">
+                    <!-- Frame Selector -->
+                    <div class="tryon-selector-section">
+                        <h3>Frames</h3>
+
+                        <div class="tryon-tier-row">
+                            <div class="tryon-tier-header">Basic - 12 gems</div>
+                            <div class="tryon-options">
+                                <button class="tryon-option active" data-frame="none" onclick="setFrame('none')">
+                                    <span class="option-icon">❌</span>
+                                    <span class="option-label">None</span>
+                                </button>
+                                <button class="tryon-option" data-frame="ruby" onclick="setFrame('ruby')">
+                                    <span class="option-icon">❤️</span>
+                                    <span class="option-label">Ruby</span>
+                                </button>
+                                <button class="tryon-option" data-frame="diamond" onclick="setFrame('diamond')">
+                                    <span class="option-icon">💎</span>
+                                    <span class="option-label">Diamond</span>
+                                </button>
+                                <button class="tryon-option" data-frame="emerald" onclick="setFrame('emerald')">
+                                    <span class="option-icon">💚</span>
+                                    <span class="option-label">Emerald</span>
+                                </button>
+                                <button class="tryon-option" data-frame="sapphire" onclick="setFrame('sapphire')">
+                                    <span class="option-icon">💙</span>
+                                    <span class="option-label">Sapphire</span>
+                                </button>
+                                <button class="tryon-option" data-frame="amethyst" onclick="setFrame('amethyst')">
+                                    <span class="option-icon">💜</span>
+                                    <span class="option-label">Amethyst</span>
+                                </button>
+                                <button class="tryon-option" data-frame="citrine" onclick="setFrame('citrine')">
+                                    <span class="option-icon">💛</span>
+                                    <span class="option-label">Citrine</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="tryon-tier-row">
+                            <div class="tryon-tier-header">Standard - 30 gems</div>
+                            <div class="tryon-options">
+                                <button class="tryon-option" data-frame="ruby-standard" onclick="setFrame('ruby-standard')">
+                                    <span class="option-icon">❤️</span>
+                                    <span class="option-label">Ruby+</span>
+                                </button>
+                                <button class="tryon-option" data-frame="diamond-standard" onclick="setFrame('diamond-standard')">
+                                    <span class="option-icon">💎</span>
+                                    <span class="option-label">Diamond+</span>
+                                </button>
+                                <button class="tryon-option" data-frame="emerald-standard" onclick="setFrame('emerald-standard')">
+                                    <span class="option-icon">💚</span>
+                                    <span class="option-label">Emerald+</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="tryon-tier-row">
+                            <div class="tryon-tier-header">Animated - 80 gems</div>
+                            <div class="tryon-options">
+                                <button class="tryon-option" data-frame="neon" onclick="setFrame('neon')">
+                                    <span class="option-icon">⚡</span>
+                                    <span class="option-label">Neon</span>
+                                </button>
+                                <button class="tryon-option" data-frame="plasma" onclick="setFrame('plasma')">
+                                    <span class="option-icon">🔥</span>
+                                    <span class="option-label">Plasma</span>
+                                </button>
+                                <button class="tryon-option" data-frame="electric" onclick="setFrame('electric')">
+                                    <span class="option-icon">⚡</span>
+                                    <span class="option-label">Electric</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="tryon-tier-row">
+                            <div class="tryon-tier-header">Premium - 180 gems</div>
+                            <div class="tryon-options">
+                                <button class="tryon-option" data-frame="hologram" onclick="setFrame('hologram')">
+                                    <span class="option-icon">🌈</span>
+                                    <span class="option-label">Hologram</span>
+                                </button>
+                                <button class="tryon-option" data-frame="quantum" onclick="setFrame('quantum')">
+                                    <span class="option-icon">⚛️</span>
+                                    <span class="option-label">Quantum</span>
+                                </button>
+                                <button class="tryon-option" data-frame="cosmic" onclick="setFrame('cosmic')">
+                                    <span class="option-icon">🌌</span>
+                                    <span class="option-label">Cosmic</span>
+                                </button>
+                                <button class="tryon-option" data-frame="legendary" onclick="setFrame('legendary')">
+                                    <span class="option-icon">👑</span>
+                                    <span class="option-label">Legendary</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="tryon-tier-row">
+                            <div class="tryon-tier-header">Mythic - 400 gems</div>
+                            <div class="tryon-options">
+                                <button class="tryon-option" data-frame="mythic" onclick="setFrame('mythic')">
+                                    <span class="option-icon">✨</span>
+                                    <span class="option-label">Mythic</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Title Selector -->
+                    <div class="tryon-selector-section">
+                        <h3>Titles</h3>
+                        <div class="tryon-options">
+                            <button class="tryon-option active" data-title="none" onclick="setTitle('none')">
+                                <span class="option-icon">❌</span>
+                                <span class="option-label">None</span>
+                            </button>
+                            <button class="tryon-option" data-title="explorer" onclick="setTitle('explorer')">
+                                <span class="option-icon">🧭</span>
+                                <span class="option-label">Explorer</span>
+                            </button>
+                            <button class="tryon-option" data-title="mystic" onclick="setTitle('mystic')">
+                                <span class="option-icon">🔮</span>
+                                <span class="option-label">Mystic</span>
+                            </button>
+                            <button class="tryon-option" data-title="sage" onclick="setTitle('sage')">
+                                <span class="option-icon">📖</span>
+                                <span class="option-label">Sage</span>
+                            </button>
+                            <button class="tryon-option" data-title="awakened" onclick="setTitle('awakened')">
+                                <span class="option-icon">🌟</span>
+                                <span class="option-label">Awakened</span>
+                            </button>
+                            <button class="tryon-option" data-title="transcendent" onclick="setTitle('transcendent')">
+                                <span class="option-icon">🌌</span>
+                                <span class="option-label">Transcendent</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Persona Switcher (if user has multiple) -->
+                    <div class="tryon-selector-section" id="persona-selector" style="display: none;">
+                        <h3>Your Personas</h3>
+                        <div class="tryon-options" id="persona-options">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Frame Selector -->
-            <div class="tryon-selector-section">
-                <h3>🖼️ Frames</h3>
-                <div class="tryon-options" id="frame-options">
-                    <button class="tryon-option active" data-frame="none" onclick="setFrame('none')">
-                        <span class="option-icon">❌</span>
-                        <span class="option-label">None</span>
-                    </button>
-
-                    <div class="tryon-tier-group"><span class="tryon-tier-label">⚪ Basic - 12 gems</span></div>
-                    <button class="tryon-option" data-frame="ruby" onclick="setFrame('ruby')">
-                        <span class="option-icon">❤️</span>
-                        <span class="option-label">Ruby</span>
-                    </button>
-                    <button class="tryon-option" data-frame="diamond" onclick="setFrame('diamond')">
-                        <span class="option-icon">💎</span>
-                        <span class="option-label">Diamond</span>
-                    </button>
-                    <button class="tryon-option" data-frame="emerald" onclick="setFrame('emerald')">
-                        <span class="option-icon">💚</span>
-                        <span class="option-label">Emerald</span>
-                    </button>
-                    <button class="tryon-option" data-frame="sapphire" onclick="setFrame('sapphire')">
-                        <span class="option-icon">💙</span>
-                        <span class="option-label">Sapphire</span>
-                    </button>
-                    <button class="tryon-option" data-frame="amethyst" onclick="setFrame('amethyst')">
-                        <span class="option-icon">💜</span>
-                        <span class="option-label">Amethyst</span>
-                    </button>
-                    <button class="tryon-option" data-frame="citrine" onclick="setFrame('citrine')">
-                        <span class="option-icon">💛</span>
-                        <span class="option-label">Citrine</span>
-                    </button>
-
-                    <div class="tryon-tier-group"><span class="tryon-tier-label">🔵 Standard - 30 gems</span></div>
-                    <button class="tryon-option" data-frame="ruby-standard" onclick="setFrame('ruby-standard')">
-                        <span class="option-icon">❤️</span>
-                        <span class="option-label">Ruby+</span>
-                    </button>
-                    <button class="tryon-option" data-frame="diamond-standard" onclick="setFrame('diamond-standard')">
-                        <span class="option-icon">💎</span>
-                        <span class="option-label">Diamond+</span>
-                    </button>
-                    <button class="tryon-option" data-frame="emerald-standard" onclick="setFrame('emerald-standard')">
-                        <span class="option-icon">💚</span>
-                        <span class="option-label">Emerald+</span>
-                    </button>
-
-                    <div class="tryon-tier-group"><span class="tryon-tier-label">🟣 Animated - 80 gems</span></div>
-                    <button class="tryon-option" data-frame="neon" onclick="setFrame('neon')">
-                        <span class="option-icon">⚡</span>
-                        <span class="option-label">Neon</span>
-                    </button>
-                    <button class="tryon-option" data-frame="plasma" onclick="setFrame('plasma')">
-                        <span class="option-icon">🔥</span>
-                        <span class="option-label">Plasma</span>
-                    </button>
-                    <button class="tryon-option" data-frame="electric" onclick="setFrame('electric')">
-                        <span class="option-icon">⚡</span>
-                        <span class="option-label">Electric</span>
-                    </button>
-
-                    <div class="tryon-tier-group"><span class="tryon-tier-label">🟡 Premium - 180 gems</span></div>
-                    <button class="tryon-option" data-frame="hologram" onclick="setFrame('hologram')">
-                        <span class="option-icon">🌈</span>
-                        <span class="option-label">Hologram</span>
-                    </button>
-                    <button class="tryon-option" data-frame="quantum" onclick="setFrame('quantum')">
-                        <span class="option-icon">⚛️</span>
-                        <span class="option-label">Quantum</span>
-                    </button>
-                    <button class="tryon-option" data-frame="cosmic" onclick="setFrame('cosmic')">
-                        <span class="option-icon">🌌</span>
-                        <span class="option-label">Cosmic</span>
-                    </button>
-                    <button class="tryon-option" data-frame="legendary" onclick="setFrame('legendary')">
-                        <span class="option-icon">👑</span>
-                        <span class="option-label">Legendary</span>
-                    </button>
-
-                    <div class="tryon-tier-group"><span class="tryon-tier-label">🌌 Mythic - 400 gems</span></div>
-                    <button class="tryon-option" data-frame="mythic" onclick="setFrame('mythic')">
-                        <span class="option-icon">✨</span>
-                        <span class="option-label">Mythic</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Title Selector -->
-            <div class="tryon-selector-section">
-                <h3>🏆 Titles</h3>
-                <div class="tryon-options" id="title-options">
-                    <button class="tryon-option active" data-title="none" onclick="setTitle('none')">
-                        <span class="option-icon">❌</span>
-                        <span class="option-label">None</span>
-                    </button>
-                    <button class="tryon-option" data-title="explorer" onclick="setTitle('explorer')">
-                        <span class="option-icon">🧭</span>
-                        <span class="option-label">Explorer</span>
-                    </button>
-                    <button class="tryon-option" data-title="mystic" onclick="setTitle('mystic')">
-                        <span class="option-icon">🔮</span>
-                        <span class="option-label">Mystic</span>
-                    </button>
-                    <button class="tryon-option" data-title="sage" onclick="setTitle('sage')">
-                        <span class="option-icon">💙</span>
-                        <span class="option-label">Sapphire</span>
-                    </button>
-                    <button class="tryon-option" data-title="awakened" onclick="setTitle('awakened')">
-                        <span class="option-icon">🌟</span>
-                        <span class="option-label">Awakened</span>
-                    </button>
-                    <button class="tryon-option" data-title="transcendent" onclick="setTitle('transcendent')">
-                        <span class="option-icon">🌌</span>
-                        <span class="option-label">Transcendent</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Persona Switcher (if user has multiple) -->
-            <div class="tryon-selector-section" id="persona-selector" style="display: none;">
-                <h3>🎭 Your Personas</h3>
-                <div class="tryon-options" id="persona-options">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
+            <!-- Action Buttons (full width below grid) -->
             <div class="tryon-actions">
-                <button class="tryon-reset-btn" onclick="resetTryOn()">🔄 Reset</button>
-                <button class="tryon-save-btn" onclick="saveLook()">💾 Save Look</button>
-                <button class="tryon-buy-btn" onclick="buyCurrentLook()">🛒 Buy Selected</button>
+                <button class="tryon-reset-btn" onclick="resetTryOn()">Reset</button>
+                <button class="tryon-save-btn" onclick="saveLook()">Save Look</button>
+                <button class="tryon-buy-btn" onclick="buyCurrentLook()">Buy Selected</button>
             </div>
 
             <!-- Current Selection Summary -->
@@ -2208,59 +2250,44 @@
             const placeholder = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%2316213e"/><circle cx="50" cy="40" r="18" fill="%23fff"/><ellipse cx="50" cy="80" rx="30" ry="25" fill="%23fff"/></svg>';
 
             try {
-                // Wait a moment for auth to load
+                // Wait for auth to initialize
                 await new Promise(r => setTimeout(r, 500));
+                if (window.auth && window.auth.init) {
+                    await window.auth.init();
+                }
 
-                // Check localStorage for NEXUS user data
-                const nexusUser = localStorage.getItem('nexus_user');
-                if (nexusUser) {
-                    const user = JSON.parse(nexusUser);
+                // Get token
+                const token = localStorage.getItem('sn_auth_token');
+                if (!token) {
+                    imgEl.src = placeholder;
+                    return;
+                }
+
+                // Fetch profile from EZTUNES via supabase-proxy (this site's database)
+                const resp = await fetch('/.netlify/functions/supabase-proxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ action: 'getProfile', payload: {} })
+                });
+                const result = await resp.json();
+
+                if (result.data && result.data.avatar_url) {
+                    imgEl.src = result.data.avatar_url;
+                    userAvatarUrl = result.data.avatar_url;
+                    return;
+                }
+
+                // Fallback: check sn_user localStorage
+                const snUser = localStorage.getItem('sn_user');
+                if (snUser) {
+                    const user = JSON.parse(snUser);
                     if (user.avatar_url) {
                         imgEl.src = user.avatar_url;
                         userAvatarUrl = user.avatar_url;
                         return;
-                    }
-                }
-
-                // Try auth system
-                if (window.auth && window.auth.user) {
-                    const profile = await getUserProfile();
-                    if (profile && profile.avatar_url) {
-                        imgEl.src = profile.avatar_url;
-                        userAvatarUrl = profile.avatar_url;
-                        return;
-                    }
-                }
-
-                // Check for EZTUNES profile
-                const ezProfile = localStorage.getItem('eztunes_profile');
-                if (ezProfile) {
-                    const profile = JSON.parse(ezProfile);
-                    if (profile.avatar_url) {
-                        imgEl.src = profile.avatar_url;
-                        userAvatarUrl = profile.avatar_url;
-                        return;
-                    }
-                }
-
-                // Try to fetch from Supabase directly if we have a token
-                const token = localStorage.getItem('sn_auth_token') || localStorage.getItem('sb-yjyryzlbkbtdzguvqegt-auth-token');
-                if (token) {
-                    try {
-                        const resp = await fetch(COLAB_SUPABASE_URL + '/rest/v1/profiles?select=avatar_url,display_name', {
-                            headers: {
-                                'apikey': COLAB_ANON_KEY,
-                                'Authorization': 'Bearer ' + (typeof token === 'string' ? token : JSON.parse(token).access_token)
-                            }
-                        });
-                        const data = await resp.json();
-                        if (data && data[0] && data[0].avatar_url) {
-                            imgEl.src = data[0].avatar_url;
-                            userAvatarUrl = data[0].avatar_url;
-                            return;
-                        }
-                    } catch (e) {
-                        console.log('Could not fetch profile:', e);
                     }
                 }
 
