@@ -2533,7 +2533,7 @@
             }
         }
 
-        function showSection(sectionName) {
+        function showSection(sectionName, fromEvent = true) {
             // Hide all sections
             document.querySelectorAll('.store-section').forEach(section => {
                 section.classList.remove('active');
@@ -2545,11 +2545,33 @@
             });
 
             // Show selected section
-            document.getElementById(sectionName).classList.add('active');
+            const section = document.getElementById(sectionName);
+            if (section) section.classList.add('active');
 
             // Mark nav button as active
-            event.target.classList.add('active');
+            if (fromEvent && event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Find and activate the correct nav button
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    if (btn.textContent.toLowerCase().includes(sectionName.toLowerCase()) ||
+                        btn.onclick.toString().includes(`'${sectionName}'`)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            // Update URL hash for bookmarking/refresh persistence
+            history.replaceState(null, '', '#' + sectionName);
         }
+
+        // Check URL hash on page load to restore last viewed tab
+        document.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash && document.getElementById(hash)) {
+                showSection(hash, false);
+            }
+        });
 
         function purchaseItem(itemId, cost) {
             if (userGems >= cost) {
