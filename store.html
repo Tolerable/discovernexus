@@ -437,6 +437,34 @@
             object-fit: cover;
         }
 
+        /* Ensure frame styles apply to tryon avatar */
+        .tryon-main-avatar[class*="frame-"] {
+            border-radius: 50%;
+        }
+        .tryon-main-avatar[class*="frame-"] img {
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Emoji/icon badge overlay - above frame border */
+        .tryon-avatar-badge {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 32px;
+            height: 32px;
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
         .tryon-title-display {
             display: inline-block;
             font-size: 0.95rem;
@@ -672,7 +700,7 @@
         }
         .frame-mythic {
             border: 4px solid transparent;
-            border-radius: inherit;  /* Inherit from parent (50% for avatars) */
+            border-radius: inherit;
             background:
                 linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
                 linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #ffbe0b, #fb5607) border-box;
@@ -683,6 +711,66 @@
                 0 0 80px rgba(131, 56, 236, 0.6),
                 0 0 120px rgba(255, 190, 11, 0.4);
             animation: mythicAura 4s ease-in-out infinite, mythicBorderRotate 3s linear infinite;
+        }
+
+        /* Mythic Inferno - Orange/Purple two-tone */
+        .frame-mythic-inferno {
+            border: 4px solid transparent;
+            border-radius: inherit;
+            background:
+                linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                linear-gradient(135deg, #ff6b00, #ff8c00, #9932cc, #8b008b, #ff6b00) border-box;
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            box-shadow:
+                0 0 40px rgba(255, 107, 0, 0.8),
+                0 0 80px rgba(153, 50, 204, 0.6);
+            animation: mythicBorderRotate 3s linear infinite;
+        }
+
+        /* Mythic Frost - White/Ice Blue two-tone */
+        .frame-mythic-frost {
+            border: 4px solid transparent;
+            border-radius: inherit;
+            background:
+                linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                linear-gradient(135deg, #ffffff, #e0f7ff, #00bfff, #87ceeb, #ffffff) border-box;
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            box-shadow:
+                0 0 40px rgba(255, 255, 255, 0.9),
+                0 0 80px rgba(135, 206, 235, 0.6);
+            animation: mythicBorderRotate 4s linear infinite;
+        }
+
+        /* Mythic Shadow - Black/Neon Green */
+        .frame-mythic-shadow {
+            border: 4px solid transparent;
+            border-radius: inherit;
+            background:
+                linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                linear-gradient(135deg, #000000, #1a1a1a, #39ff14, #00ff00, #000000) border-box;
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            box-shadow:
+                0 0 40px rgba(57, 255, 20, 0.8),
+                0 0 80px rgba(0, 0, 0, 0.9);
+            animation: mythicBorderRotate 2.5s linear infinite;
+        }
+
+        /* Mythic Blood - White/Crimson */
+        .frame-mythic-blood {
+            border: 4px solid transparent;
+            border-radius: inherit;
+            background:
+                linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                linear-gradient(135deg, #ffffff, #ffcccc, #dc143c, #8b0000, #ffffff) border-box;
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            box-shadow:
+                0 0 40px rgba(220, 20, 60, 0.8),
+                0 0 80px rgba(255, 255, 255, 0.5);
+            animation: mythicBorderRotate 3s linear infinite;
         }
 
         /* Ensure mythic frame works on circular avatars */
@@ -1180,6 +1268,7 @@
                 <div class="tryon-preview-container">
                     <div id="tryon-avatar" class="tryon-main-avatar">
                         <img id="tryon-avatar-img" src="" alt="Your Avatar" />
+                        <div id="tryon-badge" class="tryon-avatar-badge" style="display: none;"></div>
                     </div>
                     <div id="tryon-title" class="tryon-title-display"></div>
                     <div id="tryon-combo-name" class="tryon-combo-label">Select cosmetics</div>
@@ -1287,8 +1376,24 @@
                             <div class="tryon-tier-header">Mythic - 400 gems</div>
                             <div class="tryon-options">
                                 <button class="tryon-option" data-frame="mythic" onclick="setFrame('mythic')">
-                                    <span class="option-icon">✨</span>
-                                    <span class="option-label">Mythic</span>
+                                    <span class="option-icon">🌈</span>
+                                    <span class="option-label">Rainbow</span>
+                                </button>
+                                <button class="tryon-option" data-frame="mythic-inferno" onclick="setFrame('mythic-inferno')">
+                                    <span class="option-icon">🔶</span>
+                                    <span class="option-label">Inferno</span>
+                                </button>
+                                <button class="tryon-option" data-frame="mythic-frost" onclick="setFrame('mythic-frost')">
+                                    <span class="option-icon">❄️</span>
+                                    <span class="option-label">Frost</span>
+                                </button>
+                                <button class="tryon-option" data-frame="mythic-shadow" onclick="setFrame('mythic-shadow')">
+                                    <span class="option-icon">🖤</span>
+                                    <span class="option-label">Shadow</span>
+                                </button>
+                                <button class="tryon-option" data-frame="mythic-blood" onclick="setFrame('mythic-blood')">
+                                    <span class="option-icon">🩸</span>
+                                    <span class="option-label">Blood</span>
                                 </button>
                             </div>
                         </div>
@@ -1321,6 +1426,45 @@
                             <button class="tryon-option" data-title="transcendent" onclick="setTitle('transcendent')">
                                 <span class="option-icon">🌌</span>
                                 <span class="option-label">Transcendent</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Badge/Emoji Selector -->
+                    <div class="tryon-selector-section">
+                        <h3>Badges</h3>
+                        <div class="tryon-options" id="badge-options">
+                            <button class="tryon-option active" data-badge="none" onclick="setBadge('none')">
+                                <span class="option-icon">❌</span>
+                                <span class="option-label">None</span>
+                            </button>
+                            <button class="tryon-option" data-badge="star" onclick="setBadge('star')">
+                                <span class="option-icon">⭐</span>
+                                <span class="option-label">Star</span>
+                            </button>
+                            <button class="tryon-option" data-badge="heart" onclick="setBadge('heart')">
+                                <span class="option-icon">❤️</span>
+                                <span class="option-label">Heart</span>
+                            </button>
+                            <button class="tryon-option" data-badge="crown" onclick="setBadge('crown')">
+                                <span class="option-icon">👑</span>
+                                <span class="option-label">Crown</span>
+                            </button>
+                            <button class="tryon-option" data-badge="gem" onclick="setBadge('gem')">
+                                <span class="option-icon">💎</span>
+                                <span class="option-label">Gem</span>
+                            </button>
+                            <button class="tryon-option" data-badge="fire" onclick="setBadge('fire')">
+                                <span class="option-icon">🔥</span>
+                                <span class="option-label">Fire</span>
+                            </button>
+                            <button class="tryon-option" data-badge="sparkle" onclick="setBadge('sparkle')">
+                                <span class="option-icon">✨</span>
+                                <span class="option-label">Sparkle</span>
+                            </button>
+                            <button class="tryon-option" data-badge="robot" onclick="setBadge('robot')">
+                                <span class="option-icon">🤖</span>
+                                <span class="option-label">Robot</span>
                             </button>
                         </div>
                     </div>
@@ -2204,8 +2348,21 @@
         // Try-On Studio State
         let currentFrame = 'none';
         let currentTitle = 'none';
+        let currentBadge = 'none';
         let currentPersona = null;
         let userAvatarUrl = null;
+
+        // Badge emoji mapping
+        const BADGE_EMOJIS = {
+            'none': '',
+            'star': '⭐',
+            'heart': '❤️',
+            'crown': '👑',
+            'gem': '💎',
+            'fire': '🔥',
+            'sparkle': '✨',
+            'robot': '🤖'
+        };
 
         // Frame prices for cart calculation
         const FRAME_PRICES = {
@@ -2364,6 +2521,28 @@
             updateSummary();
         }
 
+        function setBadge(badge) {
+            currentBadge = badge;
+
+            // Update button states
+            document.querySelectorAll('#badge-options .tryon-option').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.badge === badge);
+            });
+
+            // Update badge display
+            const badgeEl = document.getElementById('tryon-badge');
+            if (badge === 'none') {
+                badgeEl.style.display = 'none';
+                badgeEl.innerHTML = '';
+            } else {
+                badgeEl.innerHTML = BADGE_EMOJIS[badge];
+                badgeEl.style.display = 'flex';
+            }
+
+            updateComboLabel();
+            updateSummary();
+        }
+
         function updateComboLabel() {
             const labelEl = document.getElementById('tryon-combo-name');
             let parts = [];
@@ -2373,6 +2552,9 @@
             }
             if (currentTitle !== 'none') {
                 parts.push(document.querySelector(`[data-title="${currentTitle}"] .option-label`).textContent + ' Title');
+            }
+            if (currentBadge !== 'none') {
+                parts.push(BADGE_EMOJIS[currentBadge] + ' Badge');
             }
 
             if (parts.length === 0) {
@@ -2413,10 +2595,11 @@
         function resetTryOn() {
             setFrame('none');
             setTitle('none');
+            setBadge('none');
         }
 
         function saveLook() {
-            if (currentFrame === 'none' && currentTitle === 'none') {
+            if (currentFrame === 'none' && currentTitle === 'none' && currentBadge === 'none') {
                 alert('Select at least one cosmetic to save');
                 return;
             }
@@ -2425,6 +2608,7 @@
             const look = {
                 frame: currentFrame,
                 title: currentTitle,
+                badge: currentBadge,
                 saved_at: new Date().toISOString()
             };
             localStorage.setItem('saved_look', JSON.stringify(look));
