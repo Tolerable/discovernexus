@@ -642,7 +642,7 @@ exports.handler = async (event) => {
         if (!user) return respond({ error: 'Not authenticated' }, 401);
         const { data, error } = await supabase
           .from('profiles')
-          .select('display_name, email, role, is_supporter, supporter_since, supporter_tier, last_daily_gem_claim')
+          .select('display_name, email, role, avatar_url, is_supporter, supporter_since, supporter_tier, last_daily_gem_claim')
           .eq('id', user.id)
           .single();
         if (error) return respond({ error: error.message }, 400);
