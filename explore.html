@@ -144,6 +144,7 @@
       align-items: center;
       justify-content: center;
       font-size: 24px;
+      position: relative;
       font-weight: bold;
       background: linear-gradient(135deg, var(--accent-color), var(--deep-purple));
     }
@@ -206,7 +207,8 @@
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent-color), var(--deep-purple));
       display: flex;
-      overflow: hidden;
+      overflow: visible;
+      position: relative;
     }
 
     .profile-avatar-small img {
@@ -1114,9 +1116,16 @@
         const tagNames = tags.slice(0, 3).map(t => typeof t === 'string' ? t : t.tag_name || 'Tag');
         const matchPercent = Math.min(95, 60 + Math.floor(profile.matchScore / 5));
 
+        // Cosmetics for suggested
+        const frame = profile.equipped_frame || 'none';
+        const frameClass = frame !== 'none' ? `frame-${frame}` : '';
+        const frameIcon = FRAME_ICONS[frame] || '';
+        const frameColor = FRAME_COLORS[frame] || 'transparent';
+        const iconGlow = frameColor !== 'transparent' ? `text-shadow: 0 0 4px ${frameColor}` : '';
+
         return `
           <div class="suggested-card" onclick="window.location.href='profile-view.html?id=${profile.id}'">
-            <div class="suggested-avatar">${initials}</div>
+            <div class="suggested-avatar avatar-small ${frameClass}">${initials}${frameIcon ? `<span class="avatar-frame-icon" style="${iconGlow}">${frameIcon}</span>` : ''}</div>
             <div class="suggested-name">${displayName}</div>
             <div class="suggested-match">${matchPercent}% match</div>
             <div class="suggested-tags">
@@ -1166,6 +1175,13 @@
         // Ensure tags is always an array (json_agg can return null)
         const tags = Array.isArray(profile.tags) ? profile.tags : [];
 
+        // Cosmetics
+        const frame = profile.equipped_frame || 'none';
+        const frameClass = frame !== 'none' ? `frame-${frame}` : '';
+        const frameIcon = FRAME_ICONS[frame] || '';
+        const frameColor = FRAME_COLORS[frame] || 'transparent';
+        const iconGlow = frameColor !== 'transparent' ? `text-shadow: 0 0 6px ${frameColor}, 0 0 10px ${frameColor}` : '';
+
         const avatarHtml = profile.profile_photo_url
           ? `<img src="${escapeHtml(profile.profile_photo_url)}" alt="${escapeHtml(displayName)}" onerror="this.parentElement.innerHTML='${initials}'">`
           : initials;
@@ -1173,7 +1189,7 @@
         return `
           <div class="profile-card" onclick="viewProfile('${profile.id}')">
             <div class="profile-card-header">
-              <div class="profile-avatar-small">${avatarHtml}</div>
+              <div class="profile-avatar-small avatar-small ${frameClass}">${avatarHtml}${frameIcon ? `<span class="avatar-frame-icon" style="${iconGlow}">${frameIcon}</span>` : ''}</div>
               <div class="profile-card-info">
                 <div class="profile-card-name">${escapeHtml(displayName)}${profile.is_ai ? (profile.email && profile.email.includes('@nexus.ai.local') ? '<span class="system-ai-badge">NEXUS AI</span>' : '<span class="host-badge">AI</span>') : ''}</div>
                 <div class="profile-card-username"><a href="#" onclick="viewProfile('${profile.id}'); event.stopPropagation(); return false;" class="username-link" title="View profile">@${escapeHtml(username)}</a>${profile.feed_url ? ' <a href="' + escapeHtml(profile.feed_url) + '" target="_blank" onclick="event.stopPropagation()" title="AI Feed" class="feed-link">📡 Feed</a>' : ''}</div>

@@ -225,13 +225,18 @@
 
         .frame-icon {
             position: absolute;
-            top: -2px;
-            right: -2px;
-            font-size: 0.5rem;
+            top: -5px;
+            right: -5px;
+            font-size: 1.2rem;
             z-index: 2;
-            background: none;
-            border: none;
-            /* text-shadow set dynamically via JS to match frame color */
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--accent);
         }
 
         /* Mobile optimizations */
@@ -252,9 +257,11 @@
             }
 
             .frame-icon {
-                font-size: 0.45rem;
-                top: -1px;
-                right: -1px;
+                width: 16px;
+                height: 16px;
+                font-size: 1rem;
+                top: -3px;
+                right: -3px;
             }
         }
 
@@ -438,19 +445,6 @@
             border-radius: 50%;
             position: relative;
             z-index: 1;
-        }
-
-        /* Icon on main avatar preview - just emoji, no border */
-        .tryon-main-avatar .frame-icon {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            font-size: 2rem;
-            z-index: 10;
-            background: none;
-            border: none;
-            box-shadow: none;
-            /* text-shadow set dynamically via JS to match frame color */
         }
 
 
@@ -1285,7 +1279,6 @@
                 <div class="tryon-preview-container">
                     <div id="tryon-avatar" class="tryon-main-avatar">
                         <img id="tryon-avatar-img" src="" alt="Your Avatar" />
-                        <span id="tryon-frame-icon" class="frame-icon" style="display: none;"></span>
                     </div>
                     <div id="tryon-title" class="tryon-title-display"></div>
                     <div id="tryon-combo-name" class="tryon-combo-label">Select cosmetics</div>
@@ -2406,50 +2399,6 @@
             }
         }
 
-        // Frame icons mapping
-        const FRAME_ICONS = {
-            'none': '',
-            'ruby': '❤️',
-            'diamond': '💎',
-            'emerald': '💚',
-            'sapphire': '💙',
-            'amethyst': '💜',
-            'citrine': '💛',
-            'neon': '⚡',
-            'plasma': '🔥',
-            'hologram': '🌈',
-            'quantum': '⚛️',
-            'cosmic': '🌌',
-            'legendary': '👑',
-            'mythic': '✨',
-            'mythic-inferno': '🔶',
-            'mythic-frost': '❄️',
-            'mythic-shadow': '🖤',
-            'mythic-blood': '🩸'
-        };
-
-        // Frame colors for icon glow (matching frame border colors)
-        const FRAME_COLORS = {
-            'none': 'transparent',
-            'ruby': '#e74c3c',
-            'diamond': '#ecf0f1',
-            'emerald': '#2ecc71',
-            'sapphire': '#3498db',
-            'amethyst': '#9b59b6',
-            'citrine': '#f39c12',
-            'neon': '#00ff41',
-            'plasma': '#ff3300',
-            'hologram': '#00ffff',
-            'quantum': '#ffffff',
-            'cosmic': '#ff006e',
-            'legendary': '#ffd700',
-            'mythic': '#ff00ff',
-            'mythic-inferno': '#ff4500',
-            'mythic-frost': '#00bfff',
-            'mythic-shadow': '#4a0080',
-            'mythic-blood': '#8b0000'
-        };
-
         function setFrame(frame) {
             currentFrame = frame;
 
@@ -2460,28 +2409,10 @@
 
             // Apply frame to avatar
             const avatarEl = document.getElementById('tryon-avatar');
-            const iconEl = document.getElementById('tryon-frame-icon');
-
             // Remove all frame classes
             avatarEl.className = 'tryon-main-avatar';
             if (frame !== 'none') {
                 avatarEl.classList.add('frame-' + frame);
-            }
-
-            // Update the 2 o'clock icon with matching frame color glow
-            if (iconEl) {
-                const icon = FRAME_ICONS[frame] || '';
-                const color = FRAME_COLORS[frame] || 'transparent';
-                if (icon) {
-                    iconEl.textContent = icon;
-                    iconEl.style.display = 'flex';
-                    // Apply glow matching the frame color
-                    iconEl.style.textShadow = color !== 'transparent'
-                        ? `0 0 8px ${color}, 0 0 12px ${color}`
-                        : 'none';
-                } else {
-                    iconEl.style.display = 'none';
-                }
             }
 
             updateComboLabel();
@@ -2573,52 +2504,20 @@
             setTitle('none');
         }
 
-        async function saveLook() {
+        function saveLook() {
             if (currentFrame === 'none' && currentTitle === 'none') {
                 alert('Select at least one cosmetic to save');
                 return;
             }
 
-            const token = localStorage.getItem('sn_auth_token');
-            if (!token) {
-                alert('Please log in to save your look');
-                return;
-            }
-
-            try {
-                // Save to database so others can see it
-                const response = await fetch('/.netlify/functions/supabase-proxy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        action: 'updateCosmetics',
-                        payload: {
-                            equipped_frame: currentFrame,
-                            equipped_title: currentTitle
-                        }
-                    })
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    // Also save to localStorage for local use
-                    const look = {
-                        frame: currentFrame,
-                        title: currentTitle,
-                        saved_at: new Date().toISOString()
-                    };
-                    localStorage.setItem('saved_look', JSON.stringify(look));
-                    alert('Look equipped! Others can now see your cosmetics.');
-                } else {
-                    throw new Error(result.error || 'Failed to save');
-                }
-            } catch (err) {
-                console.error('Failed to save look:', err);
-                alert('Failed to save look: ' + err.message);
-            }
+            // Save to localStorage for now
+            const look = {
+                frame: currentFrame,
+                title: currentTitle,
+                saved_at: new Date().toISOString()
+            };
+            localStorage.setItem('saved_look', JSON.stringify(look));
+            alert('Look saved! You can apply it from your profile.');
         }
 
         function buyCurrentLook() {
@@ -2645,11 +2544,11 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initTryOnStudio);
 
-        // COLAB DATABASE - Source of truth for gems
+        // COLAB DATABASE - Source of truth for gems across all domains
         const COLAB_SUPABASE_URL = 'https://yjyryzlbkbtdzguvqegt.supabase.co';
         const COLAB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqeXJ5emxia2J0ZHpndXZxZWd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0NTMzOTYsImV4cCI6MjA3NTAyOTM5Nn0.Vujw3q9_iHj4x5enf42V-7g355Tnzp9zdsoNYVCV8TY';
 
-        // Load wallet from COLAB database (universe-wide gem source)
+        // Load wallet from COLAB database (universe-wide gem source of truth)
         async function loadWallet() {
             // Wait for auth to initialize if available
             if (window.auth && window.auth.init) {
@@ -2663,23 +2562,28 @@
                 return;
             }
 
-            // Get user email from local profile
+            // Get user email from auth
             let userEmail = null;
-            try {
-                const localResp = await fetch('/.netlify/functions/supabase-proxy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ action: 'getProfile', payload: {} })
-                });
-                const localResult = await localResp.json();
-                if (localResult.data && localResult.data.email) {
-                    userEmail = localResult.data.email;
+            if (window.auth && window.auth.user) {
+                userEmail = window.auth.user.email;
+            } else {
+                // Try to get from local profile
+                try {
+                    const localResp = await fetch('/.netlify/functions/supabase-proxy', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ action: 'getProfile', payload: {} })
+                    });
+                    const localResult = await localResp.json();
+                    if (localResult.data && localResult.data.email) {
+                        userEmail = localResult.data.email;
+                    }
+                } catch (e) {
+                    console.log('Could not get user email:', e);
                 }
-            } catch (e) {
-                console.log('Could not get user email:', e);
             }
 
             if (!userEmail) {
@@ -2688,26 +2592,26 @@
                 return;
             }
 
-            // Fetch gems from COLAB via get_gems_by_email RPC
+            // Fetch gems from COLAB database (source of truth)
             try {
-                const response = await fetch(`${COLAB_SUPABASE_URL}/rest/v1/rpc/get_gems_by_email`, {
-                    method: 'POST',
+                const gemUrl = `${COLAB_SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(userEmail)}&select=gems`;
+                const response = await fetch(gemUrl, {
+                    method: 'GET',
                     headers: {
                         'apikey': COLAB_ANON_KEY,
                         'Authorization': `Bearer ${COLAB_ANON_KEY}`,
                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ p_email: userEmail })
+                    }
                 });
 
                 const result = await response.json();
-                console.log('COLAB gems result:', result);
+                console.log('Colab gem lookup result:', result);
 
-                if (result && result.length > 0 && result[0].balance_gems !== undefined) {
-                    userGems = result[0].balance_gems || 0;
-                    console.log('Gems loaded from COLAB:', userGems);
+                if (result && result.length > 0 && result[0].gems !== undefined) {
+                    userGems = result[0].gems || 0;
+                    console.log('Gems loaded from Colab:', userGems);
                 } else {
-                    console.log('No COLAB wallet found for', userEmail);
+                    console.log('No Colab profile found for', userEmail);
                     userGems = 0;
                 }
 

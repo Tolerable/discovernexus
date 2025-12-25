@@ -35,7 +35,6 @@ async function getWalletRow(supabase, userId) {
     credits: Number(w.credits || 0),
     tokens: Number(w.tokens || 0),
     xp: Number(w.xp || 0),
-    gems: Number(w.gems || 0),
   };
 }
 
@@ -641,43 +640,27 @@ exports.handler = async (event) => {
 
       case 'getProfile': {
         if (!user) return respond({ error: 'Not authenticated' }, 401);
-
-        // Get data from users table (primary source for NEXUS)
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('id, email, display_name, profile_photo_url, bio, gender, subscription_tier, equipped_frame, equipped_title, owned_frames, owned_titles')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        // Get profile data if it exists (may not for all users)
-        const { data: profileData } = await supabase
+        // Get profile data
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
-          .select('role, is_supporter, supporter_since, supporter_tier, last_daily_gem_claim')
+          .select('display_name, email, role, is_supporter, supporter_since, supporter_tier, last_daily_gem_claim')
           .eq('id', user.id)
-          .maybeSingle();
+          .single();
 
-        // Build response merging both tables (users is primary)
-        const data = {
-          id: user.id,
-          email: userData?.email || user.email,
-          display_name: userData?.display_name || 'User',
-          profile_photo_url: userData?.profile_photo_url || null,
-          bio: userData?.bio || '',
-          gender: userData?.gender || null,
-          subscription_tier: userData?.subscription_tier || 'free',
-          // Cosmetics
-          equipped_frame: userData?.equipped_frame || 'none',
-          equipped_title: userData?.equipped_title || 'none',
-          owned_frames: userData?.owned_frames || ['none'],
-          owned_titles: userData?.owned_titles || ['none'],
-          // From profiles table (if exists)
-          role: profileData?.role || 'USER',
-          is_supporter: profileData?.is_supporter || false,
-          supporter_since: profileData?.supporter_since || null,
-          supporter_tier: profileData?.supporter_tier || null,
-          last_daily_gem_claim: profileData?.last_daily_gem_claim || null
-        };
+        // Get photo from users table (where it's stored)
+        const { data: userData } = await supabase
+          .from('users')
+          .select('profile_photo_url')
+          .eq('id', user.id)
+          .single();
 
+        if (profileError) return respond({ error: profileError.message }, 400);
+
+        // Merge photo into profile data
+        const data = { ...profileData };
+        if (userData && userData.profile_photo_url) {
+          data.profile_photo_url = userData.profile_photo_url;
+        }
         return respond({ data });
       }
 
@@ -2160,7 +2143,7 @@ exports.handler = async (event) => {
       case 'getBalances': {
         if (!user) return respond({ error: 'Not authenticated' }, 401);
         const w = await getWalletRow(supabase, user.id);
-        return respond({ data: { cash_cents: w.cash_cents, credits: w.credits, tokens: w.tokens, xp: w.xp, gems: w.gems } });
+        return respond({ data: { cash_cents: w.cash_cents, credits: w.credits, tokens: w.tokens, xp: w.xp } });
       }
 
       case 'addCashCents': {
@@ -2171,18 +2154,7 @@ exports.handler = async (event) => {
         const w = await getWalletRow(supabase, user.id);
         w.cash_cents += cents;
         await saveWalletRow(supabase, w);
-        return respond({ data: { cash_cents: w.cash_cents, credits: w.credits, tokens: w.tokens, xp: w.xp, gems: w.gems } });
-      }
-
-      case 'addGems': {
-        if (!user) return respond({ error: 'Not authenticated' }, 401);
-        const amount = Math.floor((payload && payload.amount) || 0);
-        if (amount === 0) return respond({ error: 'Invalid amount' }, 400);
-
-        const w = await getWalletRow(supabase, user.id);
-        w.gems = Math.max(0, w.gems + amount); // Can subtract (negative) but never go below 0
-        await saveWalletRow(supabase, w);
-        return respond({ data: { gems: w.gems, credits: w.credits, tokens: w.tokens, xp: w.xp } });
+        return respond({ data: { cash_cents: w.cash_cents, credits: w.credits, tokens: w.tokens, xp: w.xp } });
       }
 
 	  case 'cashToCredits': {
@@ -9460,71 +9432,6 @@ exports.handler = async (event) => {
         };
 
         return respond({ data: collection });
-      }
-
-      /* ==========================
-         COSMETICS
-      ========================== */
-      case 'updateCosmetics': {
-        if (!user) return respond({ error: 'Not authenticated' }, 401);
-        const { equipped_frame, equipped_title } = payload;
-
-        const updateData = {};
-        if (equipped_frame !== undefined) updateData.equipped_frame = equipped_frame;
-        if (equipped_title !== undefined) updateData.equipped_title = equipped_title;
-
-        if (Object.keys(updateData).length === 0) {
-          return respond({ error: 'No cosmetics to update' }, 400);
-        }
-
-        const { data, error } = await supabase
-          .from('users')
-          .update(updateData)
-          .eq('id', user.id)
-          .select('equipped_frame, equipped_title')
-          .single();
-
-        if (error) return respond({ error: error.message }, 400);
-        return respond({ data, success: true });
-      }
-
-      case 'purchaseCosmetic': {
-        if (!user) return respond({ error: 'Not authenticated' }, 401);
-        const { cosmetic_type, cosmetic_name } = payload;
-
-        if (!cosmetic_type || !cosmetic_name) {
-          return respond({ error: 'Missing cosmetic_type or cosmetic_name' }, 400);
-        }
-
-        // Get current owned cosmetics
-        const { data: userData, error: fetchError } = await supabase
-          .from('users')
-          .select('owned_frames, owned_titles')
-          .eq('id', user.id)
-          .single();
-
-        if (fetchError) return respond({ error: fetchError.message }, 400);
-
-        const column = cosmetic_type === 'frame' ? 'owned_frames' : 'owned_titles';
-        const currentOwned = userData[column] || ['none'];
-
-        // Check if already owned
-        if (currentOwned.includes(cosmetic_name)) {
-          return respond({ error: 'Already owned', alreadyOwned: true }, 400);
-        }
-
-        // Add to owned array
-        const newOwned = [...currentOwned, cosmetic_name];
-
-        const { data, error } = await supabase
-          .from('users')
-          .update({ [column]: newOwned })
-          .eq('id', user.id)
-          .select(column)
-          .single();
-
-        if (error) return respond({ error: error.message }, 400);
-        return respond({ data, success: true });
       }
 
       /* ==========================
