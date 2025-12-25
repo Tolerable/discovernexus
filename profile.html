@@ -875,6 +875,12 @@
         indicator.textContent = `${currentPhotoIndex + 1} / ${allPhotos.length}`;
         container.appendChild(indicator);
       }
+
+      // Apply user's equipped frame from saved look
+      const look = getSavedLook();
+      if (look.frame && look.frame !== 'none') {
+        applyAvatarFrame(avatarElement, look.frame);
+      }
     }
 
     function nextPhoto() {
