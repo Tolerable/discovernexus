@@ -422,9 +422,20 @@
         }
 
         .tryon-title-display {
+            display: inline-block;
             font-size: 1.1rem;
             min-height: 1.5rem;
             margin-bottom: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tryon-title-display:not(:empty) {
+            background: rgba(22, 33, 62, 0.8);
+            border-color: rgba(233, 69, 96, 0.5);
         }
 
         .tryon-combo-label {
@@ -449,6 +460,23 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .tryon-tier-group {
+            width: 100%;
+            text-align: center;
+            margin: 0.75rem 0 0.25rem;
+        }
+
+        .tryon-tier-label {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
         }
 
         .tryon-option {
@@ -1145,14 +1173,48 @@
                         <span class="option-icon">❌</span>
                         <span class="option-label">None</span>
                     </button>
-                    <button class="tryon-option" data-frame="ruby-basic" onclick="setFrame('ruby-basic')">
-                        <span class="option-icon">💎</span>
+
+                    <div class="tryon-tier-group"><span class="tryon-tier-label">⚪ Basic - 12 gems</span></div>
+                    <button class="tryon-option" data-frame="ruby" onclick="setFrame('ruby')">
+                        <span class="option-icon">❤️</span>
                         <span class="option-label">Ruby</span>
                     </button>
                     <button class="tryon-option" data-frame="diamond" onclick="setFrame('diamond')">
-                        <span class="option-icon">💠</span>
+                        <span class="option-icon">💎</span>
                         <span class="option-label">Diamond</span>
                     </button>
+                    <button class="tryon-option" data-frame="emerald" onclick="setFrame('emerald')">
+                        <span class="option-icon">💚</span>
+                        <span class="option-label">Emerald</span>
+                    </button>
+                    <button class="tryon-option" data-frame="sapphire" onclick="setFrame('sapphire')">
+                        <span class="option-icon">💙</span>
+                        <span class="option-label">Sapphire</span>
+                    </button>
+                    <button class="tryon-option" data-frame="amethyst" onclick="setFrame('amethyst')">
+                        <span class="option-icon">💜</span>
+                        <span class="option-label">Amethyst</span>
+                    </button>
+                    <button class="tryon-option" data-frame="citrine" onclick="setFrame('citrine')">
+                        <span class="option-icon">💛</span>
+                        <span class="option-label">Citrine</span>
+                    </button>
+
+                    <div class="tryon-tier-group"><span class="tryon-tier-label">🔵 Standard - 30 gems</span></div>
+                    <button class="tryon-option" data-frame="ruby-standard" onclick="setFrame('ruby-standard')">
+                        <span class="option-icon">❤️</span>
+                        <span class="option-label">Ruby+</span>
+                    </button>
+                    <button class="tryon-option" data-frame="diamond-standard" onclick="setFrame('diamond-standard')">
+                        <span class="option-icon">💎</span>
+                        <span class="option-label">Diamond+</span>
+                    </button>
+                    <button class="tryon-option" data-frame="emerald-standard" onclick="setFrame('emerald-standard')">
+                        <span class="option-icon">💚</span>
+                        <span class="option-label">Emerald+</span>
+                    </button>
+
+                    <div class="tryon-tier-group"><span class="tryon-tier-label">🟣 Animated - 80 gems</span></div>
                     <button class="tryon-option" data-frame="neon" onclick="setFrame('neon')">
                         <span class="option-icon">⚡</span>
                         <span class="option-label">Neon</span>
@@ -1161,6 +1223,12 @@
                         <span class="option-icon">🔥</span>
                         <span class="option-label">Plasma</span>
                     </button>
+                    <button class="tryon-option" data-frame="electric" onclick="setFrame('electric')">
+                        <span class="option-icon">⚡</span>
+                        <span class="option-label">Electric</span>
+                    </button>
+
+                    <div class="tryon-tier-group"><span class="tryon-tier-label">🟡 Premium - 180 gems</span></div>
                     <button class="tryon-option" data-frame="hologram" onclick="setFrame('hologram')">
                         <span class="option-icon">🌈</span>
                         <span class="option-label">Hologram</span>
@@ -1177,6 +1245,8 @@
                         <span class="option-icon">👑</span>
                         <span class="option-label">Legendary</span>
                     </button>
+
+                    <div class="tryon-tier-group"><span class="tryon-tier-label">🌌 Mythic - 400 gems</span></div>
                     <button class="tryon-option" data-frame="mythic" onclick="setFrame('mythic')">
                         <span class="option-icon">✨</span>
                         <span class="option-label">Mythic</span>
@@ -2135,20 +2205,71 @@
         async function loadUserAvatar() {
             const avatarEl = document.getElementById('tryon-avatar');
             const imgEl = document.getElementById('tryon-avatar-img');
+            const placeholder = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%2316213e"/><circle cx="50" cy="40" r="18" fill="%23fff"/><ellipse cx="50" cy="80" rx="30" ry="25" fill="%23fff"/></svg>';
 
-            // Try to get user's avatar from auth/profile
-            if (window.auth && window.auth.user) {
-                const profile = await getUserProfile();
-                if (profile && profile.avatar_url) {
-                    imgEl.src = profile.avatar_url;
-                    userAvatarUrl = profile.avatar_url;
-                } else {
-                    // Use a placeholder avatar
-                    imgEl.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%2316213e"/><circle cx="50" cy="40" r="18" fill="%23fff"/><ellipse cx="50" cy="80" rx="30" ry="25" fill="%23fff"/></svg>';
+            try {
+                // Wait a moment for auth to load
+                await new Promise(r => setTimeout(r, 500));
+
+                // Check localStorage for NEXUS user data
+                const nexusUser = localStorage.getItem('nexus_user');
+                if (nexusUser) {
+                    const user = JSON.parse(nexusUser);
+                    if (user.avatar_url) {
+                        imgEl.src = user.avatar_url;
+                        userAvatarUrl = user.avatar_url;
+                        return;
+                    }
                 }
-            } else {
-                // Not logged in - show generic avatar
-                imgEl.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%2316213e"/><circle cx="50" cy="40" r="18" fill="%23fff"/><ellipse cx="50" cy="80" rx="30" ry="25" fill="%23fff"/></svg>';
+
+                // Try auth system
+                if (window.auth && window.auth.user) {
+                    const profile = await getUserProfile();
+                    if (profile && profile.avatar_url) {
+                        imgEl.src = profile.avatar_url;
+                        userAvatarUrl = profile.avatar_url;
+                        return;
+                    }
+                }
+
+                // Check for EZTUNES profile
+                const ezProfile = localStorage.getItem('eztunes_profile');
+                if (ezProfile) {
+                    const profile = JSON.parse(ezProfile);
+                    if (profile.avatar_url) {
+                        imgEl.src = profile.avatar_url;
+                        userAvatarUrl = profile.avatar_url;
+                        return;
+                    }
+                }
+
+                // Try to fetch from Supabase directly if we have a token
+                const token = localStorage.getItem('sn_auth_token') || localStorage.getItem('sb-yjyryzlbkbtdzguvqegt-auth-token');
+                if (token) {
+                    try {
+                        const resp = await fetch(COLAB_SUPABASE_URL + '/rest/v1/profiles?select=avatar_url,display_name', {
+                            headers: {
+                                'apikey': COLAB_ANON_KEY,
+                                'Authorization': 'Bearer ' + (typeof token === 'string' ? token : JSON.parse(token).access_token)
+                            }
+                        });
+                        const data = await resp.json();
+                        if (data && data[0] && data[0].avatar_url) {
+                            imgEl.src = data[0].avatar_url;
+                            userAvatarUrl = data[0].avatar_url;
+                            return;
+                        }
+                    } catch (e) {
+                        console.log('Could not fetch profile:', e);
+                    }
+                }
+
+                // Fall back to placeholder
+                imgEl.src = placeholder;
+
+            } catch (e) {
+                console.log('Error loading avatar:', e);
+                imgEl.src = placeholder;
             }
         }
 
