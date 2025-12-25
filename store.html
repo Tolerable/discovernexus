@@ -447,6 +447,24 @@
             z-index: 1;
         }
 
+        /* Icon on main avatar preview - larger and positioned at 2 o'clock */
+        .tryon-main-avatar .frame-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.8rem;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+        }
+
 
         .tryon-title-display {
             display: inline-block;
@@ -1279,6 +1297,7 @@
                 <div class="tryon-preview-container">
                     <div id="tryon-avatar" class="tryon-main-avatar">
                         <img id="tryon-avatar-img" src="" alt="Your Avatar" />
+                        <span id="tryon-frame-icon" class="frame-icon" style="display: none;"></span>
                     </div>
                     <div id="tryon-title" class="tryon-title-display"></div>
                     <div id="tryon-combo-name" class="tryon-combo-label">Select cosmetics</div>
@@ -2399,6 +2418,28 @@
             }
         }
 
+        // Frame icons mapping
+        const FRAME_ICONS = {
+            'none': '',
+            'ruby': '❤️',
+            'diamond': '💎',
+            'emerald': '💚',
+            'sapphire': '💙',
+            'amethyst': '💜',
+            'citrine': '💛',
+            'neon': '⚡',
+            'plasma': '🔥',
+            'hologram': '🌈',
+            'quantum': '⚛️',
+            'cosmic': '🌌',
+            'legendary': '👑',
+            'mythic': '✨',
+            'mythic-inferno': '🔶',
+            'mythic-frost': '❄️',
+            'mythic-shadow': '🖤',
+            'mythic-blood': '🩸'
+        };
+
         function setFrame(frame) {
             currentFrame = frame;
 
@@ -2409,10 +2450,23 @@
 
             // Apply frame to avatar
             const avatarEl = document.getElementById('tryon-avatar');
+            const iconEl = document.getElementById('tryon-frame-icon');
+
             // Remove all frame classes
             avatarEl.className = 'tryon-main-avatar';
             if (frame !== 'none') {
                 avatarEl.classList.add('frame-' + frame);
+            }
+
+            // Update the 2 o'clock icon
+            if (iconEl) {
+                const icon = FRAME_ICONS[frame] || '';
+                if (icon) {
+                    iconEl.textContent = icon;
+                    iconEl.style.display = 'flex';
+                } else {
+                    iconEl.style.display = 'none';
+                }
             }
 
             updateComboLabel();
