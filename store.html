@@ -2544,7 +2544,11 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initTryOnStudio);
 
-        // Load wallet from NEXUS database via supabase-proxy
+        // COLAB DATABASE - Source of truth for gems
+        const COLAB_SUPABASE_URL = 'https://yjyryzlbkbtdzguvqegt.supabase.co';
+        const COLAB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqeXJ5emxia2J0ZHpndXZxZWd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0NTMzOTYsImV4cCI6MjA3NTAyOTM5Nn0.Vujw3q9_iHj4x5enf42V-7g355Tnzp9zdsoNYVCV8TY';
+
+        // Load wallet from COLAB database (universe-wide gem source)
         async function loadWallet() {
             // Wait for auth to initialize if available
             if (window.auth && window.auth.init) {
@@ -2558,25 +2562,51 @@
                 return;
             }
 
-            // Fetch gems from NEXUS database via proxy
+            // Get user email from local profile
+            let userEmail = null;
             try {
-                const response = await fetch('/.netlify/functions/supabase-proxy', {
+                const localResp = await fetch('/.netlify/functions/supabase-proxy', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ action: 'getBalances', payload: {} })
+                    body: JSON.stringify({ action: 'getProfile', payload: {} })
+                });
+                const localResult = await localResp.json();
+                if (localResult.data && localResult.data.email) {
+                    userEmail = localResult.data.email;
+                }
+            } catch (e) {
+                console.log('Could not get user email:', e);
+            }
+
+            if (!userEmail) {
+                console.log('No user email - showing 0 gems');
+                updateGemDisplay();
+                return;
+            }
+
+            // Fetch gems from COLAB via get_gems_by_email RPC
+            try {
+                const response = await fetch(`${COLAB_SUPABASE_URL}/rest/v1/rpc/get_gems_by_email`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': COLAB_ANON_KEY,
+                        'Authorization': `Bearer ${COLAB_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ p_email: userEmail })
                 });
 
                 const result = await response.json();
-                console.log('Wallet result:', result);
+                console.log('COLAB gems result:', result);
 
-                if (result.data && result.data.gems !== undefined) {
-                    userGems = result.data.gems || 0;
-                    console.log('Gems loaded:', userGems);
+                if (result && result.length > 0 && result[0].balance_gems !== undefined) {
+                    userGems = result[0].balance_gems || 0;
+                    console.log('Gems loaded from COLAB:', userGems);
                 } else {
-                    console.log('No wallet data found');
+                    console.log('No COLAB wallet found for', userEmail);
                     userGems = 0;
                 }
 
