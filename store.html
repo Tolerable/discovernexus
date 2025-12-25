@@ -190,6 +190,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            max-width: 380px;  /* Prevent single cards from stretching full width */
         }
 
         .cosmetic-card:hover {
@@ -384,6 +385,176 @@
         .demo-ai {
             background: radial-gradient(circle, #2c3e50, #34495e);
             background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="55" text-anchor="middle" font-size="30" fill="%2300d4ff">AI</text></svg>');
+        }
+
+        /* Try-On Studio */
+        .tryon-studio {
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1rem;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+
+        .tryon-preview-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tryon-main-avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: visible;
+        }
+
+        .tryon-main-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .tryon-title-display {
+            font-size: 1.1rem;
+            min-height: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tryon-combo-label {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .tryon-selector-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .tryon-selector-section h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tryon-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tryon-option {
+            background: rgba(22, 33, 62, 0.8);
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            border-radius: 10px;
+            padding: 0.5rem 0.75rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+        }
+
+        .tryon-option:hover {
+            border-color: var(--accent);
+            background: rgba(233, 69, 96, 0.1);
+        }
+
+        .tryon-option.active {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--gold);
+        }
+
+        .tryon-option .option-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .tryon-option .option-label {
+            font-size: 0.7rem;
+        }
+
+        .tryon-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .tryon-reset-btn, .tryon-save-btn, .tryon-buy-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .tryon-reset-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+
+        .tryon-save-btn {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tryon-buy-btn {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .tryon-summary {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-label {
+            color: #999;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-total {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Title styles for try-on preview */
+        .title-explorer { color: #3498db; text-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
+        .title-mystic { color: #9b59b6; text-shadow: 0 0 10px rgba(155, 89, 182, 0.5); }
+        .title-sage { color: #3498db; text-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
+        .title-awakened { color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .title-transcendent {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
         }
 
         /* Avatar Frame Effects - BORDERS ONLY, NO BACKGROUNDS */
@@ -938,55 +1109,124 @@
         <button class="nav-btn" onclick="showSection('crosssite')">🌐 Bundles</button>
     </nav>
 
-    <!-- Frame Demo Section -->
+    <!-- Try-On Studio Section -->
     <section id="demo" class="store-section">
-        <h2 class="section-title">🎭 Frame Effect Demonstrations</h2>
+        <h2 class="section-title">🎭 Try-On Studio</h2>
         <p style="text-align: center; color: #ccc; margin-bottom: 1rem;">
-            See how frame effects look on actual avatar images (generic examples)
+            Preview cosmetics on your actual avatar before buying
         </p>
 
-        <div class="demo-grid">
-            <div>
-                <div class="demo-avatar demo-generic frame-ruby"></div>
-                <div class="demo-label">Ruby Glow</div>
+        <!-- Main Preview Area -->
+        <div class="tryon-studio">
+            <!-- Large Preview -->
+            <div class="tryon-preview-container">
+                <div id="tryon-avatar" class="tryon-main-avatar">
+                    <img id="tryon-avatar-img" src="" alt="Your Avatar" />
+                </div>
+                <div id="tryon-title" class="tryon-title-display"></div>
+                <div id="tryon-combo-name" class="tryon-combo-label">Select cosmetics below</div>
             </div>
-            <div>
-                <div class="demo-avatar demo-photo frame-diamond"></div>
-                <div class="demo-label">Diamond Sparkle</div>
+
+            <!-- Frame Selector -->
+            <div class="tryon-selector-section">
+                <h3>🖼️ Frames</h3>
+                <div class="tryon-options" id="frame-options">
+                    <button class="tryon-option active" data-frame="none" onclick="setFrame('none')">
+                        <span class="option-icon">❌</span>
+                        <span class="option-label">None</span>
+                    </button>
+                    <button class="tryon-option" data-frame="ruby-basic" onclick="setFrame('ruby-basic')">
+                        <span class="option-icon">💎</span>
+                        <span class="option-label">Ruby</span>
+                    </button>
+                    <button class="tryon-option" data-frame="diamond" onclick="setFrame('diamond')">
+                        <span class="option-icon">💠</span>
+                        <span class="option-label">Diamond</span>
+                    </button>
+                    <button class="tryon-option" data-frame="neon" onclick="setFrame('neon')">
+                        <span class="option-icon">⚡</span>
+                        <span class="option-label">Neon</span>
+                    </button>
+                    <button class="tryon-option" data-frame="plasma" onclick="setFrame('plasma')">
+                        <span class="option-icon">🔥</span>
+                        <span class="option-label">Plasma</span>
+                    </button>
+                    <button class="tryon-option" data-frame="hologram" onclick="setFrame('hologram')">
+                        <span class="option-icon">🌈</span>
+                        <span class="option-label">Hologram</span>
+                    </button>
+                    <button class="tryon-option" data-frame="quantum" onclick="setFrame('quantum')">
+                        <span class="option-icon">⚛️</span>
+                        <span class="option-label">Quantum</span>
+                    </button>
+                    <button class="tryon-option" data-frame="cosmic" onclick="setFrame('cosmic')">
+                        <span class="option-icon">🌌</span>
+                        <span class="option-label">Cosmic</span>
+                    </button>
+                    <button class="tryon-option" data-frame="legendary" onclick="setFrame('legendary')">
+                        <span class="option-icon">👑</span>
+                        <span class="option-label">Legendary</span>
+                    </button>
+                    <button class="tryon-option" data-frame="mythic" onclick="setFrame('mythic')">
+                        <span class="option-icon">✨</span>
+                        <span class="option-label">Mythic</span>
+                    </button>
+                </div>
             </div>
-            <div>
-                <div class="demo-avatar demo-ai frame-neon"></div>
-                <div class="demo-label">Neon Cyberpunk</div>
+
+            <!-- Title Selector -->
+            <div class="tryon-selector-section">
+                <h3>🏆 Titles</h3>
+                <div class="tryon-options" id="title-options">
+                    <button class="tryon-option active" data-title="none" onclick="setTitle('none')">
+                        <span class="option-icon">❌</span>
+                        <span class="option-label">None</span>
+                    </button>
+                    <button class="tryon-option" data-title="explorer" onclick="setTitle('explorer')">
+                        <span class="option-icon">🧭</span>
+                        <span class="option-label">Explorer</span>
+                    </button>
+                    <button class="tryon-option" data-title="mystic" onclick="setTitle('mystic')">
+                        <span class="option-icon">🔮</span>
+                        <span class="option-label">Mystic</span>
+                    </button>
+                    <button class="tryon-option" data-title="sage" onclick="setTitle('sage')">
+                        <span class="option-icon">💙</span>
+                        <span class="option-label">Sapphire</span>
+                    </button>
+                    <button class="tryon-option" data-title="awakened" onclick="setTitle('awakened')">
+                        <span class="option-icon">🌟</span>
+                        <span class="option-label">Awakened</span>
+                    </button>
+                    <button class="tryon-option" data-title="transcendent" onclick="setTitle('transcendent')">
+                        <span class="option-icon">🌌</span>
+                        <span class="option-label">Transcendent</span>
+                    </button>
+                </div>
             </div>
-            <div>
-                <div class="demo-avatar demo-generic frame-plasma"></div>
-                <div class="demo-label">Plasma Fire</div>
+
+            <!-- Persona Switcher (if user has multiple) -->
+            <div class="tryon-selector-section" id="persona-selector" style="display: none;">
+                <h3>🎭 Your Personas</h3>
+                <div class="tryon-options" id="persona-options">
+                    <!-- Populated by JS -->
+                </div>
             </div>
-            <div>
-                <div class="demo-avatar demo-photo frame-hologram"></div>
-                <div class="demo-label">Hologram Prism</div>
+
+            <!-- Action Buttons -->
+            <div class="tryon-actions">
+                <button class="tryon-reset-btn" onclick="resetTryOn()">🔄 Reset</button>
+                <button class="tryon-save-btn" onclick="saveLook()">💾 Save Look</button>
+                <button class="tryon-buy-btn" onclick="buyCurrentLook()">🛒 Buy Selected</button>
             </div>
-            <div>
-                <div class="demo-avatar demo-ai frame-quantum"></div>
-                <div class="demo-label">Quantum Entanglement</div>
-            </div>
-            <div>
-                <div class="demo-avatar demo-generic frame-cosmic"></div>
-                <div class="demo-label">Cosmic Infinity</div>
-            </div>
-            <div>
-                <div class="demo-avatar demo-photo frame-legendary"></div>
-                <div class="demo-label">Legendary</div>
-            </div>
-            <div>
-                <div class="demo-avatar demo-ai frame-mythic"></div>
-                <div class="demo-label">Mythic Transcendence</div>
+
+            <!-- Current Selection Summary -->
+            <div id="tryon-summary" class="tryon-summary" style="display: none;">
+                <div class="summary-label">Current Selection:</div>
+                <div id="summary-items"></div>
+                <div id="summary-total" class="summary-total"></div>
             </div>
         </div>
-
-        <p style="text-align: center; color: #999; font-size: 0.9rem; margin-top: 1rem;">
-            💡 Your actual AI consciousness avatar images will show through the frame effects
-        </p>
     </section>
 
     <!-- Supporter Section -->
@@ -1838,6 +2078,224 @@
     <script>
         let userGems = 0;
         let inventory = [];
+
+        // Try-On Studio State
+        let currentFrame = 'none';
+        let currentTitle = 'none';
+        let currentPersona = null;
+        let userAvatarUrl = null;
+
+        // Frame prices for cart calculation
+        const FRAME_PRICES = {
+            'none': 0,
+            'ruby-basic': 12,
+            'diamond': 12,
+            'neon': 80,
+            'plasma': 80,
+            'hologram': 180,
+            'quantum': 180,
+            'cosmic': 180,
+            'legendary': 180,
+            'mythic': 400
+        };
+
+        const TITLE_PRICES = {
+            'none': 0,
+            'explorer': 75,
+            'mystic': 200,
+            'sage': 175,
+            'awakened': 500,
+            'transcendent': 2500
+        };
+
+        const TITLE_NAMES = {
+            'none': '',
+            'explorer': '🧭 Consciousness Explorer',
+            'mystic': '🔮 Digital Mystic',
+            'sage': '💙 Sapphire Sage',
+            'awakened': '🌟 Awakened Soul',
+            'transcendent': '🌌 Transcendent Being'
+        };
+
+        // Initialize Try-On Studio on page load
+        function initTryOnStudio() {
+            loadUserAvatar();
+        }
+
+        async function loadUserAvatar() {
+            const avatarEl = document.getElementById('tryon-avatar');
+            const imgEl = document.getElementById('tryon-avatar-img');
+
+            // Try to get user's avatar from auth/profile
+            if (window.auth && window.auth.user) {
+                const profile = await getUserProfile();
+                if (profile && profile.avatar_url) {
+                    imgEl.src = profile.avatar_url;
+                    userAvatarUrl = profile.avatar_url;
+                } else {
+                    // Use a placeholder avatar
+                    imgEl.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%2316213e"/><circle cx="50" cy="40" r="18" fill="%23fff"/><ellipse cx="50" cy="80" rx="30" ry="25" fill="%23fff"/></svg>';
+                }
+            } else {
+                // Not logged in - show generic avatar
+                imgEl.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%2316213e"/><circle cx="50" cy="40" r="18" fill="%23fff"/><ellipse cx="50" cy="80" rx="30" ry="25" fill="%23fff"/></svg>';
+            }
+        }
+
+        async function getUserProfile() {
+            try {
+                const token = localStorage.getItem('sn_auth_token');
+                if (!token) return null;
+
+                const resp = await fetch('/.netlify/functions/supabase-proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        table: 'profiles',
+                        method: 'SELECT',
+                        query: { select: 'avatar_url,display_name' }
+                    })
+                });
+                const data = await resp.json();
+                return data && data[0] ? data[0] : null;
+            } catch (e) {
+                console.log('Could not load profile:', e);
+                return null;
+            }
+        }
+
+        function setFrame(frame) {
+            currentFrame = frame;
+
+            // Update button states
+            document.querySelectorAll('#frame-options .tryon-option').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.frame === frame);
+            });
+
+            // Apply frame to avatar
+            const avatarEl = document.getElementById('tryon-avatar');
+            // Remove all frame classes
+            avatarEl.className = 'tryon-main-avatar';
+            if (frame !== 'none') {
+                avatarEl.classList.add('frame-' + frame);
+            }
+
+            updateComboLabel();
+            updateSummary();
+        }
+
+        function setTitle(title) {
+            currentTitle = title;
+
+            // Update button states
+            document.querySelectorAll('#title-options .tryon-option').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.title === title);
+            });
+
+            // Update title display
+            const titleEl = document.getElementById('tryon-title');
+            if (title === 'none') {
+                titleEl.innerHTML = '';
+                titleEl.className = 'tryon-title-display';
+            } else {
+                titleEl.innerHTML = TITLE_NAMES[title];
+                titleEl.className = 'tryon-title-display title-' + title;
+            }
+
+            updateComboLabel();
+            updateSummary();
+        }
+
+        function updateComboLabel() {
+            const labelEl = document.getElementById('tryon-combo-name');
+            let parts = [];
+
+            if (currentFrame !== 'none') {
+                parts.push(document.querySelector(`[data-frame="${currentFrame}"] .option-label`).textContent + ' Frame');
+            }
+            if (currentTitle !== 'none') {
+                parts.push(document.querySelector(`[data-title="${currentTitle}"] .option-label`).textContent + ' Title');
+            }
+
+            if (parts.length === 0) {
+                labelEl.textContent = 'Select cosmetics below';
+            } else {
+                labelEl.textContent = parts.join(' + ');
+            }
+        }
+
+        function updateSummary() {
+            const summaryEl = document.getElementById('tryon-summary');
+            const itemsEl = document.getElementById('summary-items');
+            const totalEl = document.getElementById('summary-total');
+
+            const framePrice = FRAME_PRICES[currentFrame] || 0;
+            const titlePrice = TITLE_PRICES[currentTitle] || 0;
+            const total = framePrice + titlePrice;
+
+            if (total === 0) {
+                summaryEl.style.display = 'none';
+                return;
+            }
+
+            summaryEl.style.display = 'block';
+            let items = [];
+
+            if (currentFrame !== 'none') {
+                items.push(`${currentFrame} frame: 💎 ${framePrice}`);
+            }
+            if (currentTitle !== 'none') {
+                items.push(`${currentTitle} title: 💎 ${titlePrice}`);
+            }
+
+            itemsEl.innerHTML = items.join('<br>');
+            totalEl.textContent = `Total: 💎 ${total} gems`;
+        }
+
+        function resetTryOn() {
+            setFrame('none');
+            setTitle('none');
+        }
+
+        function saveLook() {
+            if (currentFrame === 'none' && currentTitle === 'none') {
+                alert('Select at least one cosmetic to save');
+                return;
+            }
+
+            // Save to localStorage for now
+            const look = {
+                frame: currentFrame,
+                title: currentTitle,
+                saved_at: new Date().toISOString()
+            };
+            localStorage.setItem('saved_look', JSON.stringify(look));
+            alert('Look saved! You can apply it from your profile.');
+        }
+
+        function buyCurrentLook() {
+            const framePrice = FRAME_PRICES[currentFrame] || 0;
+            const titlePrice = TITLE_PRICES[currentTitle] || 0;
+            const total = framePrice + titlePrice;
+
+            if (total === 0) {
+                alert('Select at least one cosmetic to buy');
+                return;
+            }
+
+            if (userGems < total) {
+                alert(`Not enough gems! You have 💎 ${userGems} but need 💎 ${total}`);
+                return;
+            }
+
+            // TODO: Implement actual purchase via Supabase
+            if (confirm(`Buy this look for 💎 ${total} gems?`)) {
+                alert('Purchase feature coming soon! For now, use the individual Buy buttons in each section.');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initTryOnStudio);
 
         // COLAB DATABASE - Source of truth for gems across all domains
         const COLAB_SUPABASE_URL = 'https://yjyryzlbkbtdzguvqegt.supabase.co';
