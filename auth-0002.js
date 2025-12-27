@@ -28,7 +28,7 @@ class Auth {
     // Load from localStorage
     this.token = localStorage.getItem(AUTH_TOKEN_KEY);
     const userStr = localStorage.getItem(USER_KEY);
-    try { this.user = userStr ? JSON.parse(userStr) : null; } catch (e) { console.warn("Corrupted localStorage, clearing..."); localStorage.removeItem(USER_KEY); localStorage.removeItem(AUTH_TOKEN_KEY); localStorage.removeItem(SESSION_KEY); this.user = null; this.token = null; return; }
+    this.user = userStr ? JSON.parse(userStr) : null;
   
     // If no token, nothing to validate/fetch
     if (!this.token) return;
@@ -166,9 +166,9 @@ class Auth {
   
     const result = await response.json();
   
-	if (result.error || result.error_code || result.code >= 400) {
+	if (result.error) {
 	  const msg = typeof result.error === 'string' ? result.error : (result.error.message || 'Sign-in failed');
-	  throw new Error(result.msg || msg);
+	  throw new Error(msg);
 	}
   
     if (!result.data || !result.data.user) {
@@ -267,9 +267,9 @@ class Auth {
   
     const result = await response.json();
   
-    if (result.error || result.error_code || result.code >= 400) {
+    if (result.error) {
       const msg = typeof result.error === 'string' ? result.error : (result.error.message || 'Sign-up failed');
-      throw new Error(result.msg || msg);
+      throw new Error(msg);
     }
   
     return result;
@@ -317,9 +317,9 @@ class Auth {
 
     const result = await response.json();
 
-    if (result.error || result.error_code || result.code >= 400) {
+    if (result.error) {
       const msg = typeof result.error === 'string' ? result.error : (result.error.message || 'Password reset failed');
-      throw new Error(result.msg || msg);
+      throw new Error(msg);
     }
 
     return result;
