@@ -445,12 +445,19 @@
 
   <!-- Auth Integration -->
   <script src="/auth.js"></script>
+  <script src="/js/passport.js"></script>
   <script src="/js/navbar.js"></script>
   <script>
     // Initialize auth and check for redirects
     document.addEventListener('DOMContentLoaded', async () => {
       const auth = window.auth || new Auth();
       await auth.init();
+
+      // Initialize passport and check age gate (21+ site)
+      await window.passport.init();
+      if (!window.passport.requireAge(21, 'DiscoverNexus requires you to be 21 or older.')) {
+        return; // Age gate shown, stop loading
+      }
 
       // If user is logged in and there's a redirect, go there
       if (auth.user) {
