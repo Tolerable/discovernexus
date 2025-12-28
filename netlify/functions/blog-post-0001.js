@@ -18,7 +18,7 @@
  */
 
 // EZTUNES Supabase (for storage)
-const SUPABASE_URL = "https://todhqdgatlejylifqpni.supabase.co";
+const SUPABASE_URL = "https://bugpycickribmdfprryq.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_c9Q2joJ8g7g7ntdrzbnzbA_RJfa_5jt";
 
 // Blogger OAuth credentials (server-side only - from environment variables)

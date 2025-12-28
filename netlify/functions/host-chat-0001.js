@@ -5,7 +5,7 @@
  * Generates a response using Pollinations text API.
  */
 
-const SUPABASE_URL = 'https://todhqdgatlejylifqpni.supabase.co';
+const SUPABASE_URL = 'https://bugpycickribmdfprryq.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const POLLINATIONS_URL = 'https://text.pollinations.ai';
 
