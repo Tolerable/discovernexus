@@ -17,9 +17,9 @@
  * }
  */
 
-// EZTUNES Supabase (for storage)
+// AI-MINISTRIES Supabase (for storage)
 const SUPABASE_URL = "https://todhqdgatlejylifqpni.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_c9Q2joJ8g7g7ntdrzbnzbA_RJfa_5jt";
+const SUPABASE_ANON_KEY = "sb_publishable__I2HKmigwOP5xf-9OiIBgA_cdWmpYta";
 
 // Blogger OAuth credentials (server-side only - from environment variables)
 const BLOGGER_CREDENTIALS = {
@@ -113,13 +113,12 @@ async function getBlogId(accessToken) {
   return data.id;
 }
 
-// Generate header image with Pollinations
+// Generate header image with Pollinations (new gen.pollinations.ai endpoint)
 function generateHeaderImage(prompt) {
   const width = 1200;
-  const height = 630;
-  const seed = Math.floor(Math.random() * 1000000);
+  const height = 900; // 4:3 ratio for blog headers
   const encodedPrompt = encodeURIComponent(prompt);
-  return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true`;
+  return `https://gen.pollinations.ai/image/${encodedPrompt}?width=${width}&height=${height}&nologo=true`;
 }
 
 // Convert markdown to basic HTML if needed

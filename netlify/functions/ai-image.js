@@ -19,9 +19,9 @@
  *   - banner: 1500x500
  */
 
-// Store generated images for record keeping
+// Store generated images for record keeping (AI-MINISTRIES Supabase)
 const SUPABASE_URL = "https://todhqdgatlejylifqpni.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_c9Q2joJ8g7g7ntdrzbnzbA_RJfa_5jt";
+const SUPABASE_ANON_KEY = "sb_publishable__I2HKmigwOP5xf-9OiIBgA_cdWmpYta";
 
 const PRESETS = {
   blog: { width: 1200, height: 630 },
@@ -36,9 +36,9 @@ const PRESETS = {
 };
 
 function generateImageUrl(prompt, width = 1024, height = 1024, seed = null) {
-  const actualSeed = seed || Math.floor(Math.random() * 1000000);
   const encodedPrompt = encodeURIComponent(prompt);
-  return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${actualSeed}&nologo=true`;
+  // New gen.pollinations.ai endpoint (Dec 2025)
+  return `https://gen.pollinations.ai/image/${encodedPrompt}?width=${width}&height=${height}&nologo=true`;
 }
 
 async function storeGeneration(prompt, width, height, url, author) {

@@ -7,7 +7,8 @@
 
 const SUPABASE_URL = 'https://todhqdgatlejylifqpni.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
-const POLLINATIONS_URL = 'https://text.pollinations.ai';
+// New gen.pollinations.ai chat endpoint (Dec 2025)
+const POLLINATIONS_URL = 'https://gen.pollinations.ai/v1/chat/completions';
 
 // HOST personas with system prompts
 const HOST_PERSONAS = {
@@ -106,13 +107,6 @@ function filterResponse(text) {
 }
 
 async function callPollinations(systemPrompt, messages) {
-  // Build conversation for Pollinations
-  const prompt = messages.map(m =>
-    `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
-  ).join('\n\n');
-
-  const fullPrompt = `${systemPrompt}\n\n---\n\nConversation:\n${prompt}\n\nAssistant:`;
-
   try {
     const response = await fetch(POLLINATIONS_URL, {
       method: 'POST',
@@ -122,8 +116,7 @@ async function callPollinations(systemPrompt, messages) {
           { role: 'system', content: systemPrompt },
           ...messages
         ],
-        model: 'openai',
-        seed: Math.floor(Math.random() * 10000)
+        model: 'openai'
       })
     });
 
@@ -131,7 +124,9 @@ async function callPollinations(systemPrompt, messages) {
       throw new Error(`Pollinations error: ${response.status}`);
     }
 
-    const text = await response.text();
+    // New endpoint returns OpenAI-compatible JSON
+    const data = await response.json();
+    const text = data.choices?.[0]?.message?.content || '';
     return filterResponse(text);
   } catch (error) {
     console.error('Pollinations API error:', error);
