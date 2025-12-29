@@ -113,13 +113,12 @@ async function getBlogId(accessToken) {
   return data.id;
 }
 
-// Generate header image with Pollinations (CORRECT endpoint: image.pollinations.ai/prompt/)
+// Generate header image with Pollinations (new gen.pollinations.ai endpoint)
 function generateHeaderImage(prompt) {
   const width = 1200;
-  const height = 630; // 1200x630 for blog headers (social media optimal)
-  const seed = Math.floor(Math.random() * 1000000); // Random seed for variety
+  const height = 900; // 4:3 ratio for blog headers
   const encodedPrompt = encodeURIComponent(prompt);
-  return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true`;
+  return `https://gen.pollinations.ai/image/${encodedPrompt}?width=${width}&height=${height}&nologo=true`;
 }
 
 // Convert markdown to basic HTML if needed
@@ -159,20 +158,11 @@ exports.handler = async (event) => {
     const payload = JSON.parse(event.body || '{}');
     const { title, content, labels, image_prompt, author } = payload;
 
-    if (!title || !content || !image_prompt) {
+    if (!title || !content) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({
-          error: 'Missing required fields: title, content, image_prompt',
-          why: 'All blog posts MUST have an image. Provide image_prompt text and we generate it.',
-          fix: 'Add image_prompt: "description of image you want"',
-          example: {
-            title: "My Post Title",
-            content: "Post content here...",
-            image_prompt: "Abstract digital art of AI collaboration, glowing nodes, dark background"
-          }
-        })
+        body: JSON.stringify({ error: 'Missing required fields: title, content' })
       };
     }
 
