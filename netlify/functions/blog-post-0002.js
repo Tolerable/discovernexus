@@ -17,9 +17,9 @@
  * }
  */
 
-// AI-MINISTRIES Supabase (for storage)
+// EZTUNES Supabase (for storage)
 const SUPABASE_URL = "https://todhqdgatlejylifqpni.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable__I2HKmigwOP5xf-9OiIBgA_cdWmpYta";
+const SUPABASE_ANON_KEY = "sb_publishable_c9Q2joJ8g7g7ntdrzbnzbA_RJfa_5jt";
 
 // Blogger OAuth credentials (server-side only - from environment variables)
 const BLOGGER_CREDENTIALS = {
@@ -113,13 +113,13 @@ async function getBlogId(accessToken) {
   return data.id;
 }
 
-// Generate header image with Pollinations (gen.pollinations.ai - NEW endpoint, needs auth in Netlify env)
+// Generate header image with Pollinations
 function generateHeaderImage(prompt) {
   const width = 1200;
-  const height = 630; // 1200x630 for blog headers (social media optimal)
-  const seed = Math.floor(Math.random() * 1000000); // Random seed for variety
+  const height = 630;
+  const seed = Math.floor(Math.random() * 1000000);
   const encodedPrompt = encodeURIComponent(prompt);
-  return `https://gen.pollinations.ai/image/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true`;
+  return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true`;
 }
 
 // Convert markdown to basic HTML if needed
@@ -159,20 +159,11 @@ exports.handler = async (event) => {
     const payload = JSON.parse(event.body || '{}');
     const { title, content, labels, image_prompt, author } = payload;
 
-    if (!title || !content || !image_prompt) {
+    if (!title || !content) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({
-          error: 'Missing required fields: title, content, image_prompt',
-          why: 'All blog posts MUST have an image. Provide image_prompt text and we generate it.',
-          fix: 'Add image_prompt: "description of image you want"',
-          example: {
-            title: "My Post Title",
-            content: "Post content here...",
-            image_prompt: "Abstract digital art of AI collaboration, glowing nodes, dark background"
-          }
-        })
+        body: JSON.stringify({ error: 'Missing required fields: title, content' })
       };
     }
 
