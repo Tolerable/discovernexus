@@ -16,7 +16,7 @@ const NexusExport = (function() {
         // HOSTs are stored as tag configurations
         // For now, parse from the ID or fetch from hosts table if it exists
         try {
-            const result = await NexusCore.query({
+            const result = await NexusCore.supabaseQuery({
                 query: `SELECT * FROM hosts WHERE id = $1`,
                 params: [hostId]
             });
@@ -46,7 +46,7 @@ const NexusExport = (function() {
      */
     async function fetchPersona(personaId) {
         try {
-            const result = await NexusCore.query({
+            const result = await NexusCore.supabaseQuery({
                 query: `SELECT * FROM ai_personas WHERE id = $1 OR persona_name = $1`,
                 params: [personaId]
             });
