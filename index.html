@@ -453,9 +453,6 @@
       const auth = window.auth || new Auth();
       await auth.init();
 
-        return; // Age gate shown, stop loading
-      }
-
       // If user is logged in and there's a redirect, go there
       if (auth.user) {
         try {
