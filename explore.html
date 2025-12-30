@@ -1260,17 +1260,14 @@
       window.location.href = `/profile-view.html?user=${userId}`;
     }
 
-    // Initialize on page load with passport age gate
     document.addEventListener('DOMContentLoaded', async () => {
-      await window.passport.init();
-      if (!window.passport.requireAge(21, 'DiscoverNexus requires you to be 21 or older.')) {
         return; // Age gate shown
       }
       initExplore();
     });
   </script>
   <!-- PASSPORT - Cross-domain identity (replaces legacy age-gate.js) -->
-  <script src="/js/passport.js"></script>
+  
   <script src="/js/cookie-consent.js"></script>
 </body>
 </html>
