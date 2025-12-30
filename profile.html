@@ -947,9 +947,7 @@
 
       try {
         // Fetch all current tags from database
-        const result = await NexusCore.supabaseQuery({
-          query: `SELECT id, tag_name, category, definition FROM tags WHERE is_current = true ORDER BY category, tag_name`
-        });
+        const result = await NexusCore.supabaseQuery(`SELECT id, tag_name, category, definition FROM tags WHERE is_current = true ORDER BY category, tag_name`);
 
         availableTags = result.data || [];
 
@@ -1098,18 +1096,12 @@
 
         // Add new tags
         for (const tagId of toAdd) {
-          await NexusCore.supabaseQuery({
-            query: `INSERT INTO user_tags (user_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
-            params: [userId, tagId]
-          });
+          await NexusCore.supabaseQuery(`INSERT INTO user_tags (user_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [userId, tagId]);
         }
 
         // Remove deselected tags
         for (const tagId of toRemove) {
-          await NexusCore.supabaseQuery({
-            query: `DELETE FROM user_tags WHERE user_id = $1 AND tag_id = $2`,
-            params: [userId, tagId]
-          });
+          await NexusCore.supabaseQuery(`DELETE FROM user_tags WHERE user_id = $1 AND tag_id = $2`, [userId, tagId]);
         }
 
         showToast('Tags saved! Your profile has been updated.', 'success');
