@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Video Lounges</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --bg-dark: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --bg-input: #252540;
+            --accent: #6c5ce7;
+            --accent-hover: #7d6ff0;
+            --success: #00b894;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --text: #ffffff;
+            --text-dim: #a0a0b0;
+            --border: #333355;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        /* === LOBBY SCREEN === */
+        .lobby {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .lobby.hidden { display: none; }
+        
+        .lobby-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .lobby-header h1 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn:active { transform: scale(0.96); }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover { background: var(--accent-hover); }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        /* Scope Toggle */
+        .scope-toggle {
+            display: flex;
+            background: var(--bg-input);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .scope-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .scope-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        /* Lounge List */
+        .lounge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .lounge-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .lounge-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        
+        .lounge-meta {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+        
+        .lounge-meta .site-badge {
+            background: var(--bg-input);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        
+        .lounge-count {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--success);
+            margin-right: 12px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-dim);
+        }
+        
+        .empty-state p { margin-bottom: 20px; }
+        
+        /* === CREATE MODAL === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-input);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: var(--text);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .modal-actions .btn { flex: 1; }
+        
+        /* === LOUNGE SCREEN === */
+        .lounge-room {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        .lounge-room.active {
+            display: flex;
+        }
+        
+        .lounge-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .lounge-topbar h2 {
+            font-size: 1.1rem;
+        }
+        
+        .lounge-main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        /* Video Grid */
+        .video-grid {
+            flex: 1;
+            display: grid;
+            gap: 8px;
+            padding: 8px;
+            background: #000;
+        }
+        
+        /* Grid layouts based on participant count */
+        .video-grid.grid-1 { grid-template-columns: 1fr; }
+        .video-grid.grid-2 { grid-template-columns: 1fr 1fr; }
+        .video-grid.grid-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .video-grid.grid-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .video-grid.grid-5 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .video-grid.grid-6 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        
+        .video-cell {
+            position: relative;
+            background: #111;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .video-cell video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-cell .name-tag {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        
+        .video-cell .site-tag {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            display: block;
+        }
+        
+        .video-cell.local video {
+            transform: scaleX(-1); /* Mirror local video */
+        }
+        
+        .video-cell .muted-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--danger);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        /* Chat Sidebar */
+        .chat-sidebar {
+            width: 280px;
+            background: var(--bg-card);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border);
+        }
+        
+        .chat-sidebar.hidden { display: none; }
+        
+        .chat-header {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+        
+        .chat-msg {
+            margin-bottom: 12px;
+        }
+        
+        .chat-msg .sender {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .chat-msg .text {
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-input);
+            color: var(--text);
+            margin-right: 8px;
+        }
+        
+        /* Bottom Controls */
+        .lounge-controls {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+        }
+        
+        .ctrl-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ctrl-btn:active { transform: scale(0.9); }
+        
+        .ctrl-btn.on {
+            background: var(--bg-input);
+            color: var(--text);
+        }
+        
+        .ctrl-btn.off {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .ctrl-btn.end {
+            background: var(--danger);
+            color: white;
+            width: 64px;
+            height: 64px;
+        }
+        
+        .ctrl-btn.chat-toggle {
+            background: var(--accent);
+            color: white;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 700px) {
+            .chat-sidebar {
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 100;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .video-grid.grid-3,
+            .video-grid.grid-4 {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .video-grid.grid-5,
+            .video-grid.grid-6 {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr;
+            }
+        }
+        
+        /* Join by code */
+        .join-code-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .join-code-section input {
+            padding: 12px;
+            font-size: 1.2rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            width: 140px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-input);
+            color: var(--text);
+            margin-right: 12px;
+        }
+        
+        /* Network indicator */
+        .network-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .network-badge.eztunes { background: #ff6b9d; }
+        .network-badge.nexus { background: #6c5ce7; }
+        .network-badge.ai-ministries { background: #00b894; }
+        .network-badge.strainnavigator { background: #00b894; }
+        .network-badge.claudecolab { background: #ffa502; }
+    </style>
+</head>
+<body>
+    <!-- LOBBY SCREEN -->
+    <div id="lobby" class="lobby">
+        <div class="lobby-header">
+            <h1>🎥 Video Lounges</h1>
+            <button class="btn btn-primary" onclick="showCreateModal()">+ Create</button>
+        </div>
+        
+        <!-- Scope Toggle -->
+        <div class="scope-toggle">
+            <button class="scope-btn active" data-scope="site" onclick="setScope('site')">This Site</button>
+            <button class="scope-btn" data-scope="network" onclick="setScope('network')">Network</button>
+            <button class="scope-btn" data-scope="global" onclick="setScope('global')">Global</button>
+        </div>
+        
+        <!-- Online Count -->
+        <p style="text-align:center; color: var(--text-dim); margin-bottom: 16px;">
+            <span id="onlineCount">0</span> lounges open
+        </p>
+        
+        <!-- Lounge List -->
+        <div id="loungeList" class="lounge-list">
+            <div class="empty-state">
+                <p>No lounges open right now</p>
+                <button class="btn btn-primary" onclick="showCreateModal()">Start One</button>
+            </div>
+        </div>
+        
+        <!-- Join by Code -->
+        <div class="join-code-section">
+            <p style="margin-bottom: 12px; color: var(--text-dim);">Have a code?</p>
+            <input type="text" id="joinCodeInput" maxlength="6" placeholder="ABCDEF">
+            <button class="btn btn-success btn-small" onclick="joinByCode()">Join</button>
+        </div>
+    </div>
+    
+    <!-- CREATE MODAL -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <h2>Create Lounge</h2>
+            
+            <div class="form-group">
+                <label>Lounge Name</label>
+                <input type="text" id="loungeName" placeholder="Late Night Hangout" maxlength="30">
+            </div>
+            
+            <div class="form-group">
+                <label>Max People</label>
+                <select id="maxPeople">
+                    <option value="2">2 people</option>
+                    <option value="4" selected>4 people</option>
+                    <option value="6">6 people</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Visibility</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="visibility" value="public" checked> Public</label>
+                    <label><input type="radio" name="visibility" value="private"> Invite Only</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Scope</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="createScope" value="site" checked> This Site</label>
+                    <label><input type="radio" name="createScope" value="network"> Network</label>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn" style="background: var(--bg-input);" onclick="hideCreateModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="createLounge()">Create</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- LOUNGE ROOM SCREEN -->
+    <div id="loungeRoom" class="lounge-room">
+        <div class="lounge-topbar">
+            <h2 id="roomTitle">Lounge Name</h2>
+            <div>
+                <span id="roomCode" style="color: var(--text-dim); margin-right: 12px;">CODE: XXXXXX</span>
+                <button class="btn btn-danger btn-small" onclick="leaveLounge()">Leave</button>
+            </div>
+        </div>
+        
+        <div class="lounge-main">
+            <div id="videoGrid" class="video-grid grid-1">
+                <!-- Video cells will be added dynamically -->
+            </div>
+            
+            <div id="chatSidebar" class="chat-sidebar hidden">
+                <div class="chat-header">Chat</div>
+                <div id="chatMessages" class="chat-messages"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleChatKeypress(event)">
+                    <button class="btn btn-primary btn-small" onclick="sendChat()">Send</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="lounge-controls">
+            <button id="micBtn" class="ctrl-btn on" onclick="toggleMic()">🎤</button>
+            <button id="vidBtn" class="ctrl-btn on" onclick="toggleVid()">📹</button>
+            <button id="flipBtn" class="ctrl-btn on" onclick="flipCamera()">🔄</button>
+            <button class="ctrl-btn end" onclick="leaveLounge()">📞</button>
+            <button id="chatBtn" class="ctrl-btn chat-toggle" onclick="toggleChat()">💬</button>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIG ============
+        const CONFIG = {
+            SUPABASE_URL: 'https://todhqdgatlejylifqpni.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZGhxZGdhdGxlanlsaWZxcG5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTA3ODEsImV4cCI6MjA3NjEyNjc4MX0.4CQ4ijUlf3Y4OGr5IFrVgCjrqT4dJ0CuEZAt_tlPBig',
+            SITE_ORIGIN: detectSite(),
+            ICE_SERVERS: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ],
+            POLL_INTERVAL: 2000
+        };
+        
+        function detectSite() {
+            const host = window.location.hostname;
+            if (host.includes('eztunes')) return 'eztunes';
+            if (host.includes('nexus') || host.includes('discovernexus')) return 'nexus';
+            if (host.includes('ai-ministries')) return 'ai-ministries';
+            if (host.includes('strainnavigator')) return 'strainnavigator';
+            if (host.includes('claudecolab')) return 'claudecolab';
+            return 'local';
+        }
+        
+        // ============ STATE ============
+        let currentScope = 'site';
+        let currentLounge = null;
+        let myUserId = 'user_' + Math.random().toString(36).substr(2, 9);
+        let myDisplayName = generateHandle();
+        let localStream = null;
+        let peerConnections = {}; // {userId: RTCPeerConnection}
+        let micMuted = false;
+        let vidOff = false;
+        let usingFrontCamera = true;
+        let chatVisible = false;
+        let pollInterval = null;
+        
+        // ============ UTILS ============
+        function generateHandle() {
+            const adj = ['Cosmic', 'Neon', 'Lazy', 'Chill', 'Mystic', 'Wild', 'Happy', 'Lucky', 'Swift', 'Brave'];
+            const nouns = ['Penguin', 'Tiger', 'Cloud', 'Wave', 'Storm', 'Phoenix', 'Dragon', 'Panda', 'Wolf', 'Hawk'];
+            const num = Math.floor(Math.random() * 99);
+            return adj[Math.floor(Math.random() * adj.length)] + 
+                   nouns[Math.floor(Math.random() * nouns.length)] + num;
+        }
+        
+        function generateCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+            return code;
+        }
+        
+        // ============ SUPABASE HELPERS ============
+        async function supabaseSelect(table, query = '') {
+            const resp = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/${table}?${query}`, {
+                headers: {
+                    'apikey': CONFIG.SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                }
+            });
+            return resp.json();
+        }
+        
+        async function supabaseInsert(table, data) {
+            const resp = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/${table}`, {
+                method: 'POST',
+                headers: {
+                    'apikey': CONFIG.SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation'
+                },
+                body: JSON.stringify(data)
+            });
+            return resp.json();
+        }
+        
+        async function supabaseUpdate(table, id, data) {
+            await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': CONFIG.SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+        }
+        
+        async function supabaseDelete(table, query) {
+            await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/${table}?${query}`, {
+                method: 'DELETE',
+                headers: {
+                    'apikey': CONFIG.SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                }
+            });
+        }
+        
+        // ============ LOBBY FUNCTIONS ============
+        function setScope(scope) {
+            currentScope = scope;
+            document.querySelectorAll('.scope-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.scope === scope);
+            });
+            loadLounges();
+        }
+        
+        async function loadLounges() {
+            let query = 'is_public=eq.true&order=created_at.desc';
+            
+            if (currentScope === 'site') {
+                query += `&site_origin=eq.${CONFIG.SITE_ORIGIN}`;
+            } else if (currentScope === 'network') {
+                query += `&site_origin=in.(eztunes,nexus,ai-ministries,strainnavigator,claudecolab,local)`;
+            }
+            // 'global' = no site filter
+            
+            const lounges = await supabaseSelect('video_lounges', query);
+            renderLounges(lounges || []);
+        }
+        
+        function renderLounges(lounges) {
+            const list = document.getElementById('loungeList');
+            const count = document.getElementById('onlineCount');
+            
+            count.textContent = lounges.length;
+            
+            if (lounges.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <p>No lounges open right now</p>
+                        <button class="btn btn-primary" onclick="showCreateModal()">Start One</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            list.innerHTML = lounges.map(l => `
+                <div class="lounge-card">
+                    <div class="lounge-info">
+                        <h3>${escapeHtml(l.name)}</h3>
+                        <div class="lounge-meta">
+                            <span class="network-badge ${l.site_origin}">${l.site_origin}</span>
+                            ${l.is_public ? 'public' : 'invite only'}
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;">
+                        <span class="lounge-count">?/${l.max_participants}</span>
+                        <button class="btn btn-success btn-small" onclick="joinLounge('${l.code}')">Join</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function showCreateModal() {
+            document.getElementById('createModal').classList.add('active');
+        }
+        
+        function hideCreateModal() {
+            document.getElementById('createModal').classList.remove('active');
+        }
+        
+        async function createLounge() {
+            const name = document.getElementById('loungeName').value.trim() || 'Chill Room';
+            const maxPeople = parseInt(document.getElementById('maxPeople').value);
+            const visibility = document.querySelector('input[name="visibility"]:checked').value;
+            const scope = document.querySelector('input[name="createScope"]:checked').value;
+            const code = generateCode();
+            
+            const lounge = {
+                code: code,
+                name: name,
+                host_id: myUserId,
+                site_origin: CONFIG.SITE_ORIGIN,
+                scope: scope,
+                max_participants: maxPeople,
+                is_public: visibility === 'public'
+            };
+            
+            const result = await supabaseInsert('video_lounges', lounge);
+            
+            if (result && result[0]) {
+                hideCreateModal();
+                await joinLounge(code, true);
+            } else {
+                alert('Failed to create lounge. Try again.');
+            }
+        }
+        
+        function joinByCode() {
+            const code = document.getElementById('joinCodeInput').value.trim().toUpperCase();
+            if (code.length === 6) {
+                joinLounge(code);
+            } else {
+                alert('Enter a 6-character code');
+            }
+        }
+        
+        // ============ JOIN LOUNGE ============
+        async function joinLounge(code, isHost = false) {
+            // Find lounge
+            const lounges = await supabaseSelect('video_lounges', `code=eq.${code}`);
+            if (!lounges || lounges.length === 0) {
+                alert('Lounge not found');
+                return;
+            }
+            
+            currentLounge = lounges[0];
+            
+            // Get media
+            if (!await getMedia()) return;
+            
+            // Add self as member
+            await supabaseInsert('lounge_members', {
+                lounge_id: currentLounge.id,
+                user_id: myUserId,
+                display_name: myDisplayName,
+                site_origin: CONFIG.SITE_ORIGIN,
+                is_host: isHost
+            });
+            
+            // Show room
+            showRoom();
+            
+            // Start polling and connecting
+            startPolling();
+        }
+        
+        async function getMedia() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: usingFrontCamera ? 'user' : 'environment' },
+                    audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+                });
+                return true;
+            } catch (err) {
+                console.error('Media error:', err);
+                alert('Could not access camera/microphone');
+                return false;
+            }
+        }
+        
+        function showRoom() {
+            document.getElementById('lobby').classList.add('hidden');
+            document.getElementById('loungeRoom').classList.add('active');
+            document.getElementById('roomTitle').textContent = currentLounge.name;
+            document.getElementById('roomCode').textContent = 'CODE: ' + currentLounge.code;
+            
+            // Add local video
+            addVideoCell(myUserId, myDisplayName, CONFIG.SITE_ORIGIN, true);
+            document.querySelector(`#video-${myUserId} video`).srcObject = localStream;
+        }
+        
+        // ============ VIDEO GRID ============
+        function addVideoCell(userId, displayName, siteOrigin, isLocal = false) {
+            const grid = document.getElementById('videoGrid');
+            
+            // Check if already exists
+            if (document.getElementById(`video-${userId}`)) return;
+            
+            const cell = document.createElement('div');
+            cell.className = 'video-cell' + (isLocal ? ' local' : '');
+            cell.id = `video-${userId}`;
+            cell.innerHTML = `
+                <video autoplay playsinline ${isLocal ? 'muted' : ''}></video>
+                <div class="name-tag">
+                    ${escapeHtml(displayName)}
+                    <span class="site-tag">${siteOrigin}</span>
+                </div>
+            `;
+            grid.appendChild(cell);
+            
+            updateGridLayout();
+        }
+        
+        function removeVideoCell(userId) {
+            const cell = document.getElementById(`video-${userId}`);
+            if (cell) cell.remove();
+            updateGridLayout();
+        }
+        
+        function updateGridLayout() {
+            const grid = document.getElementById('videoGrid');
+            const count = grid.children.length;
+            grid.className = 'video-grid grid-' + Math.min(count, 6);
+        }
+        
+        // ============ PEER CONNECTIONS ============
+        function createPeerConnection(remoteUserId) {
+            if (peerConnections[remoteUserId]) return peerConnections[remoteUserId];
+            
+            const pc = new RTCPeerConnection({ iceServers: CONFIG.ICE_SERVERS });
+            peerConnections[remoteUserId] = pc;
+            
+            // Add local tracks
+            localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+            
+            // Handle remote tracks
+            pc.ontrack = (event) => {
+                const videoEl = document.querySelector(`#video-${remoteUserId} video`);
+                if (videoEl) videoEl.srcObject = event.streams[0];
+            };
+            
+            // ICE candidates
+            pc.onicecandidate = async (event) => {
+                if (event.candidate) {
+                    await supabaseInsert('lounge_ice', {
+                        lounge_id: currentLounge.id,
+                        from_user: myUserId,
+                        to_user: remoteUserId,
+                        candidate: JSON.stringify(event.candidate)
+                    });
+                }
+            };
+            
+            pc.onconnectionstatechange = () => {
+                console.log(`Connection to ${remoteUserId}: ${pc.connectionState}`);
+            };
+            
+            return pc;
+        }
+        
+        async function createOfferFor(remoteUserId) {
+            const pc = createPeerConnection(remoteUserId);
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            
+            await supabaseInsert('lounge_offers', {
+                lounge_id: currentLounge.id,
+                from_user: myUserId,
+                to_user: remoteUserId,
+                offer_sdp: offer.sdp
+            });
+        }
+        
+        async function handleOffer(fromUserId, offerSdp) {
+            const pc = createPeerConnection(fromUserId);
+            await pc.setRemoteDescription({ type: 'offer', sdp: offerSdp });
+            
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            
+            await supabaseInsert('lounge_answers', {
+                lounge_id: currentLounge.id,
+                from_user: myUserId,
+                to_user: fromUserId,
+                answer_sdp: answer.sdp
+            });
+        }
+        
+        async function handleAnswer(fromUserId, answerSdp) {
+            const pc = peerConnections[fromUserId];
+            if (pc && pc.signalingState !== 'stable') {
+                await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
+            }
+        }
+        
+        async function handleIceCandidate(fromUserId, candidate) {
+            const pc = peerConnections[fromUserId];
+            if (pc) {
+                try {
+                    await pc.addIceCandidate(JSON.parse(candidate));
+                } catch (e) {
+                    console.warn('ICE error:', e);
+                }
+            }
+        }
+        
+        // ============ POLLING ============
+        function startPolling() {
+            pollInterval = setInterval(async () => {
+                if (!currentLounge) return;
+                
+                // Poll for members
+                const members = await supabaseSelect('lounge_members', 
+                    `lounge_id=eq.${currentLounge.id}&select=user_id,display_name,site_origin`);
+                
+                // Add new members
+                for (const m of members) {
+                    if (m.user_id !== myUserId && !peerConnections[m.user_id]) {
+                        addVideoCell(m.user_id, m.display_name, m.site_origin);
+                        await createOfferFor(m.user_id);
+                    }
+                }
+                
+                // Poll for offers TO me
+                const offers = await supabaseSelect('lounge_offers',
+                    `lounge_id=eq.${currentLounge.id}&to_user=eq.${myUserId}&select=id,from_user,offer_sdp`);
+                
+                for (const o of offers) {
+                    if (!peerConnections[o.from_user] || peerConnections[o.from_user].signalingState === 'stable') {
+                        // Find member info
+                        const member = members.find(m => m.user_id === o.from_user);
+                        if (member) addVideoCell(o.from_user, member.display_name, member.site_origin);
+                        await handleOffer(o.from_user, o.offer_sdp);
+                    }
+                    // Delete processed offer
+                    await supabaseDelete('lounge_offers', `id=eq.${o.id}`);
+                }
+                
+                // Poll for answers TO me
+                const answers = await supabaseSelect('lounge_answers',
+                    `lounge_id=eq.${currentLounge.id}&to_user=eq.${myUserId}&select=id,from_user,answer_sdp`);
+                
+                for (const a of answers) {
+                    await handleAnswer(a.from_user, a.answer_sdp);
+                    await supabaseDelete('lounge_answers', `id=eq.${a.id}`);
+                }
+                
+                // Poll for ICE candidates TO me
+                const iceCandidates = await supabaseSelect('lounge_ice',
+                    `lounge_id=eq.${currentLounge.id}&to_user=eq.${myUserId}&select=id,from_user,candidate`);
+                
+                for (const ice of iceCandidates) {
+                    await handleIceCandidate(ice.from_user, ice.candidate);
+                    await supabaseDelete('lounge_ice', `id=eq.${ice.id}`);
+                }
+                
+                // Check for disconnected members
+                const currentMemberIds = members.map(m => m.user_id);
+                for (const peerId of Object.keys(peerConnections)) {
+                    if (!currentMemberIds.includes(peerId)) {
+                        // User left
+                        peerConnections[peerId].close();
+                        delete peerConnections[peerId];
+                        removeVideoCell(peerId);
+                    }
+                }
+                
+            }, CONFIG.POLL_INTERVAL);
+        }
+        
+        // ============ CONTROLS ============
+        function toggleMic() {
+            micMuted = !micMuted;
+            localStream.getAudioTracks().forEach(t => t.enabled = !micMuted);
+            const btn = document.getElementById('micBtn');
+            btn.textContent = micMuted ? '🔇' : '🎤';
+            btn.className = 'ctrl-btn ' + (micMuted ? 'off' : 'on');
+        }
+        
+        function toggleVid() {
+            vidOff = !vidOff;
+            localStream.getVideoTracks().forEach(t => t.enabled = !vidOff);
+            const btn = document.getElementById('vidBtn');
+            btn.textContent = vidOff ? '📵' : '📹';
+            btn.className = 'ctrl-btn ' + (vidOff ? 'off' : 'on');
+        }
+        
+        async function flipCamera() {
+            usingFrontCamera = !usingFrontCamera;
+            
+            localStream.getVideoTracks().forEach(t => t.stop());
+            
+            try {
+                const newStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: usingFrontCamera ? 'user' : 'environment' }
+                });
+                
+                const newVideoTrack = newStream.getVideoTracks()[0];
+                
+                // Replace in all peer connections
+                for (const pc of Object.values(peerConnections)) {
+                    const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+                    if (sender) sender.replaceTrack(newVideoTrack);
+                }
+                
+                // Update local stream
+                localStream.removeTrack(localStream.getVideoTracks()[0]);
+                localStream.addTrack(newVideoTrack);
+                
+                document.querySelector(`#video-${myUserId} video`).srcObject = localStream;
+            } catch (err) {
+                console.error('Flip camera error:', err);
+            }
+        }
+        
+        function toggleChat() {
+            chatVisible = !chatVisible;
+            document.getElementById('chatSidebar').classList.toggle('hidden', !chatVisible);
+        }
+        
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            // TODO: Implement chat via data channels or Supabase
+            addChatMessage(myDisplayName, msg);
+            input.value = '';
+        }
+        
+        function handleChatKeypress(e) {
+            if (e.key === 'Enter') sendChat();
+        }
+        
+        function addChatMessage(sender, text) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'chat-msg';
+            div.innerHTML = `
+                <div class="sender">${escapeHtml(sender)}</div>
+                <div class="text">${escapeHtml(text)}</div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        async function leaveLounge() {
+            if (pollInterval) clearInterval(pollInterval);
+            
+            // Close all peer connections
+            for (const pc of Object.values(peerConnections)) {
+                pc.close();
+            }
+            peerConnections = {};
+            
+            // Stop local media
+            if (localStream) {
+                localStream.getTracks().forEach(t => t.stop());
+                localStream = null;
+            }
+            
+            // Remove self from members
+            if (currentLounge) {
+                await supabaseDelete('lounge_members', 
+                    `lounge_id=eq.${currentLounge.id}&user_id=eq.${myUserId}`);
+                
+                // If host, delete lounge
+                if (currentLounge.host_id === myUserId) {
+                    await supabaseDelete('video_lounges', `id=eq.${currentLounge.id}`);
+                }
+            }
+            
+            currentLounge = null;
+            
+            // Clear video grid
+            document.getElementById('videoGrid').innerHTML = '';
+            
+            // Back to lobby
+            document.getElementById('loungeRoom').classList.remove('active');
+            document.getElementById('lobby').classList.remove('hidden');
+            
+            loadLounges();
+        }
+        
+        // ============ INIT ============
+        window.onload = () => {
+            loadLounges();
+            // Refresh lounge list periodically
+            setInterval(loadLounges, 10000);
+        };
+        
+        // Cleanup on page close
+        window.onbeforeunload = () => {
+            if (currentLounge) {
+                navigator.sendBeacon(
+                    `${CONFIG.SUPABASE_URL}/rest/v1/lounge_members?lounge_id=eq.${currentLounge.id}&user_id=eq.${myUserId}`,
+                    ''
+                );
+            }
+        };
+    </script>
+</body>
+</html>
