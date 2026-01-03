@@ -1250,6 +1250,7 @@
         }
     </style>
     <!-- Auth and navigation -->
+    <script src="/js/config.js"></script>
     <script src="/auth.js"></script>
     <script src="/js/nexus-core.js"></script>
 </head>
@@ -2647,7 +2648,7 @@
 
         // COLAB DATABASE - Source of truth for gems
         const COLAB_SUPABASE_URL = 'https://todhqdgatlejylifqpni.supabase.co';
-        const COLAB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZGhxZGdhdGxlanlsaWZxcG5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTA3ODEsImV4cCI6MjA3NjEyNjc4MX0.4CQ4ijUlf3Y4OGr5IFrVgCjrqT4dJ0CuEZAt_tlPBig';
+        const COLAB_ANON_KEY = SUPABASE_ANON_KEY;
 
         // Load wallet from COLAB database (universe-wide gem source)
         async function loadWallet() {
